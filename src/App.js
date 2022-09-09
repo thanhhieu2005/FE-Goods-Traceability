@@ -1,13 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
+import { useTranslation } from 'react-i18next';
 
 function App() {
+
+  const { t } = useTranslation() // key to translate languages
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          {t('title')}
         </p>
         <a
           className="App-link"
