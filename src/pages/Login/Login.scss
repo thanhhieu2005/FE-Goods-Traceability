@@ -1,0 +1,54 @@
+.img {
+    background-color: #1C6758;
+    height: 100vh;
+}
+
+.content {
+    background-color: #fff;
+    height: 100vh;
+    position: relative;
+    .content-form {
+        vertical-align: middle;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.text-title {
+    color: #1C6758;
+    font-weight: 700;
+    margin-bottom: 50px;
+    font-size: 36px;
+}
+
+.form-control {
+    color: #1C6758 !important;
+    border-radius: 8px !important;
+}
+
+#common-button {
+    background-color: #1C6758;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 4px;
+    justify-content: center;
+    display: flex;
+    font-weight: 500;
+    border-color: #1C6758;
+}
+
+.myInput{
+    
+    :global {
+        .ant-input {
+            &:focus {
+                border: 99px solid #1C6758;
+                box-shadow: none;
+            }
+        }
+    }
+}
+

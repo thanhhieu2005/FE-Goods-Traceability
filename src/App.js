@@ -1,15 +1,21 @@
-import { useTranslation } from 'react-i18next';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import routes from './routers/index.js'
+import 'antd/dist/antd.min.css'
+
 
 function App() {
-
-  const { t } = useTranslation() // key to translate languages
-
   return (
-    <div className="App">
-      <p>
-        {t('title')}
-      </p>
-    </div>
+    <Router>
+      <div className='App'>
+        <Routes>
+          {
+            routes.publicRoutes.map((route, index) => {
+              return <Route key={index} path = {route.path} element = {route.element} />
+            })
+          }
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
