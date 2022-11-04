@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout, Menu } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +13,14 @@ export const Home = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const currentToken = localStorage.getItem('token');
+
+    if(!currentToken) {
+      navigate('/login', {replace: true});
+    }
+  }, [navigate]);
 
   const logoutUser = async () => {
     // await axiosClient.post(

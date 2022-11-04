@@ -17,14 +17,14 @@ const Routers = () => {
               )
             );
           })}
-        {Object.keys(currentUserInfo).length !== 0 &&
+        {/* {Object.keys(currentUserInfo).length !== 0 &&
           routes.commonRoutes.map((route, index) => {
             return (
               route.element && (
                 <Route key={index} path={route.path} element={route.element} />
               )
             );
-          })}
+          })} */}
       </Routes>
     </React.Suspense>
   );

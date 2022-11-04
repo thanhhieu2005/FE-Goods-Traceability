@@ -6,6 +6,7 @@ const publicRoutes = [
   { path: '/login', name: 'Login', element: <Login /> },
   { path: '/forgot_password', name: 'ForgotPassword', element: <Login /> },
   { path: '/register', name: 'Register', element: <Login /> },
+  { path: '/', name: 'Home', element: <Home /> },
 ];
 
 const protectedRoutes :any[] = [];
