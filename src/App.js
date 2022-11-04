@@ -1,21 +1,40 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import routes from './routers/index.js'
+import { useNavigate } from 'react-router-dom'
+import Routers from './routers'
 import 'antd/dist/antd.min.css'
+import { axiosClient } from './services/axios';
+import { useDispatch } from 'react-redux';
+import { updateCurrentUserInfo } from './redux/authenSlice';
+import { useEffect } from 'react';
 
 
 function App() {
-  return (
-    <Router>
-      <div className='App'>
-        <Routes>
+
+  const currentToken = localStorage.getItem('token');
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentToken) {
+      const getUser = async () => {
+        const refreshUserInfo = await axiosClient.get(
+          "/users/me",
           {
-            routes.publicRoutes.map((route, index) => {
-              return <Route key={index} path = {route.path} element = {route.element} />
-            })
+            headers: { Authorization: `Bearer ${currentToken}` },
           }
-        </Routes>
-      </div>
-    </Router>
+        );
+
+          console.log(refreshUserInfo.data);
+
+          dispatch(updateCurrentUserInfo(refreshUserInfo.data));
+
+      }
+      getUser();
+    } 
+  }, [currentToken, dispatch, navigate]);
+
+  return (
+      <Routers />
   );
 }
 

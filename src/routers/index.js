@@ -1,25 +1,38 @@
+import routes from "./router";
+import { useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom"
 import React from 'react'
-import Login from '../pages/Login/Login.js'
 
-const publicRoutes = [
-    { path: "/", name: "Login", element: <Login/> },
-    { path: "/forgot_password", element: <Login/>}
-]
-
-const protectedRoutes = []
-
-const commonRoute = []
-
-const managerRoute = []
-
-const farmerRoute = []
-
-const routes = {
-    publicRoutes,
-    protectedRoutes,
-    commonRoute,
-    managerRoute,
-    farmerRoute,
+const Routers = () => {
+    const currentUserInfo = useSelector((state) => state.authen.currentUserInfo);
+    return (
+        <React.Suspense>
+            <Routes>
+                {Object.keys(currentUserInfo).length === 0 && routes.publicRoutes.map((route, index) => {
+                    return (
+                        route.element && (
+                            <Route
+                                key = {index}
+                                path = {route.path}
+                                element = {route.element}
+                            />
+                        )
+                    )
+                })}
+                {Object.keys(currentUserInfo).length !== 0 && routes.commonRoutes.map((route, index) => {
+                    return (
+                        route.element && (
+                            <Route
+                                key = {index}
+                                path = {route.path}
+                                element = {route.element}
+                            />
+                        )
+                    )
+                })}
+            </Routes>
+        </React.Suspense>
+    )
 }
 
-export default routes
+export default Routers;

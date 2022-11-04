@@ -1,23 +1,11 @@
 import axios from 'axios'
 
 const config = {
-    withCredentials: true
+    baseURL: "https://coffee-supply-chain.herokuapp.com",
+    timeout: 5000,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 }
 
-const post = async (path, data) => {
-    return await axios.post(path, data, config)
-}
-
-const get = async (path) => {
-    return await axios.get(path, config)
-}
-
-const deleteAxios = async (path) => {
-    return await axios.delete(path, config)
-}
-
-const update = async (path, params) => {
-    return await axios.get(path, {params: params, config: config})
-}
-
-export { post, get, deleteAxios, update }
+export const axiosClient = axios.create(config);
