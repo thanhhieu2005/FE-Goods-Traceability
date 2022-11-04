@@ -6,6 +6,7 @@ import TypeCheck from 'vite-plugin-checker';
 export default ({ mode }) => {
   return defineConfig({
     build: {
+      target: 'esnext',
       outDir: 'dist',
       rollupOptions: {
         output: {
@@ -37,7 +38,7 @@ export default ({ mode }) => {
       react(),
       TypeCheck({
         typescript: true,
-        enableBuild: true,
+        enableBuild: false,
         overlay: {
           initialIsOpen: false,
           position: 'tr',
