@@ -12,8 +12,16 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const currentToken = localStorage.getItem('token');
 
-  const handleSubmit = async (value) => {
+    if(currentToken) {
+      navigate('/', {replace: true});
+    }
+  }, [navigate]);
+
+
+  const handleSubmit = async (value: any) => {
     try {
       console.log(value);
       const res = await axiosClient.post(
@@ -27,9 +35,9 @@ const Login = () => {
 
       console.log({data: res.data});
 
-      navigate('/');
+      navigate('/', {replace: true});
     } 
-    catch (err) {
+    catch (err: any) {
       console.log(err.response);
     }
   };

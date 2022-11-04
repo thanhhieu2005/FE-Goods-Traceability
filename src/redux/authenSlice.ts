@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import RefreshUserAPI from "../api/user_api";
 
 
-const res = RefreshUserAPI();
+const res = await RefreshUserAPI();
 
 const initialState = {
-    currentUserInfo: res.data || {},
+    currentUserInfo: res?.data || {},
     token: localStorage.getItem('token') || '',
 };
 

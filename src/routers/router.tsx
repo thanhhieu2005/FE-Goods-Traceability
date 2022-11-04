@@ -8,13 +8,13 @@ const publicRoutes = [
   { path: '/register', name: 'Register', element: <Login /> },
 ];
 
-const protectedRoutes = [];
+const protectedRoutes :any[] = [];
 
 const commonRoutes = [{ path: '/', name: 'Home', element: <Home /> }];
 
-const adminTechRoute = [];
+const adminTechRoute :any[] = [];
 
-const farmerRoute = [];
+const farmerRoute : any[] = [];
 
 const routes = {
   publicRoutes,

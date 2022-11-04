@@ -23,7 +23,7 @@
     "yarn": "^1.22.19"
   },
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint --fix './src/**/*.{ts,tsx,js,jsx}'"
   },

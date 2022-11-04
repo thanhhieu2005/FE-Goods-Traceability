@@ -6,7 +6,7 @@ import TypeCheck from 'vite-plugin-checker';
 export default ({ mode }) => {
   return defineConfig({
     build: {
-      outDir: 'build',
+      outDir: 'dist',
       rollupOptions: {
         output: {
           manualChunks(id) {

@@ -4,12 +4,12 @@ import { Route, Routes } from 'react-router-dom';
 import React from 'react';
 
 const Routers = () => {
-  const currentUserInfo = useSelector((state) => state.authen.currentUserInfo);
+  const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
 
   return (
     <React.Suspense>
       <Routes>
-        {Object.keys(currentUserInfo).length === 0 &&
+        {
           routes.publicRoutes.map((route, index) => {
             return (
               route.element && (
