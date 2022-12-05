@@ -1,21 +1,21 @@
-import React from 'react';
-import Login from '../pages/auth/Login.js';
-import { Home } from '../pages/home/Home.js';
+import React from "react";
+import Login from "../pages/auth/Login.js";
+import { LayoutCustom } from "../pages/layout/LayoutCustom.js";
 
 const publicRoutes = [
-  { path: '/login', name: 'Login', element: <Login /> },
-  { path: '/forgot_password', name: 'ForgotPassword', element: <Login /> },
-  { path: '/register', name: 'Register', element: <Login /> },
-  { path: '/', name: 'Home', element: <Home /> },
+  { path: "/login", name: "Login", element: <Login /> },
+  { path: "/forgot_password", name: "ForgotPassword", element: <Login /> },
+  { path: "/register", name: "Register", element: <Login /> },
+  { path: "/", name: "Home", element: <LayoutCustom /> },
 ];
 
-const protectedRoutes :any[] = [];
+const protectedRoutes: any[] = [];
 
-const commonRoutes = [{ path: '/', name: 'Home', element: <Home /> }];
+const commonRoutes = [{ path: "/", name: "Home", element: <LayoutCustom /> }];
 
-const adminTechRoute :any[] = [];
+const adminTechRoute: any[] = [];
 
-const farmerRoute : any[] = [];
+const farmerRoute: any[] = [];
 
 const routes = {
   publicRoutes,

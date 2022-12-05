@@ -1,30 +1,38 @@
-import routes from './router';
-import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
-import React from 'react';
+// import routes from "./router";
+// import { useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import React from "react";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Login from "@/pages/auth/Login";
+import { LayoutCustom } from "@/pages/layout/LayoutCustom";
+import { AccountManagement } from "@/pages/dashboard/TechnicalDashboard";
+
+import { TechAdminFarm } from "@/pages/farm/TechAdminFarm";
 
 const Routers = () => {
-  const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
+  // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
+
+  const currentToken = localStorage.getItem("token");
 
   return (
     <React.Suspense>
       <Routes>
-        {
-          routes.publicRoutes.map((route, index) => {
-            return (
-              route.element && (
-                <Route key={index} path={route.path} element={route.element} />
-              )
-            );
-          })}
-        {/* {Object.keys(currentUserInfo).length !== 0 &&
-          routes.commonRoutes.map((route, index) => {
-            return (
-              route.element && (
-                <Route key={index} path={route.path} element={route.element} />
-              )
-            );
-          })} */}
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute isAllowed={!!currentToken}>
+              <LayoutCustom></LayoutCustom>
+            </ProtectedRoute>
+          }
+        >
+          <Route
+            path="/techAd-account-management"
+            element={<AccountManagement />}
+          />
+          <Route path="/farm-management" element={<TechAdminFarm />} />
+          <Route path="/home" element={<LayoutCustom />} />
+        </Route>
       </Routes>
     </React.Suspense>
   );

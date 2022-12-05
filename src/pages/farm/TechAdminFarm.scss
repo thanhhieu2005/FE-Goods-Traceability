@@ -1,0 +1,28 @@
+.common-layout {
+    padding: 48px;
+    .header-content {
+        color: #1C6758;
+        font-size: 24px;
+        font-weight: 700;
+    }
+    .label-content{
+        color: #A7A7A7;
+        font-size: 16px;
+        font-weight: 400;
+    }
+    .info{
+        margin-top: 12px;
+        height: 64px;
+        width: 240px;
+        background-color: #1C6758;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .info-content {
+            color: white;
+            font-weight: 400;
+            font-size: 16px;
+        }
+    }
+}
