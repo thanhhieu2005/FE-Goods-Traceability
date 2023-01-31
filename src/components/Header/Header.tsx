@@ -81,7 +81,7 @@ export const HeaderCustom: React.FC = () => {
       className="site-layout-sub-header-background"
       style={{
         padding: 0,
-        background: "#1C6758",
+        // background: "#1C6758",
         lineHeight: 0,
         display: "flex",
         justifyContent: "flex-end",

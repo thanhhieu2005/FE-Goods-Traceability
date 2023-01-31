@@ -11,23 +11,24 @@ const { Sider } = Layout;
 export const LayoutCustom = () => {
   return (
     <Layout className="my-layout">
-      <Sider
-        width={240}
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-      >
-        <div className="logo" />
-        <MenuApp />
-      </Sider>
+      <HeaderCustom />
       <Layout>
-        <HeaderCustom />
-        <Outlet />
+        <Sider
+          width={300}
+          theme = 'light'
+          breakpoint="lg"
+          collapsedWidth="0"
+          onBreakpoint={(broken) => {
+            console.log(broken);
+          }}
+          onCollapse={(collapsed, type) => {
+            console.log(collapsed, type);
+          }}
+        >
+          {/* <div className="logo" /> */}
+          <MenuApp />
+        </Sider>
+        <Layout style={{ padding: '48px 24px 24px' }}><Outlet /></Layout>
       </Layout>
     </Layout>
     // <Content style={{ padding: "0 24px", minHeight: 280 }}>Home</Content>

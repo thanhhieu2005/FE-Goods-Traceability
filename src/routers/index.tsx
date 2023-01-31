@@ -5,9 +5,8 @@ import React from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Login from "@/pages/auth/Login";
 import { LayoutCustom } from "@/pages/layout/LayoutCustom";
-import { AccountManagement } from "@/pages/dashboard/TechnicalDashboard";
-
-import { TechAdminFarm } from "@/pages/farm/TechAdminFarm";
+import { AccountManagement } from "@/pages/tech_admin/account_management/AcountManagement";
+import { TechAdminFarm } from "@/pages/tech_admin/farm_techadmin/TechAdminFarm";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
