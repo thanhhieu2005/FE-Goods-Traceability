@@ -7,6 +7,7 @@ const res = await RefreshUserAPI();
 const initialState = {
     currentUserInfo: res?.data || {},
     token: localStorage.getItem('token') || '',
+    isLogin: res?.data ? true : false,
 };
 
 export const authenSlice = createSlice({
@@ -16,6 +17,7 @@ export const authenSlice = createSlice({
         setCurrentUserInfo: (state, action) => {
             state.currentUserInfo = action.payload.user;
             state.token = action.payload.token;
+            state.isLogin = action.payload.isLogin;
         },
         updateCurrentUserInfo: (state, action) => {
             state.currentUserInfo = action.payload;
@@ -23,6 +25,7 @@ export const authenSlice = createSlice({
         logout: (state) => {
             state.currentUserInfo = {};
             state.token = '';
+            state.isLogin = false;
         },
     },
 });

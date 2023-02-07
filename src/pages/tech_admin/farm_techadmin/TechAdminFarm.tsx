@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Col, Row, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
-import "../common.scss";
+import "../../common.scss";
 import CreateFarmForm from "./CreateFarmForm";
 
 interface FarmInfo {
@@ -72,7 +72,7 @@ const columns: ColumnsType<FarmInfo> = [
         </span>
       ) : value == 2 ? (
         <span>
-          <Badge status="processing" style={{paddingRight: '4px'}} />
+          <Badge status="processing" color="yellow" style={{paddingRight: '4px'}} />
           Not Actived
         </span>
       ) : (

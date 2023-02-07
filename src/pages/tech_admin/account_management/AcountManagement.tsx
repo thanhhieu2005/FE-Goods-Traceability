@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Col, Row } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
-import "../common.scss";
+import "../../common.scss"
 import CreateAccountForm from "./CreateAccountForm";
 
 interface UserInfo {
