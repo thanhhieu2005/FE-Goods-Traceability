@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./Login.scss";
 import { Col, Row, Form, Input, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUserInfo } from "../../redux/authenSlice";
 import { axiosClient } from "../../services/axios";
 // import { addListener } from "process";
@@ -11,13 +11,14 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const login = useSelector((state: any) => state.authen.isLogin);
+
   useEffect(() => {
     const currentToken = localStorage.getItem("token");
-
-    if (currentToken) {
+    if (login || currentToken) {
       navigate("/", { replace: true });
-    }
-  }, [navigate]);
+    } 
+  }, [navigate, login]);
 
   const handleSubmit = async (value: any) => {
     try {
@@ -28,7 +29,7 @@ const Login = () => {
 
       dispatch(setCurrentUserInfo(res.data));
 
-      console.log({ data: res.data });
+      // console.log({ data: res.data });
 
       navigate("/", { replace: true });
     } catch (err: any) {

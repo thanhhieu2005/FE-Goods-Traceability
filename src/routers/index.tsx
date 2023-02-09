@@ -7,16 +7,24 @@ import Login from "@/pages/auth/Login";
 import { LayoutCustom } from "@/pages/layout/LayoutCustom";
 import { AccountManagement } from "@/pages/tech_admin/account_management/AcountManagement";
 import { TechAdminFarm } from "@/pages/tech_admin/farm_techadmin/TechAdminFarm";
-import { BatchManagement } from "@/pages/system_admin/BatchManagement";
-import BatchDetail from "@/pages/system_admin/BatchDetail";
+import { ProjectManagement } from "@/pages/system_admin/ProjectManagement";
+import BatchDetail from "@/pages/system_admin/project_detail/ProjectDetail";
 import { useSelector } from "react-redux";
+import HarvestManagement from "@/pages/harvester/HarvestManagement";
+import HarvestDetail from "@/pages/harvester/HarvestDetail";
+import TransportManagement from "@/pages/transport/TransportManagement";
+import TransportDetail from "@/pages/transport/TransportDetail";
+import WarehouseManagement from "@/pages/warehouse/WarehouseManagement";
+import WarehouseDetail from "@/pages/warehouse/WarehouseDetail";
+import ProduceManagement from "@/pages/produce/ProduceManagement";
+import ProduceDetail from "@/pages/produce/ProduceDetail";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
 
-
   // Kiểm tra token còn đăng nhập
-  const currentToken = localStorage.getItem("token");
+  const currentTokenLocal = localStorage.getItem("token");
+  const currentToken = useSelector((state: any) => state.authen.token);
 
   // Kiểm tra role của user để render
   const userName = useSelector((state: any) => state.authen.currentUserInfo);
@@ -24,18 +32,17 @@ const Routers = () => {
   // Kiểm tra đăng nhập hay chưa
   const login = useSelector((state: any) => state.authen.isLogin);
 
-
   console.log("login " + login);
 
   return (
     <React.Suspense>
       <Routes>
-        {login ? (
+        {(login && currentToken != null) || currentTokenLocal ? (
           <>
             <Route
               path="/"
               element={
-                <ProtectedRoute isAllowed={!!currentToken}>
+                <ProtectedRoute isAllowed={!!currentToken || !!currentToken}>
                   <LayoutCustom></LayoutCustom>
                 </ProtectedRoute>
               }
@@ -53,19 +60,86 @@ const Routers = () => {
                   />
                   <Route path="/farm-management" element={<TechAdminFarm />} />
                 </>
-              ) : (
+              ) : userName.role === 2 ? (
                 <>
-                   <Route
+                  <Route
                     path="/"
-                    element={<Navigate to="/batch-management" />}
+                    element={<Navigate to="/project-management" />}
                   />
                   {/* System Admin Router */}
                   <Route
-                    path="/batch-management"
-                    element={<BatchManagement />}
+                    path="/project-management"
+                    element={<ProjectManagement />}
                   />
-                  <Route path="/batch-management/id" element={<BatchDetail />} />
+                  <Route
+                    path="/project-management/id"
+                    element={<BatchDetail />}
+                  />
                   <Route path="/farm-management" element={<TechAdminFarm />} />
+                </>
+              ) : userName.role === 3 ? (
+                <></>
+              ) : userName.department === 1 ? (
+                <></>
+              ) : userName.department === 2 ? (
+                <>
+                  <Route
+                    path="/"
+                    element={<Navigate to="/harvest-management" />}
+                  />
+                  <Route
+                    path="/harvest-management"
+                    element={<HarvestManagement />}
+                  />
+                  <Route
+                    path="/harvest-management/id"
+                    element={<HarvestDetail />}
+                  />
+                </>
+              ) : userName.department === 3 ? (
+                <>
+                  <Route
+                    path="/"
+                    element={<Navigate to="/transport-management" />}
+                  />
+                  <Route
+                    path="/transport-management"
+                    element={<TransportManagement />}
+                  />
+                  <Route
+                    path="/transport-management/id"
+                    element={<TransportDetail />}
+                  />
+                </>
+              ) : userName.department === 4 ? (
+                <>
+                  <Route
+                    path="/"
+                    element={<Navigate to="/warehouse-management" />}
+                  />
+                  <Route
+                    path="/warehouse-management"
+                    element={<WarehouseManagement />}
+                  />
+                  <Route
+                    path="/warehouse-management/id"
+                    element={<WarehouseDetail />}
+                  />
+                </>
+              ) : (
+                <>
+                  <Route
+                    path="/"
+                    element={<Navigate to="/produce-management" />}
+                  />
+                  <Route
+                    path="/produce-management"
+                    element={<ProduceManagement />}
+                  />
+                  <Route
+                    path="/produce-management/id"
+                    element={<ProduceDetail />}
+                  />
                 </>
               )}
             </Route>

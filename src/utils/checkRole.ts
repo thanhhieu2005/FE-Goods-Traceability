@@ -13,11 +13,11 @@ export const checkRole = (role: number) => {
             break;
         }
         case 3: {
-            roleName = "User";
+            roleName = "Farmer";
             break;
         }
         case 4: {
-            roleName = "Farmer";
+            roleName = "Staff";
             break;
         }
         default: {

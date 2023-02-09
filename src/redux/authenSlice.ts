@@ -17,7 +17,7 @@ export const authenSlice = createSlice({
         setCurrentUserInfo: (state, action) => {
             state.currentUserInfo = action.payload.user;
             state.token = action.payload.token;
-            state.isLogin = action.payload.isLogin;
+            state.isLogin = true;
         },
         updateCurrentUserInfo: (state, action) => {
             state.currentUserInfo = action.payload;

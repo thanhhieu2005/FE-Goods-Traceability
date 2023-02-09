@@ -1,11 +1,12 @@
 import React from "react";
-import { Badge, Button, Col, Row, Table } from "antd";
+import { Badge, Col, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { FormOutlined, PlusOutlined } from "@ant-design/icons";
+import { FormOutlined } from "@ant-design/icons";
 import "../common.scss";
 import { useNavigate } from "react-router-dom";
+import CreateProjectForm from "./CreateProjectForm";
 
-interface BatchInfo {
+interface ProjectInfo {
   key: string;
   projectCode: string;
   projectName: string;
@@ -14,8 +15,7 @@ interface BatchInfo {
   status: number;
 }
 
-
-const data: BatchInfo[] = [
+const data: ProjectInfo[] = [
   {
     key: "abc123",
     projectCode: "project123",
@@ -26,26 +26,26 @@ const data: BatchInfo[] = [
   },
 ];
 
-export const BatchManagement = () => {
+export const ProjectManagement = () => {
   const navigate = useNavigate();
 
-  const columns: ColumnsType<BatchInfo> = [
+  const columns: ColumnsType<ProjectInfo> = [
     {
-      title: "Batch Identify Address",
+      title: "Project Identify Address",
       width: 100,
       dataIndex: "key",
       key: "projectId",
       fixed: "left",
     },
     {
-      title: "Batch Code",
+      title: "Project Code",
       width: 100,
       dataIndex: "projectCode",
       key: "projectCode",
       fixed: "left",
     },
     {
-      title: "Batch Name",
+      title: "Project Name",
       width: 100,
       dataIndex: "projectName",
       key: "projectName",
@@ -99,9 +99,9 @@ export const BatchManagement = () => {
       fixed: "right",
       width: 100,
       render: () => (
-        <div
+        <div style={{cursor: "pointer"}}
           onClick={() => {
-            navigate("/batch-management/id");
+            navigate("/project-management/id");
           }}
         >
           <FormOutlined />
@@ -109,17 +109,13 @@ export const BatchManagement = () => {
       ),
     },
   ];
-  
-
 
   return (
     <div>
       <Col>
-        <div className="header-content">Batch Management</div>
+        <div className="header-content">Project Management</div>
         <div className="action-button">
-          <Button type="primary" icon={<PlusOutlined />}>
-            Create New
-          </Button>
+          <CreateProjectForm />
         </div>
         <Table columns={columns} dataSource={data} scroll={{ x: 1300 }} />
       </Col>
