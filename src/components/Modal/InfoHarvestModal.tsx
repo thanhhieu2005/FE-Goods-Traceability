@@ -1,9 +1,10 @@
-import { Badge, Form, Input, Modal } from "antd";
+import { Modal, Input, Form, Badge } from "antd";
 import React, { useState } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { formatDateTime } from "@/utils/formatDateTime";
+import { StateComponent } from "@/pages/common/CheckProjectStatus";
 
-
-const InfoTransportModal = () => {
+const InfoHarvestModal = ({myProp: harvest} : any) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -17,7 +18,7 @@ const InfoTransportModal = () => {
     <>
       <InfoCircleOutlined onClick={showModal}/>
       <Modal
-        title="Transport Inspection Information"
+        title="Harvest Inspection Information"
         open={isModalOpen}
         onOk={handleClose}
         okText={"Close"}
@@ -31,75 +32,72 @@ const InfoTransportModal = () => {
           justifyItems: "center",
           justifyContent: "center",
         }}
+        
       >
         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }} disabled={true}>
           <Form.Item
-            label="Transport ID"
-            name="shippingId"
+            label="Harvest ID"
+            name="harvestId"
             required
+            initialValue={harvest.harvestId}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Project Code"
-            name="projectCode"
+            label="Project ID"
+            name="projectId"
             required
+            initialValue={harvest.projectId}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Total Input"
-            name="totalInput"
+            label="Total Harvest"
+            name="totalHarvest"
+            initialValue={harvest?.totalHarvest || "Not updated information"}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Transport Name"
-            name="transport"
+            label="Ripeness"
+            name="ripeness"
+            initialValue={harvest?.ripeness || "Not updated information"}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Vehicle"
-            name="vehicle"
+            label="Temperature"
+            name="temperature"
+            initialValue={harvest?.temperature || "Not updated information"}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Number of Vehicles"
-            name="numberVehicle"
+            label="Moisure"
+            name="moisure"
+            initialValue={harvest?.moisture || "Not updated information"}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Inspector"
             name="inspector"
+            initialValue={harvest?.inspector}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Date Completed"
             name="dateCompleted"
+            initialValue={harvest?.dateCompleted ? formatDateTime(harvest?.dateCompleted) : "Not updated information"}
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Date Expected"
-            name="dateExpected"
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Status"
-            name="status"
-          >
-             <Badge status="success" style={{ paddingRight: "4px" }} />
-                Completed
-          </Form.Item>
+          {StateComponent(harvest?.state)}
         </Form>
       </Modal>
     </>
   );
 };
 
-export default InfoTransportModal;
+export default InfoHarvestModal;

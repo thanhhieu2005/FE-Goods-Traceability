@@ -1,8 +1,10 @@
 import { Modal, Input, Form, Badge } from "antd";
 import React, { useState } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { StateComponent } from "@/pages/common/CheckProjectStatus";
+import { formatDateTime } from "@/utils/formatDateTime";
 
-const InfoProductionModal = () => {
+const InfoProductionModal = ({myProp: production}: any) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
@@ -36,77 +38,82 @@ const InfoProductionModal = () => {
               label="Produce ID"
               name="produceId"
               required
+              initialValue={production.produceId}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              label="Project Code"
-              name="projectCode"
+              label="Project Id"
+              name="projectId"
               required
+              initialValue={production.projectId}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Total Input"
               name="totalInput"
+              initialValue={production.totalInput || "Not update information"}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Factory Name"
               name="factory"
+              initialValue={production?.factoryName || "Not update information"}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Product Name"
               name="productName"
+              initialValue={production?.productName || "Not update information"}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Inspector"
               name="inspector"
+              initialValue={production?.inspector}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Date Completed"
-              name="inspector"
+              name="dateCompleted"
+              initialValue={production?.dateCompleted ? formatDateTime(production?.dateCompleted) : "Not update information"}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Total Product"
               name="total Product"
+              initialValue={production?.totalProduct}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Humidity"
               name="humidity"
+              initialValue={production?.humidity}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Drying Temperature"
               name="dryingTemperature"
+              initialValue={production?.dryingTemperature}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Expired Date"
               name="expiredDate"
+              initialValue={production?.expiredDate ? formatDateTime(production?.expiredDate) : "Not update information"}
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Status"
-              name="status"
-            >
-               <Badge status="success" style={{ paddingRight: "4px" }} />
-                  Completed
-            </Form.Item>
+            {StateComponent(production?.state)}
           </Form>
         </Modal>
       </>

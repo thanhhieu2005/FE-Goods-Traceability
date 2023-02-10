@@ -17,7 +17,7 @@ const Login = () => {
     const currentToken = localStorage.getItem("token");
     if (login || currentToken) {
       navigate("/", { replace: true });
-    } 
+    }
   }, [navigate, login]);
 
   const handleSubmit = async (value: any) => {

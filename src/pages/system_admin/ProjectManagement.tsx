@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Col, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
 import "../common.scss";
 import { useNavigate } from "react-router-dom";
 import CreateProjectForm from "./CreateProjectForm";
+import { GetAllProjectAPI } from "@/api/system_admin/project_api";
 
 interface ProjectInfo {
   key: string;
@@ -15,19 +16,40 @@ interface ProjectInfo {
   status: number;
 }
 
-const data: ProjectInfo[] = [
-  {
-    key: "abc123",
-    projectCode: "project123",
-    projectName: "test project",
-    manager: "Tran Quoc Khanh",
-    dateCreated: "14/2/2023",
-    status: 1,
-  },
-];
+// const data: ProjectInfo[] = [
+//   {
+//     key: "123",
+//     projectCode: "project123",
+//     projectName: "test project",
+//     manager: "Tran Quoc Khanh",
+//     dateCreated: "14/2/2023",
+//     status: 1,
+//   },
+// ];
 
 export const ProjectManagement = () => {
   const navigate = useNavigate();
+
+  const [dataProjects, setDataProjects] = useState<ProjectInfo[]>([]);
+
+  useEffect(() => {
+    const fetchAPI = GetAllProjectAPI();
+    fetchAPI.then((res) => {
+      console.log("res:", res);
+      res?.data.map((element: any) => {
+        var project = {} as ProjectInfo;
+        project.key = element._id;
+        project.projectName = element.projectName;
+        (project.projectCode = element.projectCode),
+          (project.manager = element.manager?.lastName + " " + element.manager?.firstName);
+        project.dateCreated = element.dateCreated;
+        project.status = element.state;
+        setDataProjects((prevArr) => [...prevArr, project]);
+      });
+    });
+  }, []);
+
+  console.log(dataProjects);
 
   const columns: ColumnsType<ProjectInfo> = [
     {
@@ -93,21 +115,23 @@ export const ProjectManagement = () => {
           </span>
         ),
     },
-    {
-      title: "Edit",
-      key: "operation",
-      fixed: "right",
-      width: 100,
-      render: () => (
-        <div style={{cursor: "pointer"}}
-          onClick={() => {
-            navigate("/project-management/id");
-          }}
-        >
-          <FormOutlined />
-        </div>
-      ),
-    },
+    // {
+    //   title: "Edit",
+    //   key: "operation",
+    //   fixed: "right",
+    //   width: 100,
+    //   render: () => (
+    //     <div
+    //       style={{ cursor: "pointer" }}
+    //       onClick={() => {
+    //         console.log(dataTest)
+    //         // navigate("/project-management/id");
+    //       }}
+    //     >
+    //       <FormOutlined />
+    //     </div>
+    //   ),
+    // },
   ];
 
   return (
@@ -117,7 +141,15 @@ export const ProjectManagement = () => {
         <div className="action-button">
           <CreateProjectForm />
         </div>
-        <Table columns={columns} dataSource={data} scroll={{ x: 1300 }} />
+        <Table columns={columns} dataSource={dataProjects} scroll={{ x: 1300 }} 
+          onRow = {(record, rowIndex) => {
+            return {
+              onClick: () => {
+                navigate(`/project-management/${record.key}`, {state: record.key})
+              }
+            }
+          }}
+        />
       </Col>
     </div>
   );

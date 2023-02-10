@@ -8,7 +8,6 @@ import { LayoutCustom } from "@/pages/layout/LayoutCustom";
 import { AccountManagement } from "@/pages/tech_admin/account_management/AcountManagement";
 import { TechAdminFarm } from "@/pages/tech_admin/farm_techadmin/TechAdminFarm";
 import { ProjectManagement } from "@/pages/system_admin/ProjectManagement";
-import BatchDetail from "@/pages/system_admin/project_detail/ProjectDetail";
 import { useSelector } from "react-redux";
 import HarvestManagement from "@/pages/harvester/HarvestManagement";
 import HarvestDetail from "@/pages/harvester/HarvestDetail";
@@ -17,6 +16,7 @@ import TransportDetail from "@/pages/transport/TransportDetail";
 import WarehouseManagement from "@/pages/warehouse/WarehouseManagement";
 import WarehouseDetail from "@/pages/warehouse/WarehouseDetail";
 import ProduceManagement from "@/pages/produce/ProduceManagement";
+import ProjectDetail from "@/pages/system_admin/project_detail/ProjectDetail";
 import ProduceDetail from "@/pages/produce/ProduceDetail";
 
 const Routers = () => {
@@ -72,8 +72,8 @@ const Routers = () => {
                     element={<ProjectManagement />}
                   />
                   <Route
-                    path="/project-management/id"
-                    element={<BatchDetail />}
+                    path="/project-management/:projectId"
+                    element={<ProjectDetail />}
                   />
                   <Route path="/farm-management" element={<TechAdminFarm />} />
                 </>
@@ -126,7 +126,7 @@ const Routers = () => {
                     element={<WarehouseDetail />}
                   />
                 </>
-              ) : (
+              ) : userName.department === 4 ? (
                 <>
                   <Route
                     path="/"
@@ -141,6 +141,8 @@ const Routers = () => {
                     element={<ProduceDetail />}
                   />
                 </>
+              ) : (
+                <></>
               )}
             </Route>
           </>
