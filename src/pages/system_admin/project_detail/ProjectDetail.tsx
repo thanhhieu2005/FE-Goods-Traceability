@@ -1,4 +1,7 @@
-import { GetProjectDetailByID } from "@/api/system_admin/project_api";
+import {
+  GetProjectDetailByID,
+  UpdateProjectState,
+} from "@/api/system_admin/project_api";
 import {
   CheckProjectStatus,
   StateComponent,
@@ -11,13 +14,8 @@ import {
   WarehouseStorage,
 } from "@/types/step_tracking";
 import { formatDateTime } from "@/utils/formatDateTime";
-import {
-  FormOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  ClockCircleOutlined,
-} from "@ant-design/icons";
-import { Badge, Button, Col, Form, Input, Row } from "antd";
+import { FormOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../../common.scss";
@@ -26,6 +24,8 @@ import InfoProductionModal from "../../../components/Modal/InfoProductionModal";
 import InfoTransportModal from "../../../components/Modal/InfoTransportModal";
 import InfoWarehouseModal from "../../../components/Modal/InfoWarehouseModal";
 import "./ProjectDetail.scss";
+import {StateTag} from "@/components/Tag/StateTag";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 
 const layout = {
   labelCol: { span: 6 },
@@ -44,7 +44,7 @@ const ProjectDetail = () => {
   // console.log("project ID", projectId);
 
   useEffect(() => {
-    GetProjectDetailByID(projectId).then((res) => {
+    GetProjectDetailByID(projectId).then((res: any) => {
       res?.data.map((element: any) => {
         var projectDetail = {} as ProjectDetailInterface;
         var harvest = {} as Harvest;
@@ -100,7 +100,7 @@ const ProjectDetail = () => {
 
         // mapping data to Production interface
         production.key = element.produce._id;
-        production.productionId = element.produce.produceId;
+        production.productionId = element.produce._id;
         production.projectId = element.produce.projectId;
         production.totalInput = element.produce?.totalInput;
         production.factoryName = element.produce?.factory;
@@ -136,66 +136,79 @@ const ProjectDetail = () => {
 
   console.log(dataProject);
 
+  const handleUpdateProjectState = async (projectId: string, state: number) => {
+    const value = { state: state };
+    const res: any = await UpdateProjectState(value, projectId);
+
+    if (res?.status === 200) {
+      return 200;
+    }
+    return 400;
+  };
+
   return (
     <Col>
       <div className="header-content">Project Detail</div>
       <div className="content">
-        <Col>
-          <p className="title"> Project Information </p>
-          <div className="btn-update">
-            <Button
-              type="primary"
-              icon={<FormOutlined />}
-              size="large"
-              onClick={() => {
-                disabled = false;
-                setComponentDisabled(disabled);
-              }}
-            >
-              Update
-            </Button>
-          </div>
-          {dataProject ? (
+        {dataProject ? (
+          <Col>
+            <p className="title"> Project Information </p>
+            {dataProject.state === 1 ? (
+              <div className="btn-update">
+                <Button
+                  type="primary"
+                  icon={<FormOutlined />}
+                  size="large"
+                  onClick={() => {
+                    disabled = false;
+                    setComponentDisabled(disabled);
+                  }}
+                  disabled={!componentDisabled}
+                >
+                  Update
+                </Button>
+              </div>
+            ) : (
+              <StateTag myProp={dataProject.state}></StateTag>
+            )}
             <div className="main-content">
-              <Form {...layout} disabled={true}>
+              <Form {...layout}>
                 <Form.Item
                   label="Project Id"
                   name="projectId"
                   initialValue={dataProject?.projectId}
                 >
-                  <Input />
+                  <Input disabled={true} />
                 </Form.Item>
                 <Form.Item
                   label="Project Code"
                   name="projectCode"
                   initialValue={dataProject?.projectCode}
                 >
-                  <Input />
+                  <Input disabled={true} />
                 </Form.Item>
-              </Form>
-              <Form {...layout} disabled={componentDisabled}>
+
                 <Form.Item
                   label="Project Name"
                   name="projectName"
                   initialValue={dataProject?.projectName}
                 >
-                  <Input />
+                  <Input disabled={componentDisabled} />
                 </Form.Item>
-              </Form>
-              <Form {...layout} disabled={true}>
+
                 <Form.Item
                   label="Manager"
                   name="manager"
                   initialValue={dataProject?.manager}
                 >
-                  <Input />
+                  <Input disabled={true} />
                 </Form.Item>
                 <Form.Item
                   label="Date Created"
                   name="dateCreated"
                   initialValue={formatDateTime(dataProject?.dateCreated)}
                 >
-                  <Input />
+                  <Input disabled={true} />
                 </Form.Item>
                 <Form.Item
                   label="Date Completed"
@@ -206,10 +219,9 @@ const ProjectDetail = () => {
                       : "Pending"
                   }
                 >
-                  <Input />
+                  <Input disabled={true} />
                 </Form.Item>
-              </Form>
-              <Form {...layout}>
+
                 <Form.Item label="Harvest Inspection" name="harvester">
                   <Row>
                     {CheckProjectStatus(dataProject?.harvest.state)}
@@ -244,45 +256,113 @@ const ProjectDetail = () => {
                     </div>
                   </Row>
                 </Form.Item>
-                {StateComponent(dataProject?.state)}
+                {componentDisabled ? (
+                  StateComponent(dataProject?.state)
+                ) : (
+                  <Form.Item label="Update new State" name="newState">
+                    <Row>
+                      <Button
+                        type="primary"
+                        style={{
+                          marginRight: "24px",
+                          width: "100px",
+                          borderRadius: "6px",
+                        }}
+                        danger
+                        onClick={async () => {
+                          disabled = true;
+                          setComponentDisabled(disabled);
+                          const res = await handleUpdateProjectState(
+                            dataProject?.projectId,
+                            3
+                          );
+
+                          if (res === 200) {
+                            successMessage("Prject has been Canceled");
+                          } else {
+                            errorMessage("Update Failed");
+                          }
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        style={{
+                          width: "100px",
+                          background: "#87d068",
+                          borderColor: "#87d068",
+                          color: "white",
+                          borderRadius: "6px",
+                        }}
+                        onClick={async () => {
+                          if (
+                            dataProject.harvest.state == 1 ||
+                            dataProject.transport.state == 1 ||
+                            dataProject.warehouseStorage.state == 1 ||
+                            dataProject.production.state == 1
+                          ) {
+                            errorMessage(
+                              "Other steps have not been completed!"
+                            );
+                          } else {
+                            disabled = true;
+                            setComponentDisabled(disabled);
+                            const res = await handleUpdateProjectState(
+                              dataProject?.projectId,
+                              2
+                            );
+
+                            if (res === 200) {
+                              successMessage("Prject has been Completed");
+                            } else {
+                              errorMessage("Update Failed");
+                            }
+                          }
+                        }}
+                      >
+                        Completed
+                      </Button>
+                    </Row>
+                  </Form.Item>
+                )}
               </Form>
+              <div className="layout-btn-save">
+                <Row>
+                  <Button
+                    className="btn-cancel"
+                    type="primary"
+                    // icon={<FormOutlined />}
+                    onClick={() => {
+                      disabled = true;
+                      setComponentDisabled(disabled);
+                    }}
+                    hidden={disabled}
+                    size={"large"}
+                    style={{ marginRight: "12px" }}
+                    danger
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="btn-save"
+                    type="primary"
+                    // icon={<FormOutlined />}
+                    onClick={() => {
+                      disabled = true;
+                      setComponentDisabled(disabled);
+                    }}
+                    hidden={disabled}
+                    size={"large"}
+                  >
+                    Save
+                  </Button>
+                </Row>
+              </div>
             </div>
-          ) : (
-            <></>
-          )}
-          <div className="layout-btn-save">
-            <Row>
-              <Button
-                className="btn-cancel"
-                type="primary"
-                // icon={<FormOutlined />}
-                onClick={() => {
-                  disabled = true;
-                  setComponentDisabled(disabled);
-                }}
-                hidden={disabled}
-                size={"large"}
-                style={{ marginRight: "12px" }}
-                danger
-              >
-                Cancel
-              </Button>
-              <Button
-                className="btn-save"
-                type="primary"
-                // icon={<FormOutlined />}
-                onClick={() => {
-                  disabled = true;
-                  setComponentDisabled(disabled);
-                }}
-                hidden={disabled}
-                size={"large"}
-              >
-                Save
-              </Button>
-            </Row>
-          </div>
-        </Col>
+          </Col>
+        ) : (
+          <></>
+        )}
       </div>
     </Col>
   );

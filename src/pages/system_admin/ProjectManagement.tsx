@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Col, Table } from "antd";
+import { Badge, Button, Col, Row, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
 import "../common.scss";
@@ -34,14 +34,15 @@ export const ProjectManagement = () => {
 
   useEffect(() => {
     const fetchAPI = GetAllProjectAPI();
-    fetchAPI.then((res) => {
+    fetchAPI.then((res: any) => {
       console.log("res:", res);
       res?.data.map((element: any) => {
         var project = {} as ProjectInfo;
         project.key = element._id;
         project.projectName = element.projectName;
         (project.projectCode = element.projectCode),
-          (project.manager = element.manager?.lastName + " " + element.manager?.firstName);
+          (project.manager =
+            element.manager?.lastName + " " + element.manager?.firstName);
         project.dateCreated = element.dateCreated;
         project.status = element.state;
         setDataProjects((prevArr) => [...prevArr, project]);
@@ -96,12 +97,8 @@ export const ProjectManagement = () => {
       render: (value: number) =>
         value == 1 ? (
           <span>
-            <Badge
-              status="processing"
-              color="yellow"
-              style={{ paddingRight: "4px" }}
-            />
-            Pending
+            <Badge status="processing" style={{ paddingRight: "4px" }} />
+            Processing
           </span>
         ) : value == 2 ? (
           <span>
@@ -139,15 +136,23 @@ export const ProjectManagement = () => {
       <Col>
         <div className="header-content">Project Management</div>
         <div className="action-button">
-          <CreateProjectForm />
+          <Row>
+            <CreateProjectForm />
+            <Button>Test</Button>
+          </Row>
         </div>
-        <Table columns={columns} dataSource={dataProjects} scroll={{ x: 1300 }} 
-          onRow = {(record, rowIndex) => {
+        <Table
+          columns={columns}
+          dataSource={dataProjects}
+          scroll={{ x: 1300 }}
+          onRow={(record, rowIndex) => {
             return {
               onClick: () => {
-                navigate(`/project-management/${record.key}`, {state: record.key})
-              }
-            }
+                navigate(`/project-management/${record.key}`, {
+                  state: record.key,
+                });
+              },
+            };
           }}
         />
       </Col>

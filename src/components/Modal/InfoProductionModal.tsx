@@ -38,7 +38,7 @@ const InfoProductionModal = ({myProp: production}: any) => {
               label="Produce ID"
               name="produceId"
               required
-              initialValue={production.produceId}
+              initialValue={production.productionId}
             >
               <Input />
             </Form.Item>
@@ -88,21 +88,21 @@ const InfoProductionModal = ({myProp: production}: any) => {
             <Form.Item
               label="Total Product"
               name="total Product"
-              initialValue={production?.totalProduct}
+              initialValue={production?.totalProduct || "Not update information"}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Humidity"
               name="humidity"
-              initialValue={production?.humidity}
+              initialValue={production?.humidity || "Not update information"}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label="Drying Temperature"
               name="dryingTemperature"
-              initialValue={production?.dryingTemperature}
+              initialValue={production?.dryingTemperature || "Not update information"}
             >
               <Input />
             </Form.Item>

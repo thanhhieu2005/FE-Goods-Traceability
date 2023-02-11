@@ -7,10 +7,11 @@ export interface Harvest {
     totalHarvest?: number;
     ripeness?: number;
     state: number;
-    dateCompleted?: number;
+    dateCompleted?: string;
     moisture?: number;
-    // inspector?: User;
     inspector?: string;
+    temperature?: string;
+    projectCode: string;
 }
 
 export interface Transport {
@@ -25,6 +26,7 @@ export interface Transport {
     dateCompleted?: string;
     state: number;
     inspector?: string;
+    projectCode: string;
 }
 
 export interface WarehouseStorage {
@@ -38,12 +40,14 @@ export interface WarehouseStorage {
     outputDate?: string;
     state: number;
     inspector?: string;
+    projectCode: string;
 }
 
 export interface Production {
     key: string;
     projectId: string;
     productionId: string;
+    projectCode: string;
     totalInput?: number;
     factoryName?: string;
     totalProduct?: number;
@@ -52,5 +56,6 @@ export interface Production {
     dateCompleted?: string;
     expiredDate?: string;
     inspector?: string;
+    productName?: string;
     state: number;
 }

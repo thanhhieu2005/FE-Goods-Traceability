@@ -1,130 +1,129 @@
-import { Badge, Col } from 'antd';
-import Table, { ColumnsType } from 'antd/lib/table';
-import React from 'react';
+import { Badge, Col } from "antd";
+import Table, { ColumnsType } from "antd/lib/table";
+import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-
-interface Harvest {
-    key: string;
-    projectId: string;
-    projectCode: string;
-    totalHarvest?: number;
-    ripness?: number;
-    temperature?: number;
-    moisture?: number;
-    inspector: string;
-    dateCompleted?: string;
-    state: number;
-}
-
-const data: Harvest[] = [
-    {
-        key: '1234',
-        projectId: 'abc123',
-        projectCode: 'xyz123',
-        totalHarvest: 100,
-        ripness: 10,
-        temperature: 20,
-        moisture: 0.1,
-        inspector: "Tran Quoc Khanh",
-        dateCompleted: '29/2/2023',
-        state: 1,
-    }
-];
+import { Harvest } from "@/types/step_tracking";
+import { GetAllHarvestAPI } from "@/api/harvest/harvest_api";
 
 const HarvestManagement = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const columns: ColumnsType<Harvest> = [
-        {
-            title: "Harvest ID",
-            width: 100,
-            dataIndex: "key",
-            key: "harvestId",
-            fixed: "left",
-        },
-        {
-            title: "Project ID",
-            width: 100,
-            dataIndex: "projectId",
-            key: "projectId",
-            fixed: "left",
-        },
-        {
-            title: "Project Code",
-            width: 100,
-            dataIndex: "projectCode",
-            key: "projectCode",
-            fixed: "left",
-        },
-        {
-            title: "Inspector",
-            width: 100,
-            dataIndex: "inspector",
-            key: "inspector",
-            fixed: "left",
-        },
-        {
-            title: "Date Completed",
-            width: 100,
-            dataIndex: "dateCompleted",
-            key: "dateCompleted",
-            fixed: "left",
-        },
-        {
-            title: "State",
-            width: 100,
-            dataIndex: "state",
-            key: "state",
-            fixed: "left",
-            render: (value: number) =>
-              value == 1 ? (
-                <span>
-                  <Badge
-                    status="processing"
-                    color="yellow"
-                    style={{ paddingRight: "4px" }}
-                  />
-                  Pending
-                </span>
-              ) : value == 2 ? (
-                <span>
-                  <Badge status="success" style={{ paddingRight: "4px" }} />
-                  Completed
-                </span>
-              ) : (
-                <span>
-                  <Badge status="error" style={{ paddingRight: "4px" }} />
-                  Canceled
-                </span>
-              ),
-          },
-          {
-            title: "Edit",
-            key: "operation",
-            fixed: "right",
-            width: 100,
-            render: () => (
-              <div style={{cursor: "pointer"}}
-                onClick={() => {
-                    navigate("/harvest-management/id");
-                }}
-              >
-                <FormOutlined />
-              </div>
-            ),
-          },
-    ];
+  const [dataHarvests, setDataHarvests] = useState<Harvest[]>([]);
+
+  useEffect(() => {
+    const fetchAPI = GetAllHarvestAPI();
+    
+    fetchAPI.then((res: any) => {
+      console.log("res: ", res);
+      res?.data.map((element: any) => {
+        var harvest = {} as Harvest;
+        harvest.key = element._id;
+        harvest.harvestId = element._id;
+        harvest.projectId = element.projectId.projectId;
+        harvest.totalHarvest = element?.totalHarvest;
+        harvest.ripeness = element?.ripeness;
+        harvest.moisture = element?.moisture;
+        harvest.inspector = element.inspector.lastName + " " + element.inspector.firstName;
+        harvest.dateCompleted = element?.dateCompleted;
+        harvest.temperature = element?.temperature;
+        harvest.state = element.state;
+        setDataHarvests((prevArr) => [...prevArr, harvest]);
+      });
+    });
+  }, []);
+
+  console.log(dataHarvests);
+
+  const columns: ColumnsType<Harvest> = [
+    {
+      title: "Harvest ID",
+      width: 100,
+      dataIndex: "key",
+      key: "harvestId",
+      fixed: "left",
+    },
+    {
+      title: "Project ID",
+      width: 100,
+      dataIndex: "projectId",
+      key: "projectId",
+      fixed: "left",
+    },
+    {
+      title: "Inspector",
+      width: 100,
+      dataIndex: "inspector",
+      key: "inspector",
+      fixed: "left",
+    },
+    {
+      title: "Date Completed",
+      width: 100,
+      dataIndex: "dateCompleted",
+      key: "dateCompleted",
+      fixed: "left",
+    },
+    {
+      title: "State",
+      width: 100,
+      dataIndex: "state",
+      key: "state",
+      fixed: "left",
+      render: (value: number) =>
+        value == 1 ? (
+          <span>
+            <Badge
+              status="processing"
+              style={{ paddingRight: "4px" }}
+            />
+            Processing
+          </span>
+        ) : value == 2 ? (
+          <span>
+            <Badge status="success" style={{ paddingRight: "4px" }} />
+            Completed
+          </span>
+        ) : (
+          <span>
+            <Badge status="error" style={{ paddingRight: "4px" }} />
+            Canceled
+          </span>
+        ),
+    },
+    // {
+    //   title: "Edit",
+    //   key: "operation",
+    //   fixed: "right",
+    //   width: 100,
+    //   render: () => (
+    //     <div
+    //       style={{ cursor: "pointer" }}
+    //       onClick={() => {
+    //         navigate("/harvest-management/id");
+    //       }}
+    //     >
+    //       <FormOutlined />
+    //     </div>
+    //   ),
+    // },
+  ];
 
   return (
     <div>
-        <Col>
-            <div className='header-content'>Harvest Management</div>
-            <Table columns={columns} dataSource={data} scroll={{ x: 1300 }} />
-        </Col>
+      <Col>
+        <div className="header-content">Harvest Management</div>
+        <Table columns={columns} dataSource={dataHarvests} scroll={{ x: 1300 }} onRow = {(harvest, rowIndex) => {
+          return {
+            onClick: () => {
+              navigate(`/harvest-management/${harvest.harvestId}`, {state: harvest.harvestId})
+            }
+          }
+        }} />
+      </Col>
     </div>
-  )
-}
+  );
+};
 
-export default HarvestManagement
+export default HarvestManagement;
