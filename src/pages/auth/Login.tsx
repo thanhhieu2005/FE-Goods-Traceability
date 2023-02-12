@@ -23,6 +23,7 @@ const Login = () => {
   const handleSubmit = async (value: any) => {
     try {
       console.log(value);
+      
       const res = await axiosClient.post("/users/login", value);
 
       localStorage.setItem("token", res.data.token);

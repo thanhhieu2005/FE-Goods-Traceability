@@ -1,17 +1,17 @@
 import { axiosClient } from "@/services/axios";
 
-export const GetAllProjectAPI = async () => {
+export const GetAllWarehouseStorageAPI = async () => {
     try {
-
         const currentToken = localStorage.getItem('token');
 
         const res = await axiosClient.get(
-            "/project/",
+            "/warehouse-storage/",
             {
                 headers: { Authorization: `Bearer ${currentToken}` },
             }
         );
-        console.log("Test", res);
+        
+        console.log(res);
         return res;
     } catch (err) {
         console.log(err);
@@ -19,15 +19,14 @@ export const GetAllProjectAPI = async () => {
     }
 }
 
-export const GetProjectDetailByID = async (projectId: string) => {
+export const GetWarehouseDetailByIdAPI = async (warehouseStorageId: string) => {
     try {
-
         const currentToken = localStorage.getItem('token');
 
         const res = await axiosClient.get(
-            "/project/" + projectId,
+            "/warehouse-storage/" + warehouseStorageId,
             {
-                headers: { Authorization: `Bearer ${currentToken}` },
+                headers: { Authorization: `Bearer ${currentToken}`},
             }
         );
         console.log(res);
@@ -36,38 +35,18 @@ export const GetProjectDetailByID = async (projectId: string) => {
         console.log(err);
         return err;
     }
-};
+}
 
-export const CreateNewProject = async (value : any) => {
+export const UpdateWarehouseDetailByIdAPI = async (value: any, warehouseStorageId: string) => {
     try {
         const currentToken = localStorage.getItem('token');
 
-        console.log(currentToken);
-        
-        const res = await axiosClient.post(
-            "/project/",
-            value,
-            {
-                headers: { Authorization: `Bearer ${currentToken}` },
-            },
-        );
-        return res;
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-};
-
-export const UpdateProjectState = async (value: any, projectId: string) => {
-    try{
-        const currentToken = localStorage.getItem('token');
-
         const res = await axiosClient.patch(
-            "/project/" + projectId,
+            "/warehouse-storage/" + warehouseStorageId,
             value,
             {
                 headers: { Authorization: `Bearer ${currentToken}`},
-            },
+            }
         );
         console.log(res);
         return res;
@@ -75,4 +54,4 @@ export const UpdateProjectState = async (value: any, projectId: string) => {
         console.log(err);
         return err;
     }
-};
+}

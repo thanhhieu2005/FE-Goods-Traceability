@@ -1,20 +1,47 @@
-import { Button, Modal, Input, Form, Select } from "antd";
+import { Button, Modal, Input, Form, Select, Row } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import { CreateNewProject } from "@/api/system_admin/project_api";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 
 const CreateProjectForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const currentManagerInfo = useSelector(
+    (state: any) => state.authen.currentUserInfo
+  );
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleSubmitForm = async (value: any) => {
+    const manager = currentManagerInfo._id;
+
+    const finalValue = { ...value, manager: manager };
+    console.log(finalValue);
+
+    const result : any = await CreateNewProject(finalValue);
+
+    if(result?.status === 200) {
+      console.log("Tạo mới thành công")
+
+      successMessage("Create new project successfully!")
+
+      handleCreate();
+    } else {
+      console.log("Tạo mới thất bại");
+      errorMessage("Create new project failed!")
+    }
   };
 
   return (
@@ -25,8 +52,8 @@ const CreateProjectForm = () => {
       <Modal
         title="Create new Project"
         open={isModalOpen}
-        onOk={handleCreate}
-        onCancel={handleCancel}
+        // onOk={handleSubmitForm}
+        // onCancel={handleCancel}
         okText={"Create"}
         closable={false}
         width={640}
@@ -37,8 +64,13 @@ const CreateProjectForm = () => {
           justifyItems: "center",
           justifyContent: "center",
         }}
+        footer={null}
       >
-        <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+        <Form
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 16 }}
+          onFinish={(value) => handleSubmitForm(value)}
+        >
           <Form.Item
             label="Project Code"
             name="projectCode"
@@ -55,6 +87,33 @@ const CreateProjectForm = () => {
           >
             <Input />
           </Form.Item>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              width: "100%",
+            }}
+          >
+            <Row>
+              <Button
+                type="primary"
+                danger
+                style={{
+                  marginRight: "8px"
+                }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                // disabled = {email && password ? false : true}
+              >
+                Create
+              </Button>
+            </Row>
+          </div>
         </Form>
       </Modal>
     </>

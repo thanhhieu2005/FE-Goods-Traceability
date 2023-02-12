@@ -1,48 +1,49 @@
 import { Badge, Col } from "antd";
 import Table, { ColumnsType } from "antd/lib/table";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { Production } from "@/types/step_tracking";
+import { BadgeByState } from "@/components/Tag/StateTag";
+import { GetAllProduceAPI } from "@/api/produce_api";
+import { parseProductionData } from "@/utils/parseData";
 
-interface Produce {
-  key: string;
-  projectId: string;
-  projectCode: string;
-  totalInput?: number;
-  factory?: string;
-  produceName?: string;
-  inspector?: string;
-  dateCompleted?: string;
-  totalProduct?: number;
-  humidity?: number;
-  dryingTemperature?: number;
-  expiredDate?: string;
-  state: number;
-}
+// interface Produce {
+//   key: string;
+//   projectId: string;
+//   projectCode: string;
+//   totalInput?: number;
+//   factory?: string;
+//   produceName?: string;
+//   inspector?: string;
+//   dateCompleted?: string;
+//   totalProduct?: number;
+//   humidity?: number;
+//   dryingTemperature?: number;
+//   expiredDate?: string;
+//   state: number;
+// }
 
-const data: Produce[] = [
-  {
-    key: "123",
-    projectId: "abc123",
-    projectCode: "xyz123",
-    totalInput: 100,
-    factory: "NTH Production",
-    produceName: "NTH Coffee",
-    inspector: "Tran Quoc Khanh",
-    dateCompleted: "1/9/2023",
-    totalProduct: 20,
-    humidity: 10,
-    dryingTemperature: 80,
-    expiredDate: "1/9/2024",
-    state: 1,
-  },
-];
+const data: Production[] = [];
 
 function ProduceManagement() {
   const navigate = useNavigate();
 
-  const columns: ColumnsType<Produce> = [
+  const [dataProduction, setDataProduction] = useState<Production[]>([]);
+
+  useEffect(() => {
+    const fetchAPI = GetAllProduceAPI();
+
+    fetchAPI.then((res: any) => {
+      res?.data.map((element: any) => {
+        const production = parseProductionData(element) as Production;
+        setDataProduction((prevArr) => [...prevArr, production]);
+      });
+    });
+  }, []);
+
+  const columns: ColumnsType<Production> = [
     {
       title: "Harvest ID",
       width: 100,
@@ -84,50 +85,43 @@ function ProduceManagement() {
       dataIndex: "state",
       key: "state",
       fixed: "left",
-      render: (value: number) =>
-        value == 1 ? (
-          <span>
-            <Badge
-              status="processing"
-              color="yellow"
-              style={{ paddingRight: "4px" }}
-            />
-            Pending
-          </span>
-        ) : value == 2 ? (
-          <span>
-            <Badge status="success" style={{ paddingRight: "4px" }} />
-            Completed
-          </span>
-        ) : (
-          <span>
-            <Badge status="error" style={{ paddingRight: "4px" }} />
-            Canceled
-          </span>
-        ),
+      render: (value: number) => BadgeByState(value),
     },
-    {
-      title: "Edit",
-      key: "operation",
-      fixed: "right",
-      width: 100,
-      render: () => (
-        <div
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            navigate("/produce-management/id");
-          }}
-        >
-          <FormOutlined />
-        </div>
-      ),
-    },
+    // {
+    //   title: "Edit",
+    //   key: "operation",
+    //   fixed: "right",
+    //   width: 100,
+    //   render: () => (
+    //     <div
+    //       style={{ cursor: "pointer" }}
+    //       onClick={() => {
+    //         navigate("/produce-management/id");
+    //       }}
+    //     >
+    //       <FormOutlined />
+    //     </div>
+    //   ),
+    // },
   ];
   return (
     <div>
       <Col>
         <div className="header-content">Production Management</div>
-        <Table columns={columns} dataSource={data} scroll={{ x: 1300 }} />
+        <Table
+          columns={columns}
+          dataSource={dataProduction}
+          scroll={{ x: 1300 }}
+          onRow={(production, rowIndex) => {
+            return {
+              onClick: () => {
+                navigate(`/produce-management/${production.productionId}`, {
+                  state: production.productionId,
+                });
+              },
+            };
+          }}
+        />
       </Col>
     </div>
   );

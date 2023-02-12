@@ -3,3 +3,5 @@ export const formatDateTime = (string: string) => {
 
     return date.toLocaleDateString();
 };
+
+export const dateFormat = "YYYY/MM/DD";

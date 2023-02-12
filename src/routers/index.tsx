@@ -92,7 +92,7 @@ const Routers = () => {
                     element={<HarvestManagement />}
                   />
                   <Route
-                    path="/harvest-management/id"
+                    path="/harvest-management/:harvestId"
                     element={<HarvestDetail />}
                   />
                 </>
@@ -107,7 +107,7 @@ const Routers = () => {
                     element={<TransportManagement />}
                   />
                   <Route
-                    path="/transport-management/id"
+                    path="/transport-management/:transportId"
                     element={<TransportDetail />}
                   />
                 </>
@@ -122,11 +122,11 @@ const Routers = () => {
                     element={<WarehouseManagement />}
                   />
                   <Route
-                    path="/warehouse-management/id"
+                    path="/warehouse-management/:warehouseStorageId"
                     element={<WarehouseDetail />}
                   />
                 </>
-              ) : userName.department === 4 ? (
+              ) : userName.department === 5 ? (
                 <>
                   <Route
                     path="/"
@@ -137,7 +137,7 @@ const Routers = () => {
                     element={<ProduceManagement />}
                   />
                   <Route
-                    path="/produce-management/id"
+                    path="/produce-management/:productionId"
                     element={<ProduceDetail />}
                   />
                 </>
