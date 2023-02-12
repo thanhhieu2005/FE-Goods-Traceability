@@ -5,7 +5,7 @@ import { axiosClient } from './services/axios';
 import { useDispatch } from 'react-redux';
 import { updateCurrentUserInfo } from './redux/authenSlice';
 import { useEffect } from 'react';
-import React from 'react';
+
 
 function App() {
   const currentToken = localStorage.getItem('token');

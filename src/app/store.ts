@@ -1,12 +1,9 @@
-import accountReducer from "@/features/connectWallet";
-import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import authenSlice from "./authenSlice";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 
 export const store = configureStore({
-    reducer: {
-        authen: authenSlice,
-        account: accountReducer,
-    },
+  reducer: {
+    
+  },
 });
 
 export type AppDispatch = typeof store.dispatch;
