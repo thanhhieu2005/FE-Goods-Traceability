@@ -7,12 +7,6 @@ import {
   StateComponent,
 } from "@/pages/common/CheckProjectStatus";
 import { ProjectDetailInterface } from "@/types/project_detail";
-import {
-  Harvest,
-  Production,
-  Transport,
-  WarehouseStorage,
-} from "@/types/step_tracking";
 import { formatDateTime } from "@/utils/formatDateTime";
 import { FormOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row } from "antd";
@@ -24,8 +18,11 @@ import InfoProductionModal from "../../../components/Modal/InfoProductionModal";
 import InfoTransportModal from "../../../components/Modal/InfoTransportModal";
 import InfoWarehouseModal from "../../../components/Modal/InfoWarehouseModal";
 import "./ProjectDetail.scss";
-import {StateTag} from "@/components/Tag/StateTag";
+import { StateTag } from "@/components/Tag/StateTag";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import moment from "moment";
+import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
+import { parseProjectData } from "@/utils/parseData";
 
 const layout = {
   labelCol: { span: 6 },
@@ -45,92 +42,9 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     GetProjectDetailByID(projectId).then((res: any) => {
-      res?.data.map((element: any) => {
-        var projectDetail = {} as ProjectDetailInterface;
-        var harvest = {} as Harvest;
-        var transport = {} as Transport;
-        var warehouseStorage = {} as WarehouseStorage;
-        var production = {} as Production;
+      const projectDetail = parseProjectData(res.data);
 
-        // mapping data to harvest interface
-        harvest.key = element.harvest._id;
-        harvest.projectId = element.harvest.projectId;
-        harvest.harvestId = element.harvest._id;
-        harvest.totalHarvest = element.harvest?.totalHarvest;
-        harvest.ripeness = element.harvest?.ripeness;
-        harvest.state = element.harvest.state;
-        harvest.moisture = element.harvest?.moisture;
-        harvest.dateCompleted = element.harvest?.dateCompleted;
-        harvest.inspector =
-          element.harvest?.inspector.lastName +
-          " " +
-          element.harvest?.inspector.firstName;
-
-        // mapping data to transport interface
-        transport.key = element.shipping._id;
-        transport.projectId = element.shipping.projectId;
-        transport.transportId = element.shipping._id;
-        transport.totalInput = element.shipping?.totalInput;
-        transport.transportName = element.shipping?.transport;
-        transport.vehicleType = element.shipping?.vihicleType;
-        transport.numberOfVehicle = element.shipping?.numberOfVehicle;
-        transport.dateExpected = element.shipping?.dateExpected;
-        transport.dateCompleted = element.shipping?.dateCompleted;
-        transport.state = element.shipping?.state;
-        transport.inspector =
-          element.shipping?.inspector.lastName +
-          " " +
-          element.shipping?.inspector.firstName;
-
-        // mapping data to Warehouse Storage interface
-        warehouseStorage.key = element.warehouseStorage._id;
-        warehouseStorage.projectId = element.warehouseStorage.projectId;
-        warehouseStorage.warehouseStorageId = element.warehouseStorage._id;
-        warehouseStorage.totalInput = element.warehouseStorage?.totalInput;
-        warehouseStorage.totalExport = element.warehouseStorage?.totalExport;
-        warehouseStorage.inputDate = element.warehouseStorage?.inputDate;
-        warehouseStorage.outputDate = element.warehouseStorage?.outputDate;
-        warehouseStorage.inspector =
-          element.warehouseStorage?.inspector.lastName +
-          " " +
-          element.warehouseStorage?.inspector.firstName;
-        warehouseStorage.state = element.warehouseStorage.state;
-        warehouseStorage.warehouseName =
-          element.warehouseStorage?.warehouseStorage;
-
-        // mapping data to Production interface
-        production.key = element.produce._id;
-        production.productionId = element.produce._id;
-        production.projectId = element.produce.projectId;
-        production.totalInput = element.produce?.totalInput;
-        production.factoryName = element.produce?.factory;
-        production.totalProduct = element.produce?.totalProduct;
-        production.humidity = element.produce?.humidity;
-        production.dryingTemperature = element.produce?.dryingTemperature;
-        production.dateCompleted = element.produce?.dateCompleted;
-        production.expiredDate = element.produce?.expiredDate;
-        production.inspector = warehouseStorage.inspector =
-          element.produce?.inspector.lastName +
-          " " +
-          element.produce?.inspector.firstName;
-        production.state = element.produce?.state;
-
-        // mapping data to project detail interface
-        projectDetail.key = element._id;
-        projectDetail.projectId = element.projectId;
-        projectDetail.projectName = element.projectName;
-        projectDetail.projectCode = element.projectCode;
-        projectDetail.state = element.state;
-        projectDetail.dateCreated = element.dateCreated;
-        projectDetail.dateCompleted = element?.dateCompleted;
-        projectDetail.manager =
-          element.manager.lastName + " " + element.manager.firstName;
-        projectDetail.harvest = harvest;
-        projectDetail.transport = transport;
-        projectDetail.warehouseStorage = warehouseStorage;
-        projectDetail.production = production;
-        setDataProject(projectDetail);
-      });
+      setDataProject(projectDetail);
     });
   }, [projectId]);
 
@@ -138,18 +52,33 @@ const ProjectDetail = () => {
 
   const handleUpdateProjectState = async (projectId: string, state: number) => {
     const value = { state: state };
+
+    disabled = true;
+    setComponentDisabled(disabled);
+
     const res: any = await UpdateProjectState(value, projectId);
 
-    if (res?.status === 200) {
-      return 200;
+    console.log(res);
+
+    const newInfoProject = parseProjectData(res.data.project);
+
+    if (res.status === 200) {
+      state == 2
+        ? successMessage("Project has been Completed")
+        : successMessage("Project has been Canceled");
+
+      setDataProject(newInfoProject);
+
+      // addTrackingBlock("test", "testProject"); // test
+    } else {
+      errorMessage("Update Failed");
     }
-    return 400;
   };
 
   return (
     <Col>
       <div className="header-content">Project Detail</div>
-      <div className="content">
+      <div className="main-content">
         {dataProject ? (
           <Col>
             <p className="title"> Project Information </p>
@@ -171,7 +100,7 @@ const ProjectDetail = () => {
             ) : (
               <StateTag myProp={dataProject.state}></StateTag>
             )}
-            <div className="main-content">
+            <div>
               <Form {...layout}>
                 <Form.Item
                   label="Project Id"
@@ -193,7 +122,7 @@ const ProjectDetail = () => {
                   name="projectName"
                   initialValue={dataProject?.projectName}
                 >
-                  <Input disabled={componentDisabled} />
+                  <Input disabled={true} />
                 </Form.Item>
 
                 <Form.Item
@@ -206,7 +135,7 @@ const ProjectDetail = () => {
                 <Form.Item
                   label="Date Created"
                   name="dateCreated"
-                  initialValue={formatDateTime(dataProject?.dateCreated)}
+                  initialValue={moment(dataProject?.dateCreated)}
                 >
                   <Input disabled={true} />
                 </Form.Item>
@@ -215,8 +144,8 @@ const ProjectDetail = () => {
                   name="dateCompleted"
                   initialValue={
                     dataProject?.dateCompleted
-                      ? formatDateTime(dataProject?.dateCompleted)
-                      : "Pending"
+                      ? moment(dataProject?.dateCompleted)
+                      : null
                   }
                 >
                   <Input disabled={true} />
@@ -257,7 +186,7 @@ const ProjectDetail = () => {
                   </Row>
                 </Form.Item>
                 {componentDisabled ? (
-                  StateComponent(dataProject?.state)
+                  StateComponent(dataProject.state)
                 ) : (
                   <Form.Item label="Update new State" name="newState">
                     <Row>
@@ -272,16 +201,7 @@ const ProjectDetail = () => {
                         onClick={async () => {
                           disabled = true;
                           setComponentDisabled(disabled);
-                          const res = await handleUpdateProjectState(
-                            dataProject?.projectId,
-                            3
-                          );
-
-                          if (res === 200) {
-                            successMessage("Prject has been Canceled");
-                          } else {
-                            errorMessage("Update Failed");
-                          }
+                          handleUpdateProjectState(dataProject?.projectId, 3);
                         }}
                       >
                         Cancel
@@ -296,10 +216,10 @@ const ProjectDetail = () => {
                         }}
                         onClick={async () => {
                           if (
-                            dataProject.harvest.state == 1 ||
-                            dataProject.transport.state == 1 ||
-                            dataProject.warehouseStorage.state == 1 ||
-                            dataProject.production.state == 1
+                            dataProject.harvest.state === 1 ||
+                            dataProject.transport.state === 1 ||
+                            dataProject.warehouseStorage.state === 1 ||
+                            dataProject.production.state === 1
                           ) {
                             errorMessage(
                               "Other steps have not been completed!"
@@ -307,16 +227,7 @@ const ProjectDetail = () => {
                           } else {
                             disabled = true;
                             setComponentDisabled(disabled);
-                            const res = await handleUpdateProjectState(
-                              dataProject?.projectId,
-                              2
-                            );
-
-                            if (res === 200) {
-                              successMessage("Prject has been Completed");
-                            } else {
-                              errorMessage("Update Failed");
-                            }
+                            handleUpdateProjectState(dataProject.projectId, 2);
                           }
                         }}
                       >
@@ -343,7 +254,7 @@ const ProjectDetail = () => {
                   >
                     Cancel
                   </Button>
-                  <Button
+                  {/* <Button
                     className="btn-save"
                     type="primary"
                     // icon={<FormOutlined />}
@@ -355,7 +266,7 @@ const ProjectDetail = () => {
                     size={"large"}
                   >
                     Save
-                  </Button>
+                  </Button> */}
                 </Row>
               </div>
             </div>

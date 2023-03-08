@@ -13,20 +13,24 @@
     padding-right: 48px;
 }
 
-.layout-btn-save {
-    display: flex;
-    justify-content: center;
-    margin-top: 72px;
-    .btn-save {
-        width: 100px;
-        border-radius: 4px;
-        font-size: 16px;
-        font-weight: 400;
-    }
-    .btn-cancel {
-        width: 100px;
-        border-radius: 4px;
-        font-size: 16px;
-        font-weight: 400;
+.main-content {
+    background-color: white;
+    position: relative;
+    .layout-btn-save {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 72px;
+        .btn-save {
+            width: 100px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        .btn-cancel {
+            width: 100px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 400;
+        }
     }
 }

@@ -1,76 +1,104 @@
 .img {
-    background-color: #1C6758;
+    background-color: #000e1c;
     height: 100vh;
 }
 
-.content {
-    background-color: #fff;
+.authen-page {
+    background-color: #000e1c;
     height: 100vh;
+}
+
+.layout-authen {
     position: relative;
+    height: 100vh;
+    background-color: white;
     .content-form {
-        vertical-align: middle;
-        margin: 0;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        width: 500px;
     }
 }
 
 .text-title {
-    color: #1C6758;
+    color: #1990ff;
     font-weight: 700;
-    margin-bottom: 50px;
     font-size: 36px;
+    
 }
 
-.form-control {
-    color: #1C6758 !important;
-    border-radius: 8px !important;
-}
-
-#common-button {
-    background-color: #1C6758;
-    color: #fff;
-    font-size: 18px;
-    border-radius: 4px;
-    justify-content: center;
+.center-content {
     display: flex;
-    font-weight: 500;
-    border-color: #1C6758;
+    justify-content: center;
 }
 
-.ant-input.myInput.custom:hover {
-    border-color: #1C6758;
-    box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
-    border-right-width: 1px;
-    outline: 0;
+.form-authen {
+    padding-top: 32px;
+    .ant-form-item-label {
+        & > label {
+         font-size: 16px;
+         font-weight: 500;
+         color: #000e1c;
+        }
+     }
 }
 
-.ant-input.myInput.custom:focus {
-    border-color: #1C6758;
-    box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
-    border-right-width: 1px;
-    outline: 0;
+.text-grey {
+    color: #86A3B8;
+    font-size: 16px;
 }
 
-.ant-input-affix-wrapper.myInput.custom:hover {
-    border-color: #1C6758;
-    box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
-    border-right-width: 1px;
-    outline: 0;
-}
 
-.ant-input-affix-wrapper-focused.myInput.custom {
-    border-color: #1C6758;
-    box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
-    border-right-width: 1px;
-    outline: 0;
-    .ant-input-affix-wrapper.myInput.custom:focus {
-        border-color: #1C6758;
-        box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
-        border-right-width: 1px;
-        outline: 0;
-    }
-}
+
+// .form-control {
+//     color: #1C6758 !important;
+//     border-radius: 8px !important;
+// }
+
+// #common-button {
+//     background-color: #1C6758;
+//     color: #fff;
+//     font-size: 18px;
+//     border-radius: 4px;
+//     justify-content: center;
+//     display: flex;
+//     font-weight: 500;
+//     border-color: #1C6758;
+// }
+
+// .ant-input.myInput.custom:hover {
+//     // border-color: #1C6758;
+//     box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
+//     border-right-width: 1px;
+//     outline: 0;
+// }
+
+// .ant-input.myInput.custom:focus {
+//     // border-color: #1C6758;
+//     box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
+//     border-right-width: 1px;
+//     outline: 0;
+// }
+
+// .ant-input-affix-wrapper.myInput.custom:hover {
+//     // border-color: #1C6758;
+//     box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
+//     border-right-width: 1px;
+//     outline: 0;
+// }
+
+// .ant-input-affix-wrapper-focused.myInput.custom {
+//     // border-color: #1C6758;
+//     box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
+//     border-right-width: 1px;
+//     outline: 0;
+//     .ant-input-affix-wrapper.myInput.custom:focus {
+//         // border-color: #1C6758;
+//         box-shadow: 0 0 0 2px rgba(28, 103, 88, 0.1);
+//         border-right-width: 1px;
+//         outline: 0;
+//     }
+// }
+
 

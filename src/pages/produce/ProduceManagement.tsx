@@ -36,6 +36,7 @@ function ProduceManagement() {
     const fetchAPI = GetAllProduceAPI();
 
     fetchAPI.then((res: any) => {
+      console.log("hieu", res);
       res?.data.map((element: any) => {
         const production = parseProductionData(element) as Production;
         setDataProduction((prevArr) => [...prevArr, production]);

@@ -10,7 +10,7 @@ export interface Harvest {
     dateCompleted?: string;
     moisture?: number;
     inspector?: string;
-    temperature?: string;
+    temperature?: number;
     projectCode: string;
 }
 

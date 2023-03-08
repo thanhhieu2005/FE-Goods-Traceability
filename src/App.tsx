@@ -14,6 +14,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = "HK Solution"
     if (currentToken) {
       const getUser = async () => {
         const refreshUserInfo = await axiosClient.get('/users/me', {

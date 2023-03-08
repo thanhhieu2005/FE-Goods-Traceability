@@ -12,7 +12,7 @@ export const LayoutCustom = () => {
   return (
     <Layout className="my-layout">
       <HeaderCustom />
-      <Layout>
+      <Layout style={{minHeight: "100vh"}}>
         <Sider
           width={300}
           theme = 'light'

@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import { StateComponent } from "@/pages/common/CheckProjectStatus";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import moment from "moment";
+import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
 
 const layout = {
   labelCol: { span: 6 },
@@ -37,7 +38,6 @@ const TransportDetail = () => {
       setDataTransport(transport);
     });
   }, []);
-
 
   const handleUpdateTransportState = async (
     transportId: string,
@@ -86,7 +86,7 @@ const TransportDetail = () => {
   return (
     <Col>
       <div className="header-content">Transport Detail</div>
-      <div className="content">
+      <div className="main-content">
         {dataTransport ? (
           <Col>
             <p className="title">Transport Information</p>
@@ -141,7 +141,7 @@ const TransportDetail = () => {
                   name="dateCompleted"
                   initialValue={
                     dataTransport?.dateCompleted
-                      ? formatDateTime(dataTransport?.dateCompleted)
+                      ? moment(dataTransport?.dateCompleted)
                       : ""
                   }
                 >
@@ -202,7 +202,11 @@ const TransportDetail = () => {
                 <Form.Item
                   label="Date Expected"
                   name="dateExpected"
-                  initialValue={moment(dataTransport.dateExpected)}
+                  initialValue={
+                    dataTransport.dateExpected !== undefined
+                      ? moment(dataTransport.dateExpected)
+                      : null
+                  }
                 >
                   {componentDisabled ? (
                     <Input />
@@ -232,12 +236,10 @@ const TransportDetail = () => {
                           );
 
                           const transport = parseTransportData(
-                            res.data.shippingPop
+                            res.data.shipping
                           );
 
                           setDataTransport(transport);
-
-                          console.log(dataTransport);
 
                           if (res?.status === 200) {
                             successMessage("Prject has been Canceled");
@@ -269,15 +271,14 @@ const TransportDetail = () => {
                             );
 
                             const transport = parseTransportData(
-                              res.data.shippingPop
+                              res.data.shipping
                             );
 
                             setDataTransport(transport);
 
-                            console.log(dataTransport);
-
                             if (res?.status === 200) {
                               successMessage("This Step has been Completed");
+                              addTrackingBlock("test2", "contentTransport"); // test2
                             } else {
                               errorMessage("Update Failed");
                             }

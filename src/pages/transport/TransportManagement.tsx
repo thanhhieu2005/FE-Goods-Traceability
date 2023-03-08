@@ -52,13 +52,13 @@ const TransportManagement = () => {
       key: "inspector",
       fixed: "left",
     },
-    // {
-    //   title: "Date Completed",
-    //   width: 100,
-    //   dataIndex: "dateCompleted",
-    //   key: "dateCompleted",
-    //   fixed: "left",
-    // },
+    {
+      title: "Date Completed",
+      width: 100,
+      dataIndex: "dateCompleted",
+      key: "dateCompleted",
+      fixed: "left",
+    },
     {
       title: "State",
       width: 100,

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUserInfo } from "../../redux/authenSlice";
 import { axiosClient } from "../../services/axios";
 // import { addListener } from "process";
+import logo from "../../assets/images/img-logo.png";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Login = () => {
   const handleSubmit = async (value: any) => {
     try {
       console.log(value);
-      
+
       const res = await axiosClient.post("/users/login", value);
 
       localStorage.setItem("token", res.data.token);
@@ -39,69 +40,79 @@ const Login = () => {
   };
 
   return (
-    <Row>
-      <Col span={12} className="img"></Col>
-      <Col span={12} className="content">
-        <Col className="content-form">
-          <h2 className="text-title">Sign In with HK Solution</h2>
-          <Form layout="vertical" onFinish={(value) => handleSubmit(value)}>
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                {
-                  message: "Please input your email!",
-                },
-              ]}
-            >
-              <Input
-                className="myInput custom"
-                placeholder="Enter your email"
-                size="large"
-                name="email"
-              />
-            </Form.Item>
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                {
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <Input.Password
-                className="myInput custom"
-                placeholder="Enter your password"
-                size="large"
-                name="pwd"
-              />
-            </Form.Item>
-            <Button
-              block
-              id="common-button"
-              size="large"
-              htmlType="submit"
-              // disabled = {email && password ? false : true}
-            >
-              LOGIN
-            </Button>
-          </Form>
-          <Link
-            to="/"
-            className="forgot-password"
-            style={{
-              color: "#1C6758",
-              fontSize: "12px",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            Forgot Password?
-          </Link>
+    <div className="authen-page">
+      <Row>
+        <Col span={14} className="background"></Col>
+        <Col span={10}>
+          <div className="layout-authen">
+            <Col className="content-form">
+              <div className="center-content"><img src={logo} /></div>
+              <div className="text-title center-content">Welcome Back</div>
+              <div className="form-authen">
+                <Form layout="vertical" onFinish={(value) => handleSubmit(value)}>
+                  <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[
+                      {
+                        message: "Please input your email!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      className="myInput custom"
+                      placeholder="Enter your email"
+                      size="large"
+                      name="email"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                      {
+                        message: "Please input your password!",
+                      },
+                    ]}
+                  >
+                    <Input.Password
+                      className="myInput custom"
+                      placeholder="Enter your password"
+                      size="large"
+                      name="pwd"
+                    />
+                  </Form.Item>
+                  <Link
+                    to="/forgot-password"
+                    className="forgot-password"
+                    style={{
+                      color: "#1990ff",
+                      fontSize: "12px",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Forgot Password?
+                  </Link>
+                  <Button
+                    block
+                    // id="common-button"
+                    style={{ marginTop: "16px" }}
+                    type="primary"
+                    size="large"
+                    htmlType="submit"
+                    // disabled = {email && password ? false : true}
+                  >
+                    LOGIN
+                  </Button>
+                </Form>
+              </div>
+            </Col>
+          </div>
         </Col>
-      </Col>
-    </Row>
+      </Row>
+    </div>
   );
 };
 

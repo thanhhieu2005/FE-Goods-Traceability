@@ -1,5 +1,7 @@
+import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
 import { GetProduceDetailByIdAPI, UpdateProduceAPI } from "@/api/produce_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import { StateTagStep } from "@/components/Tag/StateTag";
 import { Production } from "@/types/step_tracking";
 import { dateFormat, formatDateTime } from "@/utils/formatDateTime";
 import { parseProductionData } from "@/utils/parseData";
@@ -39,7 +41,9 @@ function ProduceDetail() {
 
     const res: any = await UpdateProduceAPI(valueState, productionId);
 
-    const newProduction = parseProductionData(res.data.produceSupervision);
+    console.log("asda", res);
+
+    const newProduction = parseProductionData(res.data.produce);
 
     setDataProduction(newProduction);
 
@@ -47,6 +51,7 @@ function ProduceDetail() {
       state === 2
         ? successMessage("This Step has been Completed")
         : successMessage("This Step has been Canceled");
+      state === 2 ? addTrackingBlock("test4", "content") : null; // test 4
     } else {
       errorMessage("Upload Failed");
     }
@@ -63,7 +68,7 @@ function ProduceDetail() {
 
     if (result.status === 200) {
       const newProduction: Production = parseProductionData(
-        result.data.produceSupervision
+        result.data.produce
       );
 
       setDataProduction(newProduction);
@@ -89,23 +94,27 @@ function ProduceDetail() {
 
   return (
     <Col>
-      <div className="header-content">Transport Detail</div>
-      <div className="content">
+      <div className="header-content">Production Detail</div>
+      <div className="main-content">
         {dataProduction ? (
           <Col>
-            <p className="title">Transport Information</p>
-            <div className="btn-update">
-              <Button
-                type="primary"
-                icon={<FormOutlined />}
-                onClick={() => {
-                  disabled = false;
-                  setComponentDisabled(disabled);
-                }}
-              >
-                Update
-              </Button>
-            </div>
+            <p className="title">Production Information</p>
+            {dataProduction.state === 1 ? (
+              <div className="btn-update">
+                <Button
+                  type="primary"
+                  icon={<FormOutlined />}
+                  onClick={() => {
+                    disabled = false;
+                    setComponentDisabled(disabled);
+                  }}
+                >
+                  Update
+                </Button>
+              </div>
+            ) : (
+              <StateTagStep myProp={dataProduction.state}></StateTagStep>
+            )}
             <div className="main-content">
               <Form {...layout} disabled={true}>
                 <Form.Item
@@ -139,7 +148,11 @@ function ProduceDetail() {
                 <Form.Item
                   label="dateCompleted"
                   name="dateCompleted"
-                  initialValue={dataProduction.dateCompleted}
+                  initialValue={
+                    dataProduction?.dateCompleted
+                      ? moment(dataProduction?.dateCompleted)
+                      : ""
+                  }
                 >
                   <Input />
                 </Form.Item>
@@ -168,13 +181,13 @@ function ProduceDetail() {
                 >
                   <Input />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                   label="Product Name"
-                  name="productName"
+                  name="factory"
                   initialValue={dataProduction.productName}
                 >
                   <Input />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item
                   label="Total Product"
                   name="totalProduct"
@@ -191,7 +204,7 @@ function ProduceDetail() {
                 </Form.Item>
                 <Form.Item
                   label="Drying Temperature"
-                  name="dryingTeperature"
+                  name="dryingTemperature"
                   initialValue={dataProduction.dryingTemperature}
                 >
                   <Input />
@@ -199,7 +212,11 @@ function ProduceDetail() {
                 <Form.Item
                   label="Expired Date"
                   name="expiredDate"
-                  initialValue={moment(dataProduction.expiredDate)}
+                  initialValue={
+                    dataProduction.expiredDate !== undefined
+                      ? moment(dataProduction.expiredDate)
+                      : null
+                  }
                 >
                   <DatePicker style={{ width: "70%" }} format={dateFormat} />
                 </Form.Item>
@@ -216,9 +233,11 @@ function ProduceDetail() {
                           borderRadius: "6px",
                         }}
                         danger
-                        onClick={async () =>
-                          handleUpdateState(dataProduction.productionId, 3)
-                        }
+                        onClick={async () => {
+                          disabled = true;
+                          setComponentDisabled(disabled);
+                          handleUpdateState(dataProduction.productionId, 3);
+                        }}
                       >
                         Cancel
                       </Button>
@@ -233,6 +252,8 @@ function ProduceDetail() {
                         onClick={async () => {
                           const check = checkCanBeCompleted(dataProduction);
                           if (check) {
+                            disabled = true;
+                            setComponentDisabled(disabled);
                             await handleUpdateState(
                               dataProduction.productionId,
                               2

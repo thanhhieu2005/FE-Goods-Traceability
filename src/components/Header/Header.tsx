@@ -11,6 +11,7 @@ import { checkRole } from "@/utils/checkRole";
 import { connect } from "../../features/connectWalletAPI";
 import { selectAccount } from "@/features/connectWallet";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
+import logo from "../../assets/images/img-logo.png";
 
 const { Header } = Layout;
 
@@ -47,15 +48,13 @@ export const HeaderCustom: React.FC = () => {
 
   const role = checkRole(userName.role);
 
-
   const fetch = useCallback(() => {
     dispatch(connect());
-  }, [])
+  }, []);
 
   useEffect(() => {
     fetch();
-  }, [fetch])
-
+  }, [fetch]);
 
   // useEffect(() => {
 
@@ -98,29 +97,32 @@ export const HeaderCustom: React.FC = () => {
   return (
     <Header
       className="site-layout-sub-header-background"
-      style={{
-        padding: 0,
-        // background: "#1C6758",
-        lineHeight: 0,
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-      }}
+      style={{ padding: "0" }}
     >
-      <div
+      <Row
         style={{
-          marginRight: "16px",
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
+          justifyContent: "space-between",
         }}
       >
-        <span className="item-header item-role"> {role} </span>
-        <span className="item-header">Hi, {userName.firstName}</span>
-        <Dropdown overlay={menu} placement="bottomRight">
-          <Avatar size="large" icon={<UserOutlined />} />
-        </Dropdown>
-      </div>
+        <div>
+          <Row style={{ display: "flex", alignItems: "center" }}>
+            <img style={{ width: "48px", margin: "0 12px", }} src={logo} />
+            <div className="app-name">HK Solution</div>
+          </Row>
+        </div>
+        <div
+          style={{
+            marginRight: "16px",
+            gap: 12,
+          }}
+        >
+          <span className="item-header item-role"> {role} </span>
+          <span className="item-header">Hi, {userName.firstName}</span>
+          <Dropdown overlay={menu} placement="bottomRight">
+            <Avatar size="large" icon={<UserOutlined />} />
+          </Dropdown>
+        </div>
+      </Row>
     </Header>
   );
 };

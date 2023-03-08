@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./MenuApp.scss";
 import { useSelector } from "react-redux";
 import { AppstoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -77,45 +76,28 @@ export const MenuApp = () => {
 
   if (userName.role == 1) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Account", "/techAd-account-management"),
-        getItem("Farm", "/farm-management"),
-      ]),
+      getItem("Account Management", "/techAd-account-management"),
+      getItem("Farm Management", "/farm-management"),
     ];
   } else if (userName.role == 2) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Batch/ Project", "/project-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Batch/ Project Management", "/project-management"),
     ];
   } else if (userName.role === 4 && userName.department ===2) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Harvest", "/harvest-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Harvest Management", "/harvest-management"),
     ];
   } else if (userName.role === 4 && userName.department === 3) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Transport", "/transport-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Transport Management", "/transport-management"),
     ];
   } else if (userName.role == 4 && userName.department === 4) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Warehouse", "/warehouse-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Warehouse Management", "/warehouse-management"),
     ];
   } else if (userName.role == 4 && userName.department === 5) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Pruduction", "/produce-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Pruduction Management", "/produce-management"),
     ];
   }
   
@@ -124,8 +106,8 @@ export const MenuApp = () => {
     <Menu
       onClick={onClick}
       // style={{ width: 256 }}
+      // defaultOpenKeys={["sub1"]}
       selectedKeys={[path]}
-      defaultOpenKeys={["sub1"]}
       mode="inline"
       items={items}
     ></Menu>
