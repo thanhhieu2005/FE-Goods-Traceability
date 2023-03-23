@@ -1,28 +1,31 @@
-import React from "react";
-import { Table, Col, Row } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Col } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
 import "../../common.scss"
 import CreateAccountForm from "./CreateAccountForm";
+import { useNavigate } from "react-router-dom";
+import UserManagementService from "@/api/admin_tech/user_management_service";
+import { ListUserInfo } from "@/types/user";
+import { parseListUserInfo } from "@/utils/parseData";
 
-interface UserInfo {
-  key: string;
-  fullName: string;
-  walletAddress: string;
-  phoneNumber: string;
-  role: number;
-  address: string;
-  email: string;
-  department?: number;
-}
 
-const columns: ColumnsType<UserInfo> = [
+const columns: ColumnsType<ListUserInfo> = [
+  {
+    title: "Email",
+    width: 100,
+    dataIndex: "email",
+    key: "email",
+    fixed: "left",
+    align: 'center',
+  },
   {
     title: "Full Name",
     width: 100,
     dataIndex: "fullName",
     key: "fullName",
     fixed: "left",
+    align: 'center',
   },
   {
     title: "Wallet Adress",
@@ -30,6 +33,7 @@ const columns: ColumnsType<UserInfo> = [
     dataIndex: "walletAddress",
     key: "walletAddress",
     fixed: "left",
+    align: 'center',
   },
   {
     title: "Phone Number",
@@ -37,6 +41,7 @@ const columns: ColumnsType<UserInfo> = [
     dataIndex: "phoneNumber",
     key: "phoneNumber",
     fixed: "left",
+    align: 'center',
   },
   {
     title: "Role",
@@ -44,6 +49,7 @@ const columns: ColumnsType<UserInfo> = [
     dataIndex: "role",
     key: "role",
     fixed: "left",
+    align: 'center',
   },
   {
     title: "Address",
@@ -51,51 +57,38 @@ const columns: ColumnsType<UserInfo> = [
     dataIndex: "address",
     key: "address",
     fixed: "left",
+    align: 'center',
   },
-  {
-    title: "Email",
-    width: 100,
-    dataIndex: "email",
-    key: "email",
-    fixed: "left",
-  },
-  {
-    title: "Edit",
-    key: "operation",
-    fixed: "right",
-    width: 100,
-    render: () => (
-      <a>
-        <FormOutlined />
-      </a>
-    ),
-  },
-];
-
-const data: UserInfo[] = [
-  {
-    key: "1",
-    fullName: "Test AAA",
-    walletAddress: "2",
-    phoneNumber: "0939865452",
-    address: "test",
-    role: 2,
-    email: "test@gmail.com",
-    department: 0,
-  },
-  {
-    key: "2",
-    fullName: "Test AAA",
-    walletAddress: "2",
-    phoneNumber: "0939865452",
-    address: "test",
-    role: 2,
-    email: "test@gmail.com",
-    department: 0,
-  },
+  // {
+  //   title: "Edit",
+  //   key: "operation",
+  //   fixed: "right",
+  //   width: 100,
+  //   render: () => (
+  //     <a>
+  //       <FormOutlined />
+  //     </a>
+  //   ),
+  // },
 ];
 
 export const AccountManagement = () => {
+  const navigate = useNavigate();
+
+  const [dataUsers, setDataUsers] = useState<ListUserInfo[]>([]);
+
+  useEffect(() => {
+     UserManagementService.getAllUserService().then((res : any) => {
+      console.log("res: ", res);
+      if(res?.status === 200) {
+        res.data.map((element : any) => {
+          const user = parseListUserInfo(element) as ListUserInfo;
+          setDataUsers((prevUser) => [...prevUser, user]);
+        });
+      }
+    });
+  }, []);
+
   return (
     <div>
       <Col>
@@ -103,7 +96,7 @@ export const AccountManagement = () => {
         <div className="action-button">
           <CreateAccountForm></CreateAccountForm>
         </div>
-        <Table columns={columns} dataSource={data} scroll={{ x: 1300 }} />
+        <Table columns={columns} dataSource={dataUsers} scroll={{ x: 1300 }} />
       </Col>
     </div>
   );

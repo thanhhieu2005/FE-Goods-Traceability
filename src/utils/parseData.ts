@@ -1,5 +1,7 @@
 import { ProjectDetailInterface } from "@/types/project_detail";
 import { Harvest, Production, Transport, WarehouseStorage } from "@/types/step_tracking";
+import { ListUserInfo } from "@/types/user";
+
 
 export const parseHarvestData = (data: any) => {
     var harvest = {} as Harvest;
@@ -168,4 +170,16 @@ export const parseProjectData = (data: any) => {
   projectDetail.production = production;
 
   return projectDetail;
+};
+
+export const parseListUserInfo = (data: any) => {
+  var user = {} as ListUserInfo;
+  user.key = data._id;
+          user.email = data.email;
+          user.fullName = data.firstName + data.lastName;
+          user.address = data.address ?? '-';
+          user.phoneNumber = data.phoneNumber ?? '-';
+          user.role = data.role;
+          user.walletAddress = data.walletAddress ?? '-';
+  return user;
 };

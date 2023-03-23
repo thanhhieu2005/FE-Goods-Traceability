@@ -7,3 +7,13 @@ export interface User {
     department: string;
     walletAdress?: string;
 }
+export interface ListUserInfo {
+    key: string;
+    fullName: string;
+    walletAddress: string;
+    phoneNumber: string;
+    role: number;
+    address: string;
+    email: string;
+    department?: number;
+}

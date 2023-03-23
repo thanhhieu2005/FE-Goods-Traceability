@@ -1,17 +1,16 @@
 import { Layout, Avatar, Dropdown, Menu, Row, Col } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import type { MenuProps } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ItemType, MenuInfo } from "rc-menu/lib/interface";
 import "./Header.scss";
 import { logout } from "@/redux/authenSlice";
 import { useNavigate } from "react-router-dom";
 import { checkRole } from "@/utils/checkRole";
 import { connect } from "../../features/connectWalletAPI";
-import { selectAccount } from "@/features/connectWallet";
-import { useAppDispatch, useAppSelector } from "../../app/hook";
 import logo from "../../assets/images/img-logo.png";
+import { useAppDispatch } from "@/redux/hook";
 
 const { Header } = Layout;
 
