@@ -1,10 +1,9 @@
 import { axiosClient } from "@/services/axios";
 
-const currentToken = localStorage.getItem('token');
-
 const UserManagementService = {
     getAllUserService : async() => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.get(
                 '/users/',
                 {
@@ -18,6 +17,7 @@ const UserManagementService = {
     },
     getDetailUserByIdService : async(userId: string) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.get(
                 '/user/' + userId,
                 {
@@ -31,6 +31,7 @@ const UserManagementService = {
     },
     createNewUserService : async(value: any) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.post(
                 '/users',
                 value,
@@ -45,6 +46,7 @@ const UserManagementService = {
     },
     deleteUserService : async (userId: string) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.delete(
                 '/users/' + userId,
                 {

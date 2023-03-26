@@ -21,8 +21,6 @@ function App() {
           headers: { Authorization: `Bearer ${currentToken}` },
         });
 
-        console.log(refreshUserInfo.data);
-
         dispatch(updateCurrentUserInfo(refreshUserInfo.data));
       };
       getUser();

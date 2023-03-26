@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import "./Login.scss";
-import { Col, Row, Form, Input, Button } from "antd";
+import { Col, Row, Form, Input, Button, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUserInfo } from "../../redux/authenSlice";
 import { axiosClient } from "../../services/axios";
 // import { addListener } from "process";
 import logo from "../../assets/images/img-logo.png";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -19,23 +20,26 @@ const Login = () => {
     if (login || currentToken) {
       navigate("/", { replace: true });
     }
-  }, [navigate, login]);
+  }, [login, navigate]);
 
   const handleSubmit = async (value: any) => {
     try {
-      console.log(value);
-
       const res = await axiosClient.post("/users/login", value);
+
+      console.log("Res", res);
 
       localStorage.setItem("token", res.data.token);
 
       dispatch(setCurrentUserInfo(res.data));
-
-      // console.log({ data: res.data });
-
+      
       navigate("/", { replace: true });
+      // console.log({ data: res.data });
+      successMessage("Login Successfully", 2);
+
+      
     } catch (err: any) {
-      console.log(err.response);
+      console.log(err);
+      errorMessage(err.response.data.message, 3);
     }
   };
 
@@ -49,13 +53,16 @@ const Login = () => {
               <div className="center-content"><img src={logo} /></div>
               <div className="text-title center-content">Welcome Back</div>
               <div className="form-authen">
-                <Form layout="vertical" onFinish={(value) => handleSubmit(value)}>
+                <Form 
+                layout="vertical" 
+                onFinish={(value) => handleSubmit(value)}
+                >
                   <Form.Item
                     label="Email"
                     name="email"
                     rules={[
                       {
-                        message: "Please input your email!",
+                        required: true, message: "Please input your email!",
                       },
                     ]}
                   >
@@ -71,7 +78,7 @@ const Login = () => {
                     name="password"
                     rules={[
                       {
-                        message: "Please input your password!",
+                        required: true, message: "Please input your password!",
                       },
                     ]}
                   >

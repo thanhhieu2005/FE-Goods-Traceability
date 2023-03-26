@@ -1,7 +1,5 @@
 import { axiosClient } from "../../services/axios";
 
-const currentToken = localStorage.getItem('token');
-
 const FarmManagementService = {
         
     getAllFarmService : async () => {
@@ -22,6 +20,7 @@ const FarmManagementService = {
     },
     getFarmDetailService : async (farmId: string) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.get(
                 "/farm/" + farmId,
                 {
@@ -35,6 +34,7 @@ const FarmManagementService = {
     },
     updateFarmInfoService : async (farmId : string, value: any) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.patch(
                 '/farm/' + farmId,
                 value,
@@ -49,6 +49,7 @@ const FarmManagementService = {
     },
     deleteFarmService : async (farmId: string) => {
         try{
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.delete(
                 '/farm/' + farmId,
                 {
@@ -62,6 +63,7 @@ const FarmManagementService = {
     },
     createNewFarmService : async (value : any) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.post(
                 '/farm/',
                 value,
@@ -76,6 +78,7 @@ const FarmManagementService = {
     },
     updateFarmerIntoFarmService : async (email : string, farmId: string) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.post(
                 '/famr/add-farmer/' + farmId,
                 email,
@@ -90,6 +93,7 @@ const FarmManagementService = {
     },
     removeFarmerToFarmService : async (email: string, farmId: string) => {
         try {
+            const currentToken = localStorage.getItem('token');
             const res = await axiosClient.post(
                 '/farm/remove-farmer/' + farmId,
                 email,

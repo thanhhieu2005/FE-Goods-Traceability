@@ -33,6 +33,8 @@ const Routers = () => {
   // Kiểm tra đăng nhập hay chưa
   const login = useSelector((state: any) => state.authen.isLogin);
 
+  console.log(userName);
+
   return (
     <React.Suspense>
       <Routes>

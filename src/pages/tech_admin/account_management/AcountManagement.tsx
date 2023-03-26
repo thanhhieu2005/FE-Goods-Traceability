@@ -78,8 +78,7 @@ export const AccountManagement = () => {
   const [dataUsers, setDataUsers] = useState<ListUserInfo[]>([]);
 
   useEffect(() => {
-     UserManagementService.getAllUserService().then((res : any) => {
-      console.log("res: ", res);
+      UserManagementService.getAllUserService().then((res : any) => {
       if(res?.status === 200) {
         res.data.map((element : any) => {
           const user = parseListUserInfo(element) as ListUserInfo;
