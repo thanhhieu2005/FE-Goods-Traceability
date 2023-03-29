@@ -28,7 +28,7 @@ export const LayoutCustom = () => {
           {/* <div className="logo" /> */}
           <MenuApp />
         </Sider>
-        <Layout style={{ padding: '48px 24px 24px' }}><Outlet /></Layout>
+        <Layout style={{ padding: '48px 24px 24px', minHeight: '100vh' }}><Outlet /></Layout>
       </Layout>
     </Layout>
     // <Content style={{ padding: "0 24px", minHeight: 280 }}>Home</Content>

@@ -35,11 +35,10 @@ const Login = () => {
       navigate("/", { replace: true });
       // console.log({ data: res.data });
       successMessage("Login Successfully", 2);
-
       
     } catch (err: any) {
       console.log(err);
-      errorMessage(err.response.data.message, 3);
+      errorMessage(err.response.message, 3);
     }
   };
 

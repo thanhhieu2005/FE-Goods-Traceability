@@ -5,7 +5,7 @@ import {
 import { StateTagStep } from "@/components/Tag/StateTag";
 import { Transport } from "@/types/step_tracking";
 import { dateFormat, formatDateTime } from "@/utils/formatDateTime";
-import { parseTransportData } from "@/utils/parseData";
+import { parseTransportData } from "@/utils/models/parseData";
 import { FormOutlined } from "@ant-design/icons";
 import { Badge, Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
 import React, { useEffect, useState } from "react";

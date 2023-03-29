@@ -22,7 +22,7 @@ import { StateTag } from "@/components/Tag/StateTag";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import moment from "moment";
 import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
-import { parseProjectData } from "@/utils/parseData";
+import { parseProjectData } from "@/utils/models/parseData";
 
 const layout = {
   labelCol: { span: 6 },

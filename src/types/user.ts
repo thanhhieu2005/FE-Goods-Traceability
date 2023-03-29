@@ -1,3 +1,5 @@
+import { FarmInfo } from "./farm";
+
 export interface User {
     key: string;
     lastName: string;
@@ -9,6 +11,7 @@ export interface User {
 }
 export interface ListUserInfo {
     key: string;
+    userId: string;
     fullName: string;
     walletAddress: string;
     phoneNumber: string;
@@ -16,4 +19,18 @@ export interface ListUserInfo {
     address: string;
     email: string;
     department?: number;
+}
+
+export interface UserDetail {
+    userDetail: FarmInfo;
+    userId: string;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    avatar?: string;
+    role: number;
+    department?: string;
+    walletAddress?: string;
+    farmList?: Array<FarmInfo>;
+    phoneNumber: string;
 }

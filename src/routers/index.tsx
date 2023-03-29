@@ -19,6 +19,8 @@ import ProduceManagement from "@/pages/produce/ProduceManagement";
 import ProjectDetail from "@/pages/system_admin/project_detail/ProjectDetail";
 import ProduceDetail from "@/pages/produce/ProduceDetail";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
+import AccountDetail from "@/pages/tech_admin/account_management/AccountDetail";
+import TechAdminFarmDetail from "@/pages/tech_admin/farm_techadmin/TechAdminFarmDetail";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -32,8 +34,6 @@ const Routers = () => {
 
   // Kiểm tra đăng nhập hay chưa
   const login = useSelector((state: any) => state.authen.isLogin);
-
-  console.log(userName);
 
   return (
     <React.Suspense>
@@ -59,7 +59,9 @@ const Routers = () => {
                     path="/techAd-account-management"
                     element={<AccountManagement />}
                   />
-                  <Route path="/farm-management" element={<TechAdminFarm />} />
+                  <Route path="/techAd-account-management/:userId" element={<AccountDetail/>} />
+                  <Route path="/techAd-farm-management" element={<TechAdminFarm />} />
+                  <Route path="/techAd-farm-management/:farmId" element={<TechAdminFarmDetail/>}/>
                 </>
               ) : userName.role === 2 ? (  // System Admin Router
                 <>

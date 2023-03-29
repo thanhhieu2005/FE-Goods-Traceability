@@ -35,8 +35,8 @@ export const MenuApp = () => {
       if (location.pathname.includes("/techAd-account-management")) {
         setPath("/techAd-account-management");
       }
-      if (location.pathname.includes("/farm-management"))
-        setPath("/farm-management");
+      if (location.pathname.includes("/techAd-farm-management"))
+        setPath("/techAd-farm-management");
     } else if(userName.role === 2) {
       if (location.pathname.includes("/")) {
         setPath("/project-management");
@@ -77,7 +77,7 @@ export const MenuApp = () => {
   if (userName.role == 1) {
     items = [
       getItem("Account Management", "/techAd-account-management"),
-      getItem("Farm Management", "/farm-management"),
+      getItem("Farm Management", "/techAd-farm-management"),
     ];
   } else if (userName.role == 2) {
     items = [
@@ -110,6 +110,8 @@ export const MenuApp = () => {
       selectedKeys={[path]}
       mode="inline"
       items={items}
+      style={{minHeight: "100vh"}}
+      theme="light"
     ></Menu>
   );
 };

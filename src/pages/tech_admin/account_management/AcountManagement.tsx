@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Col } from "antd";
+import { Table, Col, Row } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
 import "../../common.scss"
@@ -7,13 +7,23 @@ import CreateAccountForm from "./CreateAccountForm";
 import { useNavigate } from "react-router-dom";
 import UserManagementService from "@/api/admin_tech/user_management_service";
 import { ListUserInfo } from "@/types/user";
-import { parseListUserInfo } from "@/utils/parseData";
+import { TagRoleUser } from "@/components/Tag/StateTag";
+import Search from "antd/lib/input/Search";
+import { parseListUserInfo } from "@/utils/models/parseData";
 
 
 const columns: ColumnsType<ListUserInfo> = [
   {
+    title: "User Id",
+    width: 120,
+    dataIndex: "userId",
+    key: "userId",
+    fixed: "left",
+    align: "center",
+  },
+  {
     title: "Email",
-    width: 100,
+    width: 120,
     dataIndex: "email",
     key: "email",
     fixed: "left",
@@ -29,7 +39,7 @@ const columns: ColumnsType<ListUserInfo> = [
   },
   {
     title: "Wallet Adress",
-    width: 100,
+    width: 120,
     dataIndex: "walletAddress",
     key: "walletAddress",
     fixed: "left",
@@ -50,6 +60,7 @@ const columns: ColumnsType<ListUserInfo> = [
     key: "role",
     fixed: "left",
     align: 'center',
+    render: (value: number) => TagRoleUser(value),
   },
   {
     title: "Address",
@@ -80,6 +91,7 @@ export const AccountManagement = () => {
   useEffect(() => {
       UserManagementService.getAllUserService().then((res : any) => {
       if(res?.status === 200) {
+        console.log("a", res.data);
         res.data.map((element : any) => {
           const user = parseListUserInfo(element) as ListUserInfo;
           setDataUsers((prevUser) => [...prevUser, user]);
@@ -91,11 +103,47 @@ export const AccountManagement = () => {
   return (
     <div>
       <Col>
-        <div className="header-content">Account Management</div>
-        <div className="action-button">
-          <CreateAccountForm></CreateAccountForm>
+        <div className="header-content">
+          <Col>
+            <div className="title-header">
+              Account Management
+            </div>
+            <div className="sub-title-header">
+              Display the list of user accounts in the system
+            </div>     
+          </Col>
         </div>
-        <Table columns={columns} dataSource={dataUsers} scroll={{ x: 1300 }} />
+        <div className="content-page">
+          <Col>
+            <Row style={{paddingBottom: '12px', justifyContent: 'space-between'}}>
+              <Row style={{width:'80%'}}>
+                <div className="label-search">
+                  Find account
+                </div>
+                <div className="search-item">
+                  <Search placeholder="Enter your email" enterButton/>
+                </div>
+              </Row>
+              <div className="action-layout-btn">
+                <CreateAccountForm></CreateAccountForm>
+              </div>
+            </Row>
+            <Table 
+              columns={columns} 
+              dataSource={dataUsers} 
+              scroll={{ x: 1300 }}
+              onRow={(user, rowIndex) => {
+                return {
+                  onClick: () => {
+                    navigate(`/techAd-account-management/${user.key}`, {
+                      state: user.key,
+                    })
+                  }
+                };
+              }} 
+            />
+          </Col>
+        </div>
       </Col>
     </div>
   );

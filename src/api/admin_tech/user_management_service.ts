@@ -19,7 +19,7 @@ const UserManagementService = {
         try {
             const currentToken = localStorage.getItem('token');
             const res = await axiosClient.get(
-                '/user/' + userId,
+                '/users/' + userId,
                 {
                     headers: { Authorization: `Bearer ${currentToken}` },
                 }

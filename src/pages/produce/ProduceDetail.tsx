@@ -4,7 +4,7 @@ import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import { StateTagStep } from "@/components/Tag/StateTag";
 import { Production } from "@/types/step_tracking";
 import { dateFormat, formatDateTime } from "@/utils/formatDateTime";
-import { parseProductionData } from "@/utils/parseData";
+import { parseProductionData } from "@/utils/models/parseData";
 import { FormOutlined } from "@ant-design/icons";
 import { Badge, Button, Col, DatePicker, Form, Input, Row } from "antd";
 import moment from "moment";
@@ -270,7 +270,7 @@ function ProduceDetail() {
                     </Row>
                   </Form.Item>
                 )}
-                <div className="layout-btn-save">
+                <div className="in--btn-save">
                   <Row>
                     <Button
                       className="btn-cancel"

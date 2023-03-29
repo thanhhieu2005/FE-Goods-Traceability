@@ -6,7 +6,7 @@ import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Harvest } from "@/types/step_tracking";
 import { GetAllHarvestAPI } from "@/api/harvest/harvest_api";
-import { parseHarvestData } from "@/utils/parseData";
+import { parseHarvestData } from "@/utils/models/parseData";
 
 const HarvestManagement = () => {
   const navigate = useNavigate();

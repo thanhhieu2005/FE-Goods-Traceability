@@ -3,7 +3,7 @@ import Table, { ColumnsType } from "antd/lib/table";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetAllTransportAPI } from "@/api/transport_api";
-import { parseTransportData } from "@/utils/parseData";
+import { parseTransportData } from "@/utils/models/parseData";
 import { Transport } from "@/types/step_tracking";
 import { BadgeByState } from "@/components/Tag/StateTag";
 

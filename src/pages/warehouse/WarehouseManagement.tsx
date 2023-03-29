@@ -5,9 +5,9 @@ import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { WarehouseStorage } from "@/types/step_tracking";
-import { parseWarehouseStorageData } from "@/utils/parseData";
 import { GetAllWarehouseStorageAPI } from "@/api/warehouse_api";
 import { BadgeByState } from "@/components/Tag/StateTag";
+import { parseWarehouseStorageData } from "@/utils/models/parseData";
 
 const data: WarehouseStorage[] = [
   {

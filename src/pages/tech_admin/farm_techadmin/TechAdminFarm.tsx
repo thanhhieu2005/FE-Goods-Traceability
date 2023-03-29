@@ -1,27 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Col, Row, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
 import "../../common.scss";
 import CreateFarmForm from "./CreateFarmForm";
-
-interface FarmInfo {
-  key: string;
-  farmCode: string;
-  farmName: string;
-  farmAddress?: string;
-  farmPhoneNumber?: string;
-  farmOwner?: string;
-  statusFarm: number;
-}
+import { FarmInfo } from "@/types/farm";
+import { useNavigate } from "react-router-dom";
+import FarmManagementService from "@/api/admin_tech/farm_management_services";
+import { parseFarmInfo } from "@/utils/models/farm_model";
+import Search from "antd/lib/input/Search";
 
 const columns: ColumnsType<FarmInfo> = [
   {
-    title: "ID",
+    title: "Farm ID",
     width: 100,
-    dataIndex: "key",
+    dataIndex: "farmId",
     key: "farmId",
     fixed: "left",
+    align: "center",
   },
   {
     title: "Code",
@@ -29,6 +25,7 @@ const columns: ColumnsType<FarmInfo> = [
     dataIndex: "farmCode",
     key: "farmCode",
     fixed: "left",
+    align: "center",
   },
   {
     title: "Name",
@@ -36,6 +33,7 @@ const columns: ColumnsType<FarmInfo> = [
     dataIndex: "farmName",
     key: "farmName",
     fixed: "left",
+    align: "center",
   },
   {
     title: "Owner",
@@ -43,6 +41,7 @@ const columns: ColumnsType<FarmInfo> = [
     dataIndex: "farmOwner",
     key: "owner",
     fixed: "left",
+    align: "center",
   },
   {
     title: "Address",
@@ -50,6 +49,7 @@ const columns: ColumnsType<FarmInfo> = [
     dataIndex: "farmAddress",
     key: "farmAddress",
     fixed: "left",
+    align: "center",
   },
   {
     title: "Phone Number",
@@ -57,6 +57,7 @@ const columns: ColumnsType<FarmInfo> = [
     dataIndex: "farmPhoneNumber",
     key: "phoneNumber",
     fixed: "left",
+    align: "center",
   },
   {
     title: "Status",
@@ -64,6 +65,7 @@ const columns: ColumnsType<FarmInfo> = [
     dataIndex: "statusFarm",
     key: "state",
     fixed: "left",
+    align: "center",
     render: (value: number) =>
       value == 1 ? (
         <span>
@@ -82,40 +84,69 @@ const columns: ColumnsType<FarmInfo> = [
         </span>
       ),
   },
-  {
-    title: "Edit",
-    key: "operation",
-    fixed: "right",
-    width: 100,
-    render: () => (
-      <a>
-        <FormOutlined />
-      </a>
-    ),
-  },
-];
-
-const data: FarmInfo[] = [
-  {
-    key: "123",
-    farmCode: "1AFarm",
-    farmName: "Test Nông trại",
-    farmOwner: "Nguyễn Văn A",
-    farmAddress: "123ABC",
-    farmPhoneNumber: "1234567890",
-    statusFarm: 1,
-  },
 ];
 
 export const TechAdminFarm = () => {
+  const navigate = useNavigate();
+
+  const [dataListFarms, setDataListFarms] = useState<FarmInfo[]>([]);
+
+  useEffect(() => {
+    FarmManagementService.getAllFarmService().then((res: any) => {
+      if(res?.status === 200) {
+        console.log(res.data);
+        res.data.map((element: any) => {
+          const farmInfo = parseFarmInfo(element) as FarmInfo;
+          setDataListFarms((prev) => [...prev, farmInfo]);
+        })
+      }
+    });
+  }, []);
+
   return (
     <div>
       <Col>
-        <div className="header-content">Account Management</div>
-        <div className="action-button">
-          <CreateFarmForm></CreateFarmForm>
+        <div className="header-content">
+          <Col>
+            <div className="title-header">
+              Farm Management
+            </div>
+            <div className="sub-title-header">
+              Manage the list of farms in the system controlled by the Technical Administrator
+            </div>
+          </Col>
         </div>
-        <Table columns={columns} dataSource={data} scroll={{ x: 1300 }} />
+        <div className="content-page">
+          <Col>
+          <Row style={{paddingBottom: '12px', justifyContent: 'space-between'}}>
+              <Row style={{width:'80%'}}>
+                <div className="label-search">
+                  Find farm
+                </div>
+                <div className="search-item">
+                  <Search placeholder="Enter your farm code" enterButton/>
+                </div>
+              </Row>
+              <div className="action-layout-btn">
+              <CreateFarmForm></CreateFarmForm>
+              </div>
+            </Row>
+            <Table 
+              columns={columns} 
+              dataSource={dataListFarms} 
+              scroll={{ x: 1300 }} 
+              onRow={(farm, rowIndex) => {
+                return {
+                  onClick: () => {
+                    navigate(`/techAd-farm-management/${farm.farmId}`, {
+                      state: farm.farmId,
+                    })
+                  }
+                }
+              }}
+            />
+          </Col>
+        </div>
       </Col>
     </div>
   );

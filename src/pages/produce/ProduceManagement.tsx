@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Production } from "@/types/step_tracking";
 import { BadgeByState } from "@/components/Tag/StateTag";
 import { GetAllProduceAPI } from "@/api/produce_api";
-import { parseProductionData } from "@/utils/parseData";
+import { parseProductionData } from "@/utils/models/parseData";
 
 // interface Produce {
 //   key: string;

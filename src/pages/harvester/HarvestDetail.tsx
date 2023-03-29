@@ -12,7 +12,7 @@ import {
 } from "@/api/harvest/harvest_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import { Harvest } from "@/types/step_tracking";
-import { parseHarvestData } from "@/utils/parseData";
+import { parseHarvestData } from "@/utils/models/parseData";
 import {
   addTrackingBlock,
   getTrackingBlock,

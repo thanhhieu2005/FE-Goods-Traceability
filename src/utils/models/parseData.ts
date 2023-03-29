@@ -1,6 +1,8 @@
 import { ProjectDetailInterface } from "@/types/project_detail";
 import { Harvest, Production, Transport, WarehouseStorage } from "@/types/step_tracking";
-import { ListUserInfo } from "@/types/user";
+import { ListUserInfo, UserDetail } from "@/types/user";
+import { FarmInfo } from "@/types/farm";
+import { parseFarmInfo } from "./farm_model";
 
 
 export const parseHarvestData = (data: any) => {
@@ -175,11 +177,35 @@ export const parseProjectData = (data: any) => {
 export const parseListUserInfo = (data: any) => {
   var user = {} as ListUserInfo;
   user.key = data._id;
-          user.email = data.email;
-          user.fullName = data.firstName + data.lastName;
-          user.address = data.address ?? '-';
-          user.phoneNumber = data.phoneNumber ?? '-';
-          user.role = data.role;
-          user.walletAddress = data.walletAddress ?? '-';
+  user.userId = data._id;
+  user.email = data.email;
+  user.fullName = data.firstName + data.lastName;
+  user.address = data.address ?? '-';
+  user.phoneNumber = data.phoneNumber ?? '-';
+  user.role = data.role;
+  user.walletAddress = data.walletAddress ?? '-';
   return user;
 };
+
+export const parseUserDetail = (data: any) => {
+  var userDetail = {} as UserDetail;
+  var farmList = [] as Array<FarmInfo>;
+  if(data.farmList != null) {
+    data.farmList.map((element: any) => {
+      const farm = parseFarmInfo(element.farm);
+      farmList.push(farm);
+    })
+  }
+  userDetail.userId = data._id;
+  userDetail.email = data.email;
+  userDetail.firstName = data.firstName;
+  userDetail.lastName = data.lastName;
+  userDetail.walletAddress = data.walletAddress;
+  userDetail.role = data.role;
+  userDetail.department = data.role == 4 ? data.department : null;
+  userDetail.farmList = farmList;
+  userDetail.phoneNumber = data.phoneNumber;
+
+  return userDetail;
+}
+
