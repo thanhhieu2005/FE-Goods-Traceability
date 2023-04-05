@@ -18,6 +18,11 @@ import WarehouseDetail from "@/pages/warehouse/WarehouseDetail";
 import ProduceManagement from "@/pages/produce/ProduceManagement";
 import ProjectDetail from "@/pages/system_admin/project_detail/ProjectDetail";
 import ProduceDetail from "@/pages/produce/ProduceDetail";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import AccountDetail from "@/pages/tech_admin/account_management/AccountDetail";
+import TechAdminFarmDetail from "@/pages/tech_admin/farm_techadmin/TechAdminFarmDetail";
+import FarmInfo from "@/pages/farm/FarmInfo";
+import FarmProjectManagement from "@/pages/farm/farm_project/FarmProjectManagement";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -32,8 +37,6 @@ const Routers = () => {
   // Kiểm tra đăng nhập hay chưa
   const login = useSelector((state: any) => state.authen.isLogin);
 
-  console.log("login " + login);
-
   return (
     <React.Suspense>
       <Routes>
@@ -47,8 +50,8 @@ const Routers = () => {
                 </ProtectedRoute>
               }
             >
-              {/* Tech Admin Router */}
-              {userName.role === 1 ? (
+              {/* Check Role to render Route */}
+              {userName.role === 1 ? ( // Technical Admin Router
                 <>
                   <Route
                     path="/"
@@ -58,9 +61,11 @@ const Routers = () => {
                     path="/techAd-account-management"
                     element={<AccountManagement />}
                   />
-                  <Route path="/farm-management" element={<TechAdminFarm />} />
+                  <Route path="/techAd-account-management/:userId" element={<AccountDetail/>} />
+                  <Route path="/techAd-farm-management" element={<TechAdminFarm />} />
+                  <Route path="/techAd-farm-management/:farmId" element={<TechAdminFarmDetail/>}/>
                 </>
-              ) : userName.role === 2 ? (
+              ) : userName.role === 2 ? (  // System Admin Router
                 <>
                   <Route
                     path="/"
@@ -75,13 +80,29 @@ const Routers = () => {
                     path="/project-management/:projectId"
                     element={<ProjectDetail />}
                   />
-                  <Route path="/farm-management" element={<TechAdminFarm />} />
                 </>
-              ) : userName.role === 3 ? (
+              ) : userName.role === 3 ? ( // Farm Router
+                <>
+                  <Route path="/" element={<Navigate to="/farm-info"/>}/>
+                  <Route 
+                    path="/farm-info"
+                    element={<FarmInfo/>}
+                  />
+                  {userName.isOwner ? (
+                    <Route>
+                      <Route
+                        path="/farm-project-management"
+                        element={<FarmProjectManagement/>}
+                      />
+                      <Route/>
+                    </Route>
+                  ) : (
+                    <Route/>
+                  )}
+                </>
+              ) : userName.role === 4 &&  userName.department === 1 ? (
                 <></>
-              ) : userName.department === 1 ? (
-                <></>
-              ) : userName.department === 2 ? (
+              ) : userName.role === 4 && userName.department === 2 ? (
                 <>
                   <Route
                     path="/"
@@ -96,7 +117,7 @@ const Routers = () => {
                     element={<HarvestDetail />}
                   />
                 </>
-              ) : userName.department === 3 ? (
+              ) : userName.role === 4 && userName.department === 3 ? (
                 <>
                   <Route
                     path="/"
@@ -111,7 +132,7 @@ const Routers = () => {
                     element={<TransportDetail />}
                   />
                 </>
-              ) : userName.department === 4 ? (
+              ) : userName.role === 4 && userName.department === 4 ? (
                 <>
                   <Route
                     path="/"
@@ -126,7 +147,7 @@ const Routers = () => {
                     element={<WarehouseDetail />}
                   />
                 </>
-              ) : userName.department === 5 ? (
+              ) : userName.role === 4 && userName.department === 5 ? (
                 <>
                   <Route
                     path="/"
@@ -150,6 +171,7 @@ const Routers = () => {
           <>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/forgot-password" element={<ForgotPassword/>} />
           </>
         )}
       </Routes>

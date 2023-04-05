@@ -104,3 +104,48 @@ export const BadgeByState = (value: number) => {
       );
   }
 };
+
+export const TagRoleUser = (value: number) => {
+  switch(value) {
+    case 1:
+      return(
+        <div>
+          <Tag color="volcano">
+            Technical Admin
+          </Tag>
+        </div>
+      );
+    case 2:
+      return (
+        <div>
+          <Tag color="blue">
+            System Admin
+          </Tag>
+        </div>
+      );
+    case 3:
+      return (
+        <div>
+          <Tag color="green">
+            Farmer
+          </Tag>
+        </div>
+      );
+    case 4:
+      return (
+        <div>
+          <Tag color="gold">
+            Staff
+          </Tag>
+        </div>
+      );
+    default:
+      return (
+        <div>
+          <Tag color="default">
+            Unknow
+          </Tag>
+        </div>
+      );
+  }
+};

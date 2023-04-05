@@ -1,12 +1,12 @@
+import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
 import {
   GetWarehouseDetailByIdAPI,
   UpdateWarehouseDetailByIdAPI,
 } from "@/api/warehouse_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import { StateTagStep } from "@/components/Tag/StateTag";
-import { WarehouseStorage } from "@/types/step_tracking";
+import { parseWarehouseStorageData, WarehouseStorage } from "@/types/step_tracking";
 import { dateFormat } from "@/utils/formatDateTime";
-import { parseWarehouseStorageData } from "@/utils/parseData";
 import { FormOutlined } from "@ant-design/icons";
 import { Badge, Button, Col, DatePicker, Form, Input, Row } from "antd";
 import moment from "moment";
@@ -51,9 +51,7 @@ function WarehouseDetail() {
       warehouseStorageId
     );
 
-    const newWarehouseStorage = parseWarehouseStorageData(
-      res.data.warehousePop
-    );
+    const newWarehouseStorage = parseWarehouseStorageData(res.data.warehouse);
 
     setDataWarehouseStorage(newWarehouseStorage);
 
@@ -61,6 +59,7 @@ function WarehouseDetail() {
       state === 2
         ? successMessage("This Step has been Completed")
         : successMessage("This Step has been Canceled");
+      state === 2 ? addTrackingBlock("test3", "content") : null; // test 3
     } else {
       errorMessage("Upload Failed");
     }
@@ -76,11 +75,9 @@ function WarehouseDetail() {
       warehouseStorageId
     );
 
-    console.log(result);
-
     if (result.status === 200) {
       const newWarehouseStorage: WarehouseStorage = parseWarehouseStorageData(
-        result.data.warehousePop
+        result.data.warehouse
       );
 
       setDataWarehouseStorage(newWarehouseStorage);
@@ -106,11 +103,11 @@ function WarehouseDetail() {
 
   return (
     <Col>
-      <div className="header-content">Warehouse Detail </div>
-      <div className="content">
+      <div className="header-content">Production Detail </div>
+      <div className="main-content">
         {dataWarehouseStorage ? (
           <Col>
-            <p className="title">Warehouse Storage Information</p>
+            <p className="title">Production Information</p>
             {dataWarehouseStorage.state === 1 ? (
               <div className="btn-update">
                 <Button
@@ -183,26 +180,34 @@ function WarehouseDetail() {
                   name="totalInput"
                   initialValue={dataWarehouseStorage.totalInput}
                 >
-                  <Input />
+                  <Input type="number" />
                 </Form.Item>
                 <Form.Item
                   label="Total Export"
                   name="totalExport"
                   initialValue={dataWarehouseStorage.totalExport}
                 >
-                  <Input />
+                  <Input type="number" />
                 </Form.Item>
                 <Form.Item
                   label="Input Date"
                   name="inputDate"
-                  initialValue={moment(dataWarehouseStorage.inputDate)}
+                  initialValue={
+                    dataWarehouseStorage.inputDate !== undefined
+                      ? moment(dataWarehouseStorage.inputDate)
+                      : null
+                  }
                 >
                   <DatePicker style={{ width: "70%" }} format={dateFormat} />
                 </Form.Item>
                 <Form.Item
                   label="Output Date"
                   name="outputDate"
-                  initialValue={moment(dataWarehouseStorage.outputDate)}
+                  initialValue={
+                    dataWarehouseStorage?.outputDate !== undefined
+                      ? moment(dataWarehouseStorage.outputDate)
+                      : null
+                  }
                 >
                   <DatePicker style={{ width: "70%" }} format={dateFormat} />
                 </Form.Item>
@@ -219,12 +224,14 @@ function WarehouseDetail() {
                           borderRadius: "6px",
                         }}
                         danger
-                        onClick={async () =>
+                        onClick={async () => {
+                          disabled = true;
+                          setComponentDisabled(disabled);
                           handleUpdateState(
                             dataWarehouseStorage.warehouseStorageId,
                             3
-                          )
-                        }
+                          );
+                        }}
                       >
                         Cancel
                       </Button>
@@ -240,6 +247,8 @@ function WarehouseDetail() {
                           const check =
                             checkCanBeCompleted(dataWarehouseStorage);
                           if (check) {
+                            disabled = true;
+                            setComponentDisabled(disabled);
                             await handleUpdateState(
                               dataWarehouseStorage.warehouseStorageId,
                               2

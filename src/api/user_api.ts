@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { axiosClient } from "../services/axios";
 
 const RefreshUserAPI = async () => {
@@ -10,7 +11,6 @@ const RefreshUserAPI = async () => {
               headers: { Authorization: `Bearer ${currentToken}` },
             }
         );
-        console.log(res);
         return res;
     } catch (err) {
         console.log(err);

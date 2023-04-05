@@ -3,8 +3,7 @@ import Table, { ColumnsType } from "antd/lib/table";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetAllTransportAPI } from "@/api/transport_api";
-import { parseTransportData } from "@/utils/parseData";
-import { Transport } from "@/types/step_tracking";
+import { parseTransportData, Transport } from "@/types/step_tracking";
 import { BadgeByState } from "@/components/Tag/StateTag";
 
 const TransportManagement = () => {
@@ -52,13 +51,13 @@ const TransportManagement = () => {
       key: "inspector",
       fixed: "left",
     },
-    // {
-    //   title: "Date Completed",
-    //   width: 100,
-    //   dataIndex: "dateCompleted",
-    //   key: "dateCompleted",
-    //   fixed: "left",
-    // },
+    {
+      title: "Date Completed",
+      width: 100,
+      dataIndex: "dateCompleted",
+      key: "dateCompleted",
+      fixed: "left",
+    },
     {
       title: "State",
       width: 100,

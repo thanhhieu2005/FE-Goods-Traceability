@@ -138,7 +138,6 @@ export const ProjectManagement = () => {
         <div className="action-button">
           <Row>
             <CreateProjectForm />
-            <Button>Test</Button>
           </Row>
         </div>
         <Table

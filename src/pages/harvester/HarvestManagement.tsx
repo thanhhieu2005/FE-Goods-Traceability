@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { Harvest } from "@/types/step_tracking";
+import { Harvest, parseHarvestData } from "@/types/step_tracking";
 import { GetAllHarvestAPI } from "@/api/harvest/harvest_api";
 
 const HarvestManagement = () => {
@@ -18,18 +18,8 @@ const HarvestManagement = () => {
     fetchAPI.then((res: any) => {
       console.log("res: ", res);
       res?.data.map((element: any) => {
-        var harvest = {} as Harvest;
-        harvest.key = element._id;
-        harvest.harvestId = element._id;
-        harvest.projectId = element.projectId.projectId;
-        harvest.totalHarvest = element?.totalHarvest;
-        harvest.ripeness = element?.ripeness;
-        harvest.moisture = element?.moisture;
-        harvest.inspector = element.inspector.lastName + " " + element.inspector.firstName;
-        harvest.dateCompleted = element?.dateCompleted;
-        harvest.temperature = element?.temperature;
-        harvest.state = element.state;
-        setDataHarvests((prevArr) => [...prevArr, harvest]);
+        const newHarvest = parseHarvestData(element);
+        setDataHarvests((prevArr) => [...prevArr, newHarvest]);
       });
     });
   }, []);
@@ -49,6 +39,13 @@ const HarvestManagement = () => {
       width: 100,
       dataIndex: "projectId",
       key: "projectId",
+      fixed: "left",
+    },
+    {
+      title: "Project Code",
+      width: 100,
+      dataIndex: "projectCode",
+      key: "projectCode",
       fixed: "left",
     },
     {

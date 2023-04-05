@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "antd";
 import { HeaderCustom } from "@/components/Header/Header";
 import { MenuApp } from "@/components/Menu/MenuApp";
@@ -12,25 +12,34 @@ export const LayoutCustom = () => {
   return (
     <Layout className="my-layout">
       <HeaderCustom />
-      <Layout>
+      <Layout hasSider>
         <Sider
           width={300}
           theme = 'light'
           breakpoint="lg"
-          collapsedWidth="0"
-          onBreakpoint={(broken) => {
-            console.log(broken);
-          }}
-          onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
+          style={{
+            overflow: "auto",
+            height: "100vh",
+            position: "fixed",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            marginTop: '64px'
           }}
         >
           {/* <div className="logo" /> */}
-          <MenuApp />
+          <MenuApp/>
         </Sider>
-        <Layout style={{ padding: '48px 24px 24px' }}><Outlet /></Layout>
+        <Layout className="site-layout" 
+          style={{ 
+            padding: '48px 24px 24px', 
+            minHeight: '100vh', 
+            marginTop: "40px", 
+            marginLeft: "300px"
+          }}>
+          <Outlet />
+        </Layout>
       </Layout>
     </Layout>
-    // <Content style={{ padding: "0 24px", minHeight: 280 }}>Home</Content>
   );
 };

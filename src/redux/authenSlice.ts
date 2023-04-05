@@ -15,7 +15,7 @@ export const authenSlice = createSlice({
     initialState,
     reducers: {
         setCurrentUserInfo: (state, action) => {
-            state.currentUserInfo = action.payload.user;
+            state.currentUserInfo = action.payload.model;
             state.token = action.payload.token;
             state.isLogin = true;
         },

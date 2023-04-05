@@ -11,8 +11,12 @@ import {
   UpdateHarvestAPI,
 } from "@/api/harvest/harvest_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import { Harvest } from "@/types/step_tracking";
-import { parseHarvestData } from "@/utils/parseData";
+import { Harvest, parseHarvestData } from "@/types/step_tracking";
+import {
+  addTrackingBlock,
+  getTrackingBlock,
+} from "@/api/node_api/blockchain_helper";
+import moment from "moment";
 
 const layout = {
   labelCol: { span: 6 },
@@ -30,6 +34,7 @@ const HarvestDetail = () => {
 
   useEffect(() => {
     GetHarvestDetailByIdAPI(harvestId).then((res: any) => {
+      console.log("bb", res);
       const harvest = parseHarvestData(res.data);
 
       setDataHarvest(harvest);
@@ -46,7 +51,9 @@ const HarvestDetail = () => {
 
   const checkCanbeCompleted = (harvest: Harvest) => {
     if (
-      harvest.totalHarvest === 0
+      harvest.totalHarvest === 0 ||
+      harvest.ripeness === 0 ||
+      harvest.moisture === 0
     ) {
       return false;
     } else {
@@ -75,7 +82,7 @@ const HarvestDetail = () => {
   return (
     <Col>
       <div className="header-content">Harvest Detail</div>
-      <div className="content">
+      <div className="main-content">
         {dataHarvest ? (
           <Col>
             <p className="title">Harvest Information</p>
@@ -123,7 +130,7 @@ const HarvestDetail = () => {
                   name="dateCompleted"
                   initialValue={
                     dataHarvest?.dateCompleted
-                      ? formatDateTime(dataHarvest?.dateCompleted)
+                      ? moment(dataHarvest?.dateCompleted)
                       : "Not update information"
                   }
                 >
@@ -195,7 +202,7 @@ const HarvestDetail = () => {
                             3
                           );
 
-                          const harvest = parseHarvestData(res.data.harvestPop);
+                          const harvest = parseHarvestData(res.data.harvest);
 
                           setDataHarvest(harvest);
 
@@ -220,6 +227,7 @@ const HarvestDetail = () => {
                         }}
                         onClick={async () => {
                           const check = checkCanbeCompleted(dataHarvest);
+                          console.log(check);
 
                           if (check) {
                             disabled = true;
@@ -229,14 +237,14 @@ const HarvestDetail = () => {
                               2
                             );
 
-                            const harvest = parseHarvestData(
-                              res.data.harvestPop
-                            );
+                            const harvest = parseHarvestData(res.data.harvest);
 
                             setDataHarvest(harvest);
 
                             if (res?.status === 200) {
                               successMessage("Prject has been Completed");
+                              const a = addTrackingBlock("test1", "content123"); // test1
+                              console.log(a);
                             } else {
                               errorMessage("Update Failed");
                             }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./MenuApp.scss";
 import { useSelector } from "react-redux";
 import { AppstoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
+import { UserRole } from "@/types/user";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -32,31 +32,38 @@ export const MenuApp = () => {
 
   // Kiểm tra role set path phù hợp
   useEffect(() => {
-    if (userName.role === 1) {
+    if (userName.role === UserRole.TechnicalAdmin) {
       if (location.pathname.includes("/techAd-account-management")) {
         setPath("/techAd-account-management");
       }
-      if (location.pathname.includes("/farm-management"))
-        setPath("/farm-management");
-    } else if(userName.role === 2) {
+      if (location.pathname.includes("/techAd-farm-management"))
+        setPath("/techAd-farm-management");
+    } else if(userName.role === UserRole.SystemAdmin) {
       if (location.pathname.includes("/")) {
         setPath("/project-management");
       }
       // if (location.pathname.includes("/farm-management"))
       //   setPath("/farm-management");
-    } else if (userName.role === 4 && userName.department === 2) {
+    } else if(userName.role === UserRole.Farmer && userName.isOwner === true) {
+      if(location.pathname.includes('/')) {
+        setPath("/farm-info");
+      }
+      if ( location.pathname.includes('/farm-project-management')) {
+        setPath("/farm-project-management");
+      } 
+    } else if (userName.role === UserRole.Staff && userName.department === 2) {
       if(location.pathname.includes("/")) {
         setPath("/harvest-management");
       }
-    } else if (userName.role === 4 && userName.department === 3) {
+    } else if (userName.role === UserRole.Staff && userName.department === 3) {
       if(location.pathname.includes("/")) {
         setPath("/transport-management");
       }
-    } else if (userName.role === 4 && userName.department === 4) {
+    } else if (userName.role === UserRole.Staff && userName.department === 4) {
       if(location.pathname.includes("/")) {
         setPath("/warehouse-management");
       }
-    } else if (userName.role === 4 && userName.department === 5) {
+    } else if (userName.role === UserRole.Staff && userName.department === 5) {
       if(location.pathname.includes("/")) {
         setPath("/produce-management");
       }
@@ -75,47 +82,35 @@ export const MenuApp = () => {
 
   var items: MenuProps["items"] = [];
 
-  if (userName.role == 1) {
+  if (userName.role == UserRole.TechnicalAdmin) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Account", "/techAd-account-management"),
-        getItem("Farm", "/farm-management"),
-      ]),
+      getItem("Account Management", "/techAd-account-management"),
+      getItem("Farm Management", "/techAd-farm-management"),
     ];
-  } else if (userName.role == 2) {
+  } else if (userName.role == UserRole.SystemAdmin) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Batch/ Project", "/project-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Batch/ Project Management", "/project-management"),
     ];
-  } else if (userName.role === 4 && userName.department ===2) {
+  } else if(userName.role == UserRole.Farmer && userName.isOwner === true) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Harvest", "/harvest-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Farm Information", '/farm-info'),
+      getItem("Farm Project Management", '/farm-project-management'),
     ];
-  } else if (userName.role === 4 && userName.department === 3) {
+  }else if (userName.role === UserRole.Staff && userName.department ===2) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Transport", "/transport-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Harvest Management", "/harvest-management"),
     ];
-  } else if (userName.role == 4 && userName.department === 4) {
+  } else if (userName.role === UserRole.Staff && userName.department === 3) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Warehouse", "/warehouse-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Transport Management", "/transport-management"),
     ];
-  } else if (userName.role == 4 && userName.department === 5) {
+  } else if (userName.role == UserRole.Staff && userName.department === 4) {
     items = [
-      getItem("Management", "sub1", <AppstoreOutlined />, [
-        getItem("Pruduction", "/produce-management"),
-        // getItem("Staff", "/farm-management"),
-      ]),
+      getItem("Warehouse Management", "/warehouse-management"),
+    ];
+  } else if (userName.role == UserRole.Staff && userName.department === 5) {
+    items = [
+      getItem("Pruduction Management", "/produce-management"),
     ];
   }
   
@@ -124,10 +119,12 @@ export const MenuApp = () => {
     <Menu
       onClick={onClick}
       // style={{ width: 256 }}
+      // defaultOpenKeys={["sub1"]}
       selectedKeys={[path]}
-      defaultOpenKeys={["sub1"]}
       mode="inline"
       items={items}
+      style={{minHeight: "100vh"}}
+      theme="light"
     ></Menu>
   );
 };
