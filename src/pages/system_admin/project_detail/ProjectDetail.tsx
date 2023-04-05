@@ -6,7 +6,7 @@ import {
   CheckProjectStatus,
   StateComponent,
 } from "@/pages/common/CheckProjectStatus";
-import { ProjectDetailInterface } from "@/types/project_detail";
+import { parseProjectData, ProjectDetailModel } from "@/types/project_model";
 import { formatDateTime } from "@/utils/formatDateTime";
 import { FormOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row } from "antd";
@@ -22,7 +22,6 @@ import { StateTag } from "@/components/Tag/StateTag";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import moment from "moment";
 import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
-import { parseProjectData } from "@/utils/models/parseData";
 
 const layout = {
   labelCol: { span: 6 },
@@ -34,7 +33,7 @@ let disabled = true;
 const ProjectDetail = () => {
   const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
 
-  const [dataProject, setDataProject] = useState<ProjectDetailInterface>();
+  const [dataProject, setDataProject] = useState<ProjectDetailModel>();
 
   const { state: projectId } = useLocation();
 

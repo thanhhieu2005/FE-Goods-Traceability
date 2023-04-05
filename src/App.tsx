@@ -3,8 +3,9 @@ import Routers from './routers';
 import 'antd/dist/antd.min.css';
 import { axiosClient } from './services/axios';
 import { useDispatch } from 'react-redux';
-import { updateCurrentUserInfo } from './redux/authenSlice';
+import { logout, updateCurrentUserInfo } from './redux/authenSlice';
 import { useEffect } from 'react';
+import { AxiosError } from 'axios';
 
 
 function App() {
@@ -17,11 +18,19 @@ function App() {
     document.title = "HK Solution"
     if (currentToken) {
       const getUser = async () => {
-        const refreshUserInfo = await axiosClient.get('/users/me', {
-          headers: { Authorization: `Bearer ${currentToken}` },
-        });
-
-        dispatch(updateCurrentUserInfo(refreshUserInfo.data));
+        try {
+          const refreshUserInfo = await axiosClient.get('/users/me', {
+            headers: { Authorization: `Bearer ${currentToken}` },
+          });
+  
+          dispatch(updateCurrentUserInfo(refreshUserInfo.data));
+        } catch (err) {
+          localStorage.clear();
+          
+          dispatch(logout);
+          
+          navigate("/login", { replace: true });
+        }
       };
       getUser();
     }

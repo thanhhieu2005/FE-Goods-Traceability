@@ -6,15 +6,15 @@ import { useLocation } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons';
 
 import '../../common.scss';
-import { UserDetail } from '@/types/user';
+import { parseUserDetail, UserDetailModel } from '@/types/user';
 import Column from 'antd/lib/table/Column';
 import { contentLayout } from '@/styles/content_layout';
-import { parseUserDetail } from '@/utils/models/parseData';
+
 
 const AccountDetail = () => {
   const {state : userId} = useLocation();
 
-  const [dataUserDetail, setDataUserDetail] = useState<UserDetail>();
+  const [dataUserDetail, setDataUserDetail] = useState<UserDetailModel>();
 
   useEffect(() => {
     UserManagementService.getDetailUserByIdService(userId).then((res: any) => {

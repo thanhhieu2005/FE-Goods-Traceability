@@ -4,26 +4,10 @@ import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { WarehouseStorage } from "@/types/step_tracking";
+import { parseWarehouseStorageData, WarehouseStorage } from "@/types/step_tracking";
 import { GetAllWarehouseStorageAPI } from "@/api/warehouse_api";
 import { BadgeByState } from "@/components/Tag/StateTag";
-import { parseWarehouseStorageData } from "@/utils/models/parseData";
 
-const data: WarehouseStorage[] = [
-  {
-    key: "123",
-    warehouseStorageId: "123",
-    projectId: "abc123",
-    projectCode: "xyz123",
-    totalInput: 100,
-    warehouseName: "NTH Warehouse",
-    inspector: "Tran Quoc Khanh",
-    inputDate: "16/2/2023",
-    outputDate: "20/2/2023",
-    totalExport: 100,
-    state: 1,
-  },
-];
 
 function WarehouseManagement() {
   const navigate = useNavigate();

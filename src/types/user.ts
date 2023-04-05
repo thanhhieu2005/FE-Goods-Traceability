@@ -1,12 +1,12 @@
-import { FarmInfo } from "./farm";
+import { FarmInfoModel, parseFarmInfo } from "./farm_model";
 
-export interface User {
+export interface UserModel {
     key: string;
     lastName: string;
     firstName: string;
-    role: number;
+    role: UserRole;
     email: string;
-    department: string;
+    department: StaffDepartment;
     walletAdress?: string;
 }
 export interface ListUserInfo {
@@ -15,22 +15,74 @@ export interface ListUserInfo {
     fullName: string;
     walletAddress: string;
     phoneNumber: string;
-    role: number;
+    role: UserRole;
     address: string;
     email: string;
-    department?: number;
+    department?: StaffDepartment;
 }
 
-export interface UserDetail {
-    userDetail: FarmInfo;
+export interface UserDetailModel {
+    userDetail: FarmInfoModel;
     userId: string;
     email: string;
     firstName?: string;
     lastName?: string;
     avatar?: string;
-    role: number;
-    department?: string;
+    role: UserRole;
+    department?: StaffDepartment;
     walletAddress?: string;
-    farmList?: Array<FarmInfo>;
+    farmList?: Array<FarmInfoModel>;
     phoneNumber: string;
+    isOwner?: boolean;
 }
+
+export enum UserRole {
+  TechnicalAdmin = 1,
+  SystemAdmin = 2,
+  Farmer = 3,
+  Staff = 4,
+}
+
+export enum StaffDepartment {
+  Empty = 1,
+  HarvestInspection = 2,
+  TransportSupervision = 3,
+  WarehouseSupervision = 4,
+  SupervisingProducer = 5,
+}
+
+/// parse model
+export const parseListUserInfo = (data: any) => {
+    var user = {} as ListUserInfo;
+    user.key = data._id;
+    user.userId = data._id;
+    user.email = data.email;
+    user.fullName = data.firstName + data.lastName;
+    user.address = data.address ?? '-';
+    user.phoneNumber = data.phoneNumber ?? '-';
+    user.role = data.role as UserRole;
+    user.walletAddress = data.walletAddress ?? '-';
+    return user;
+  };
+  
+  export const parseUserDetail = (data: any) => {
+    var userDetail = {} as UserDetailModel;
+    var farmList = [] as Array<FarmInfoModel>;
+    if(data.farmList != null) {
+      data.farmList.map((element: any) => {
+        const farm = parseFarmInfo(element.farm);
+        farmList.push(farm);
+      })
+    }
+    userDetail.userId = data._id;
+    userDetail.email = data.email;
+    userDetail.firstName = data.firstName;
+    userDetail.lastName = data.lastName;
+    userDetail.walletAddress = data.walletAddress;
+    userDetail.role = data.role as UserRole;
+    userDetail.department = data.role == 4 ? data.department : null;
+    userDetail.farmList = farmList;
+    userDetail.phoneNumber = data.phoneNumber;
+  
+    return userDetail;
+  }

@@ -5,9 +5,8 @@ import {
 } from "@/api/warehouse_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import { StateTagStep } from "@/components/Tag/StateTag";
-import { WarehouseStorage } from "@/types/step_tracking";
+import { parseWarehouseStorageData, WarehouseStorage } from "@/types/step_tracking";
 import { dateFormat } from "@/utils/formatDateTime";
-import { parseWarehouseStorageData } from "@/utils/models/parseData";
 import { FormOutlined } from "@ant-design/icons";
 import { Badge, Button, Col, DatePicker, Form, Input, Row } from "antd";
 import moment from "moment";

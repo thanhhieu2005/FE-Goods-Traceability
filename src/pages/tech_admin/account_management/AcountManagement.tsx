@@ -6,10 +6,9 @@ import "../../common.scss"
 import CreateAccountForm from "./CreateAccountForm";
 import { useNavigate } from "react-router-dom";
 import UserManagementService from "@/api/admin_tech/user_management_service";
-import { ListUserInfo } from "@/types/user";
+import { ListUserInfo, parseListUserInfo } from "@/types/user";
 import { TagRoleUser } from "@/components/Tag/StateTag";
 import Search from "antd/lib/input/Search";
-import { parseListUserInfo } from "@/utils/models/parseData";
 
 
 const columns: ColumnsType<ListUserInfo> = [

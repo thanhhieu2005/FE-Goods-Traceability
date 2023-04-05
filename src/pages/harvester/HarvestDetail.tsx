@@ -11,8 +11,7 @@ import {
   UpdateHarvestAPI,
 } from "@/api/harvest/harvest_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import { Harvest } from "@/types/step_tracking";
-import { parseHarvestData } from "@/utils/models/parseData";
+import { Harvest, parseHarvestData } from "@/types/step_tracking";
 import {
   addTrackingBlock,
   getTrackingBlock,

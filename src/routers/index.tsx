@@ -21,6 +21,8 @@ import ProduceDetail from "@/pages/produce/ProduceDetail";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import AccountDetail from "@/pages/tech_admin/account_management/AccountDetail";
 import TechAdminFarmDetail from "@/pages/tech_admin/farm_techadmin/TechAdminFarmDetail";
+import FarmInfo from "@/pages/farm/FarmInfo";
+import FarmProjectManagement from "@/pages/farm/farm_project/FarmProjectManagement";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -80,7 +82,24 @@ const Routers = () => {
                   />
                 </>
               ) : userName.role === 3 ? ( // Farm Router
-                <></>
+                <>
+                  <Route path="/" element={<Navigate to="/farm-info"/>}/>
+                  <Route 
+                    path="/farm-info"
+                    element={<FarmInfo/>}
+                  />
+                  {userName.isOwner ? (
+                    <Route>
+                      <Route
+                        path="/farm-project-management"
+                        element={<FarmProjectManagement/>}
+                      />
+                      <Route/>
+                    </Route>
+                  ) : (
+                    <Route/>
+                  )}
+                </>
               ) : userName.role === 4 &&  userName.department === 1 ? (
                 <></>
               ) : userName.role === 4 && userName.department === 2 ? (

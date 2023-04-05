@@ -11,13 +11,14 @@
     }
     .title-header {
         font-weight: bold;
-        font-size: 24px;
+        font-size: 36px;
         color: black;
         padding-bottom: 8px;
     }
     .sub-title-header {
         font-weight: 400;
         color: grey;
+        font-size: 20px;
     }
 }
 
@@ -32,6 +33,7 @@
     background-color: white;
     padding: 12px 24px;
     width: 100%;
+    padding-bottom: 64px;
 
     .search-item {
         width: 60%;
@@ -54,5 +56,28 @@
         justify-content: flex-end;
         padding: 0 12px;
         width: 20%;
+    }
+    
+    .text-title {
+        font-size: 16px;
+        font-weight: 600;
+        padding-left: 36px;
+        color: black;
+    }
+
+    .info-row {
+        margin-bottom: 12px;
+        .row-label-item {
+            font-size: 16px;
+            font-weight: 400;
+            color: black;
+            margin-right: 12px;
+        }
+    
+        .row-title-item {
+            font-size: 20px;
+            font-weight: 500;
+            color: black;
+        }
     }
 }

@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { Harvest } from "@/types/step_tracking";
+import { Harvest, parseHarvestData } from "@/types/step_tracking";
 import { GetAllHarvestAPI } from "@/api/harvest/harvest_api";
-import { parseHarvestData } from "@/utils/models/parseData";
 
 const HarvestManagement = () => {
   const navigate = useNavigate();

@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { axiosClient } from "../services/axios";
 
 const RefreshUserAPI = async () => {

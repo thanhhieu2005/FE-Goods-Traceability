@@ -96,7 +96,16 @@ export const HeaderCustom: React.FC = () => {
   return (
     <Header
       className="site-layout-sub-header-background"
-      style={{ padding: "0" }}
+      style={{ 
+        minHeight: '64px',
+        padding: "0",
+        marginBottom: "100px",
+        position: "fixed",
+        left: "0",
+        top: "0",
+        right: "0",
+        zIndex: "1000",
+      }}
     >
       <Row
         style={{

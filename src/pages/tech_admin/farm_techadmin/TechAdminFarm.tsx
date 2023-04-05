@@ -4,13 +4,12 @@ import type { ColumnsType } from "antd/es/table";
 import { FormOutlined } from "@ant-design/icons";
 import "../../common.scss";
 import CreateFarmForm from "./CreateFarmForm";
-import { FarmInfo } from "@/types/farm";
+import { FarmInfoModel, parseFarmInfo, StatusFarm } from "@/types/farm_model";
 import { useNavigate } from "react-router-dom";
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
-import { parseFarmInfo } from "@/utils/models/farm_model";
 import Search from "antd/lib/input/Search";
 
-const columns: ColumnsType<FarmInfo> = [
+const columns: ColumnsType<FarmInfoModel> = [
   {
     title: "Farm ID",
     width: 100,
@@ -66,13 +65,13 @@ const columns: ColumnsType<FarmInfo> = [
     key: "state",
     fixed: "left",
     align: "center",
-    render: (value: number) =>
-      value == 1 ? (
+    render: (value: StatusFarm) =>
+      value == StatusFarm.Actived ? (
         <span>
           <Badge status="success" style={{paddingRight: '4px'}} />
           Actived
         </span>
-      ) : value == 2 ? (
+      ) : value == StatusFarm.NotActive ? (
         <span>
           <Badge status="processing" color="yellow" style={{paddingRight: '4px'}} />
           Not Actived
@@ -89,14 +88,14 @@ const columns: ColumnsType<FarmInfo> = [
 export const TechAdminFarm = () => {
   const navigate = useNavigate();
 
-  const [dataListFarms, setDataListFarms] = useState<FarmInfo[]>([]);
+  const [dataListFarms, setDataListFarms] = useState<FarmInfoModel[]>([]);
 
   useEffect(() => {
     FarmManagementService.getAllFarmService().then((res: any) => {
       if(res?.status === 200) {
         console.log(res.data);
         res.data.map((element: any) => {
-          const farmInfo = parseFarmInfo(element) as FarmInfo;
+          const farmInfo = parseFarmInfo(element) as FarmInfoModel;
           setDataListFarms((prev) => [...prev, farmInfo]);
         })
       }

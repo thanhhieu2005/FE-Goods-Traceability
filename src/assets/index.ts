@@ -1,4 +1,7 @@
-import icLogout from './icons/ic_logout.svg';
+import icLand from './images/land.png';
+import icSeed from './images/seed.png';
 
-
-export {icLogout}
+export {
+    icLand,
+    icSeed,
+}
