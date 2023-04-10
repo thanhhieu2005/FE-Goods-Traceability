@@ -23,6 +23,9 @@ import AccountDetail from "@/pages/tech_admin/account_management/AccountDetail";
 import TechAdminFarmDetail from "@/pages/tech_admin/farm_techadmin/TechAdminFarmDetail";
 import FarmInfo from "@/pages/farm/FarmInfo";
 import FarmProjectManagement from "@/pages/farm/farm_project/FarmProjectManagement";
+import FarmProjectDetail from "@/pages/farm/farm_project/FarmProjectDetail";
+import LandManagement from "@/pages/farm/land/LandManagement";
+import SeedManagement from "@/pages/farm/seed/SeedManagement";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -94,7 +97,18 @@ const Routers = () => {
                         path="/farm-project-management"
                         element={<FarmProjectManagement/>}
                       />
-                      <Route/>
+                      <Route
+                        path="/farm-project-management/:farmProjectId"
+                        element={<FarmProjectDetail/>}
+                      />
+                      <Route
+                        path="/land-management"
+                        element={<LandManagement/>}
+                      />
+                      <Route
+                        path="/seed-management"
+                        element={<SeedManagement/>}
+                      />
                     </Route>
                   ) : (
                     <Route/>

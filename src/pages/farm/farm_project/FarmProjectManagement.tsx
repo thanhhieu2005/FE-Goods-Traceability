@@ -1,12 +1,15 @@
 import FarmServices from '@/api/farm/farm_api';
+import { TagStateCommonProject } from '@/components/Tag/StateTag';
 import { FarmProjectModel } from '@/types/farm_model';
+import { CommonProjectState } from '@/types/project_model';
 import { UserDetailModel } from '@/types/user';
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import Search from 'antd/lib/input/Search';
 import Table, { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const columns: ColumnsType<FarmProjectModel> = [
   {
@@ -60,10 +63,13 @@ const columns: ColumnsType<FarmProjectModel> = [
     key: "state",
     fixed: 'left',
     align: "center", 
+    render: (state: CommonProjectState) => TagStateCommonProject(state), 
   },
 ];
 
 const FarmProjectManagement = () => {
+  const navigate = useNavigate();
+
   const [dataFarmProjects, setDataFarmProjects] = useState<FarmProjectModel[]>([]);
 
   const farmId = useSelector((state: any) => state.authen.currentUserInfo.farmId);
@@ -71,7 +77,7 @@ const FarmProjectManagement = () => {
   console.log(farmId);
 
   useEffect(() => {
-    FarmServices.getAllFarmProjectsService("640d5f994c62a777b9986114").then((res: any) => {
+    FarmServices.getAllFarmProjectsService(farmId).then((res: any) => {
       if(res?.status === 200) {
         res.data.map((element: any) => {
           const farmProject = element as FarmProjectModel;
@@ -106,12 +112,25 @@ const FarmProjectManagement = () => {
                   <Search placeholder="Enter your farm project" enterButton/>
                 </div>
               </Row>
+              <div className='action-layout-btn'>
+                <Button type='primary'>
+                  Create new Project
+                </Button>
+              </div>
             </Row>
           <Table
             columns={columns}
             dataSource={dataFarmProjects}
             scroll={{x: 1300}}
-
+            onRow={(farmProject, rowIndex) => {
+              return {
+                onClick: () => {
+                  navigate(`/farm-project-management/${farmProject.farmProjectId}`, {
+                    state: farmProject,
+                  })
+                }
+              };
+            }}
           />
         </div>
       </Col>

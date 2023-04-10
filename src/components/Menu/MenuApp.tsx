@@ -50,7 +50,11 @@ export const MenuApp = () => {
       }
       if ( location.pathname.includes('/farm-project-management')) {
         setPath("/farm-project-management");
-      } 
+      } else if(location.pathname.includes('/land-management')) {
+        setPath("/land-management");
+      } else if(location.pathname.includes('/seed-management')) {
+        setPath("/seed-management");
+      }
     } else if (userName.role === UserRole.Staff && userName.department === 2) {
       if(location.pathname.includes("/")) {
         setPath("/harvest-management");
@@ -95,6 +99,8 @@ export const MenuApp = () => {
     items = [
       getItem("Farm Information", '/farm-info'),
       getItem("Farm Project Management", '/farm-project-management'),
+      getItem("Land Management", '/land-management'),
+      getItem("Seed Management", '/seed-management'),
     ];
   }else if (userName.role === UserRole.Staff && userName.department ===2) {
     items = [

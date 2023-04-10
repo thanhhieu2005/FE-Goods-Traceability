@@ -1,4 +1,4 @@
 export const contentLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 12 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 8 },
   };

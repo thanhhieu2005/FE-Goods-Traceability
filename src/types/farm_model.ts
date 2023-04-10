@@ -39,7 +39,7 @@ export interface FarmProjectModel {
     totalHarvest: number;
     state: CommonProjectState;
     note: string;
-    dateCreate: string;
+    dateCreated: string;
     farmer: UserDetailModel;
     projectId: string;
 }
