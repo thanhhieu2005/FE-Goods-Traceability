@@ -64,9 +64,6 @@ const LandManagement = () => {
             grid={{ gutter: 16, column: 4 }}
             dataSource={dataLands}
             pagination={{
-              onChange: (page) => {
-                console.log(page);
-              },
               pageSize: 16,
             }}
             renderItem={(element) => (

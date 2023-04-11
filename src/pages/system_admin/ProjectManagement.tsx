@@ -144,7 +144,7 @@ export const ProjectManagement = () => {
           columns={columns}
           dataSource={dataProjects}
           scroll={{ x: 1300 }}
-          onRow={(record, rowIndex) => {
+          onRow={(record : ProjectInfo, rowIndex : any) => {
             return {
               onClick: () => {
                 navigate(`/project-management/${record.key}`, {

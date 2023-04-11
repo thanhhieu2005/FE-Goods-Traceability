@@ -3,9 +3,9 @@ import { TagStateCommonProject } from '@/components/Tag/StateTag';
 import { FarmProjectModel } from '@/types/farm_model';
 import { CommonProjectState } from '@/types/project_model';
 import { UserDetailModel } from '@/types/user';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import Search from 'antd/lib/input/Search';
-import Table, { ColumnsType } from 'antd/lib/table';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
@@ -122,7 +122,7 @@ const FarmProjectManagement = () => {
             columns={columns}
             dataSource={dataFarmProjects}
             scroll={{x: 1300}}
-            onRow={(farmProject, rowIndex) => {
+            onRow={(farmProject : any, rowIndex : any) => {
               return {
                 onClick: () => {
                   navigate(`/farm-project-management/${farmProject.farmProjectId}`, {

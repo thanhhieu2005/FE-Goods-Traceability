@@ -131,7 +131,7 @@ export const AccountManagement = () => {
               columns={columns} 
               dataSource={dataUsers} 
               scroll={{ x: 1300 }}
-              onRow={(user, rowIndex) => {
+              onRow={(user : ListUserInfo, rowIndex: any) => {
                 return {
                   onClick: () => {
                     navigate(`/techAd-account-management/${user.key}`, {
