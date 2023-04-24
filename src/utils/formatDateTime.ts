@@ -4,4 +4,4 @@ export const formatDateTime = (string: any) => {
     return date.toLocaleDateString();
 };
 
-export const dateFormat = "YYYY/MM/DD";
+export const dateFormat = "DD/MM/YYYY";

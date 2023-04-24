@@ -6,6 +6,10 @@ import { AppstoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { UserRole } from "@/types/user";
 
+import { TbHomeEco, TbColumns3 } from 'react-icons/tb';
+import { FaTasks } from 'react-icons/fa';
+import { RiSeedlingLine } from 'react-icons/ri';
+
 type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
@@ -50,7 +54,11 @@ export const MenuApp = () => {
       }
       if ( location.pathname.includes('/farm-project-management')) {
         setPath("/farm-project-management");
-      } 
+      } else if(location.pathname.includes('/land-management')) {
+        setPath("/land-management");
+      } else if(location.pathname.includes('/seed-management')) {
+        setPath("/seed-management");
+      }
     } else if (userName.role === UserRole.Staff && userName.department === 2) {
       if(location.pathname.includes("/")) {
         setPath("/harvest-management");
@@ -93,8 +101,10 @@ export const MenuApp = () => {
     ];
   } else if(userName.role == UserRole.Farmer && userName.isOwner === true) {
     items = [
-      getItem("Farm Information", '/farm-info'),
-      getItem("Farm Project Management", '/farm-project-management'),
+      getItem("Farm Information", '/farm-info', <TbHomeEco/>),
+      getItem("Farm Project Management", '/farm-project-management', <FaTasks/>),
+      getItem("Land Management", '/land-management', <TbColumns3/>),
+      getItem("Seed Management", '/seed-management', <RiSeedlingLine/>),
     ];
   }else if (userName.role === UserRole.Staff && userName.department ===2) {
     items = [

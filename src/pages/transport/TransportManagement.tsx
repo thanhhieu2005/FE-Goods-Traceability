@@ -1,10 +1,10 @@
-import { Badge, Col } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Badge, Col, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetAllTransportAPI } from "@/api/transport_api";
 import { parseTransportData, Transport } from "@/types/step_tracking";
 import { BadgeByState } from "@/components/Tag/StateTag";
+import { ColumnsType } from "antd/es/table";
 
 const TransportManagement = () => {
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ const TransportManagement = () => {
         columns={columns}
         dataSource={dataTransport}
         scroll={{ x: 1300 }}
-        onRow={(transport, rowIndex) => {
+        onRow={(transport : Transport, rowIndex : any) => {
           return {
             onClick: () => {
               navigate(`/transport-management/${transport.transportId}`, {

@@ -1,11 +1,11 @@
-import { Badge, Col } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Badge, Col, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Harvest, parseHarvestData } from "@/types/step_tracking";
 import { GetAllHarvestAPI } from "@/api/harvest/harvest_api";
+import { ColumnsType } from "antd/es/table";
 
 const HarvestManagement = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const HarvestManagement = () => {
       width: 100,
       dataIndex: "projectCode",
       key: "projectCode",
-      fixed: "left",
+      fixed: "left", 
     },
     {
       title: "Inspector",
@@ -111,7 +111,7 @@ const HarvestManagement = () => {
     <div>
       <Col>
         <div className="header-content">Harvest Management</div>
-        <Table columns={columns} dataSource={dataHarvests} scroll={{ x: 1300 }} onRow = {(harvest, rowIndex) => {
+        <Table columns={columns} dataSource={dataHarvests} scroll={{ x: 1300 }} onRow = {(harvest : Harvest, rowIndex : any) => {
           return {
             onClick: () => {
               navigate(`/harvest-management/${harvest.harvestId}`, {state: harvest.harvestId})

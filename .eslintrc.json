@@ -37,6 +37,7 @@
       }
     ],
     "react/prop-types": "off",
-    "no-useless-escape": "warn"
+    "no-useless-escape": "warn",
+    "no-unused-vars": "off"
   }
 }

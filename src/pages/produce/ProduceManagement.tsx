@@ -1,5 +1,4 @@
-import { Badge, Col } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Badge, Col, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
@@ -7,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { parseProductionData, Production } from "@/types/step_tracking";
 import { BadgeByState } from "@/components/Tag/StateTag";
 import { GetAllProduceAPI } from "@/api/produce_api";
+import { ColumnsType } from "antd/es/table";
 
 // interface Produce {
 //   key: string;
@@ -111,7 +111,7 @@ function ProduceManagement() {
           columns={columns}
           dataSource={dataProduction}
           scroll={{ x: 1300 }}
-          onRow={(production, rowIndex) => {
+          onRow={(production: Production, rowIndex : any) => {
             return {
               onClick: () => {
                 navigate(`/produce-management/${production.productionId}`, {

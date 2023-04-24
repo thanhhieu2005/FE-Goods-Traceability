@@ -1,6 +1,8 @@
 import { Badge, Tag } from "antd";
 import React from "react";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { CommonProjectState } from "@/types/project_model";
+import { LandState } from "@/types/farm_model";
 
 export const StateTag = ({ myProp: state }: any) => {
   return (
@@ -105,6 +107,52 @@ export const BadgeByState = (value: number) => {
   }
 };
 
+export const TagStateCommonProject = (value: CommonProjectState) => {
+  switch (value) {
+    case CommonProjectState.Completed: 
+      return (
+        <div>
+          <Tag color="success">
+            COMPLETE
+          </Tag>
+        </div>
+      );
+    case CommonProjectState.Pending:
+      return (
+        <div>
+          <Tag color="warning">
+            PENDING
+          </Tag>
+        </div>
+      );
+    case CommonProjectState.Processing:
+      return (
+        <div>
+          <Tag color="processing">
+            PROCESSING
+          </Tag>
+        </div>
+      );
+    case CommonProjectState.Canceled:
+      return (
+        <div>
+          <Tag color="error">
+            CANCELED
+          </Tag>
+        </div>
+      );
+    default:
+      return (
+        <div>
+          <Tag color="default">
+            UNDEFINED
+          </Tag>
+        </div>
+       
+      );
+  }
+}
+
 export const TagRoleUser = (value: number) => {
   switch(value) {
     case 1:
@@ -149,3 +197,22 @@ export const TagRoleUser = (value: number) => {
       );
   }
 };
+
+export const TagLandState = (value : LandState) => {
+  switch(value) {
+    case LandState.Empty:
+      return <div>
+        <Tag color="default" style={{margin: '0px'}}>
+          EMPTY
+        </Tag>
+      </div>
+    case LandState.Cultivating:
+      return <div>
+        <Tag color="success" style={{margin: '0px'}}>
+          CULTIVATING
+        </Tag>
+      </div>
+    default:
+      return <></>
+  }
+}

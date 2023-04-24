@@ -134,7 +134,7 @@ export const TechAdminFarm = () => {
               columns={columns} 
               dataSource={dataListFarms} 
               scroll={{ x: 1300 }} 
-              onRow={(farm, rowIndex) => {
+              onRow={(farm : FarmInfoModel, rowIndex : any) => {
                 return {
                   onClick: () => {
                     navigate(`/techAd-farm-management/${farm.farmId}`, {

@@ -1,5 +1,4 @@
-import { Badge, Col } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
+import { Badge, Col, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import "../common.scss";
 import { FormOutlined } from "@ant-design/icons";
@@ -7,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { parseWarehouseStorageData, WarehouseStorage } from "@/types/step_tracking";
 import { GetAllWarehouseStorageAPI } from "@/api/warehouse_api";
 import { BadgeByState } from "@/components/Tag/StateTag";
+import { ColumnsType } from "antd/es/table";
 
 
 function WarehouseManagement() {
@@ -98,7 +98,7 @@ function WarehouseManagement() {
           columns={columns}
           dataSource={dataWarehouseStorage}
           scroll={{ x: 1300 }}
-          onRow={(warehouseStorage, rowIndex) => {
+          onRow={(warehouseStorage : WarehouseStorage, rowIndex : any) => {
             return {
               onClick: () => {
                 navigate(
