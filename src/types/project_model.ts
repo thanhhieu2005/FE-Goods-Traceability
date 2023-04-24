@@ -48,26 +48,38 @@ export const parseProjectData = (data: any) => {
     harvest.state = data.harvest.state;
     harvest.moisture = data.harvest?.moisture;
     harvest.dateCompleted = data.harvest?.dateCompleted;
-    harvest.inspector =
+
+    if(harvest.inspector != null) {
+harvest.inspector =
     data.harvest?.inspector.lastName +
       " " +
       data.harvest?.inspector.firstName;
+    } else {
+      harvest.inspector = ""
+    }
+    
   
     // mapping data to transport interface
-    transport.key = data.shipping._id;
-    transport.projectId = data.shipping.projectId;
-    transport.transportId = data.shipping._id;
-    transport.totalInput = data.shipping?.totalInput;
-    transport.transportName = data.shipping?.transport;
-    transport.vehicleType = data.shipping?.vehicleType;
-    transport.numberOfVehicle = data.shipping?.numberOfVehicle;
-    transport.dateExpected = data.shipping?.dateExpected;
-    transport.dateCompleted = data.shipping?.dateCompleted;
-    transport.state = data.shipping?.state;
-    transport.inspector =
-    data.shipping?.inspector.lastName +
+    transport.key = data.transport._id;
+    transport.projectId = data.transport.projectId;
+    transport.transportId = data.transport._id;
+    transport.totalInput = data.transport?.totalInput;
+    transport.transportName = data.transport?.transport;
+    transport.vehicleType = data.transport?.vehicleType;
+    transport.numberOfVehicle = data.transport?.numberOfVehicle;
+    transport.dateExpected = data.transport?.dateExpected;
+    transport.dateCompleted = data.transport?.dateCompleted;
+    transport.state = data.transport?.state;
+
+    if(transport.inspector != null) {
+transport.inspector =
+    data.transport?.inspector.lastName +
       " " +
-      data.shipping?.inspector.firstName;
+      data.transport?.inspector.firstName;
+    } else {
+      transport.inspector = ""
+    }
+    
   
     // mapping data to Warehouse Storage interface
     warehouseStorage.key = data.warehouseStorage._id;
@@ -77,10 +89,16 @@ export const parseProjectData = (data: any) => {
     warehouseStorage.totalExport = data.warehouseStorage?.totalExport;
     warehouseStorage.inputDate = data.warehouseStorage?.inputDate;
     warehouseStorage.outputDate = data.warehouseStorage?.outputDate;
+
+    if(warehouseStorage.inspector != null) {
     warehouseStorage.inspector =
     data.warehouseStorage?.inspector.lastName +
       " " +
       data.warehouseStorage?.inspector.firstName;
+    } else {
+      warehouseStorage.inspector = ""
+    }
+
     warehouseStorage.state = data.warehouseStorage.state;
     warehouseStorage.warehouseName =
     data.warehouseStorage?.warehouse;
@@ -96,10 +114,15 @@ export const parseProjectData = (data: any) => {
     production.dryingTemperature = data.produce?.dryingTemperature;
     production.dateCompleted = data.produce?.dateCompleted;
     production.expiredDate = data.produce?.expiredDate;
-    production.inspector = warehouseStorage.inspector =
+    if(production.inspector != null) {
+    production.inspector = 
     data.produce?.inspector.lastName +
       " " +
       data.produce?.inspector.firstName;
+    } else {
+      production.inspector = ""
+    }
+    
     production.state = data.produce?.state;
   
     // mapping data to project detail interface
