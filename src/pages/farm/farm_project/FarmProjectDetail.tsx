@@ -1,7 +1,9 @@
+import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
 import { TagStateCommonProject } from "@/components/Tag/StateTag";
 import { contentLayout } from "@/styles/content_layout";
 import { FarmProjectModel } from "@/types/farm_model";
 import { dateFormat } from "@/utils/formatDateTime";
+import { EditOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Col, DatePicker, Form, Input, Row } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
@@ -16,6 +18,23 @@ const FarmProjectDetail = () => {
   const [updateInfo, setUpdateInfo] = useState<boolean>(true);
 
   console.log(dataFarmProject.fertilizerUsed);
+
+  // update farm project
+
+  const [isDrawerEditFarmProject, setIsDrawerEditFarmProject] = useState(false);
+
+  const showEditFarmProject = () => {
+    setIsDrawerEditFarmProject(true);
+  };
+
+  const cancelCloseEditFarmProject = () => {
+    setIsDrawerEditFarmProject(false);
+  };
+
+  const submitEditLand = () => {
+    setIsDrawerEditFarmProject(false);
+  };
+
   return (
     <Col>
       <div className="header-content">
@@ -37,11 +56,39 @@ const FarmProjectDetail = () => {
               <Button
                 type="primary"
                 onClick={() => {
-                  setUpdateInfo(false);
+                  setIsDrawerEditFarmProject(true);
                 }}
+                icon={<EditOutlined key="edit" />}
+                style={{ borderRadius: "4px" }}
               >
                 Update Project
               </Button>
+              {isDrawerEditFarmProject && (
+                <ShowDrawerEdit
+                  myProps={{
+                    title: "Edit Farm Project",
+                    onOpen: showEditFarmProject,
+                    onClose: cancelCloseEditFarmProject,
+                    onsubmit: submitEditLand,
+                    content: (
+                      <div>
+                        <div
+                          style={{
+                            fontSize: "18px",
+                            fontWeight: "600",
+                            marginBottom: "12px",
+                          }}
+                        >
+                          Update new information for the farm project
+                        </div>
+                        <Form layout="vertical">
+                          <Col></Col>
+                        </Form>
+                      </div>
+                    ),
+                  }}
+                />
+              )}
             </div>
             <div className="text-title">Overview Farm Project</div>
             <Form {...contentLayout} disabled>
@@ -58,10 +105,10 @@ const FarmProjectDetail = () => {
               <Form.Item
                 label="Project ID"
                 name="projectId"
-                initialValue={
-                  dataFarmProject.projectId ??
-                  "Farm Project has not been assigned to the project"
-                }
+                // initialValue={
+                //   dataFarmProject.projectId ??
+                //   "Farm Project has not been assigned to the project"
+                // }
               >
                 <Input />
               </Form.Item>

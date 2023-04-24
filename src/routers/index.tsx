@@ -26,6 +26,7 @@ import FarmProjectManagement from "@/pages/farm/farm_project/FarmProjectManageme
 import FarmProjectDetail from "@/pages/farm/farm_project/FarmProjectDetail";
 import LandManagement from "@/pages/farm/land/LandManagement";
 import SeedManagement from "@/pages/farm/seed/SeedManagement";
+import CreateFarmProject from "@/pages/farm/farm_project/CreateFarmProject";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -108,6 +109,10 @@ const Routers = () => {
                       <Route
                         path="/seed-management"
                         element={<SeedManagement/>}
+                      />
+                      <Route
+                        path="farm-project-management/create-farm-project"
+                        element={<CreateFarmProject/>}
                       />
                     </Route>
                   ) : (

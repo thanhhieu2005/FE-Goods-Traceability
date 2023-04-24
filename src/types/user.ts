@@ -22,7 +22,7 @@ export interface ListUserInfo {
 }
 
 export interface UserDetailModel {
-    userDetail: FarmInfoModel;
+    farmInfo?: FarmInfoModel;
     userId: string;
     email: string;
     firstName?: string;
@@ -83,6 +83,7 @@ export const parseListUserInfo = (data: any) => {
     userDetail.department = data.role == 4 ? data.department : null;
     userDetail.farmList = farmList;
     userDetail.phoneNumber = data.phoneNumber;
+    userDetail.isOwner = data.isOwner;
   
     return userDetail;
   }

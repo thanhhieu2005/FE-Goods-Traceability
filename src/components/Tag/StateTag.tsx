@@ -2,6 +2,7 @@ import { Badge, Tag } from "antd";
 import React from "react";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { CommonProjectState } from "@/types/project_model";
+import { LandState } from "@/types/farm_model";
 
 export const StateTag = ({ myProp: state }: any) => {
   return (
@@ -111,7 +112,7 @@ export const TagStateCommonProject = (value: CommonProjectState) => {
     case CommonProjectState.Completed: 
       return (
         <div>
-          <Tag color="sucess">
+          <Tag color="success">
             COMPLETE
           </Tag>
         </div>
@@ -196,3 +197,22 @@ export const TagRoleUser = (value: number) => {
       );
   }
 };
+
+export const TagLandState = (value : LandState) => {
+  switch(value) {
+    case LandState.Empty:
+      return <div>
+        <Tag color="default" style={{margin: '0px'}}>
+          EMPTY
+        </Tag>
+      </div>
+    case LandState.Cultivating:
+      return <div>
+        <Tag color="success" style={{margin: '0px'}}>
+          CULTIVATING
+        </Tag>
+      </div>
+    default:
+      return <></>
+  }
+}

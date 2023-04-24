@@ -41,7 +41,15 @@ export interface FarmProjectModel {
     note: string;
     dateCreated: string;
     farmer: UserDetailModel;
+    projectId: ProjectInFarmProjectModel;
+}
+
+export interface ProjectInFarmProjectModel {
     projectId: string;
+    projectCode: string;
+    projectName: string;
+    dateCreate: string;
+    state: CommonProjectState;
 }
 
 export interface SeedModel {
