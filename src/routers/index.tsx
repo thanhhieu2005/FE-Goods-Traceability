@@ -27,6 +27,7 @@ import FarmProjectDetail from "@/pages/farm/farm_project/FarmProjectDetail";
 import LandManagement from "@/pages/farm/land/LandManagement";
 import SeedManagement from "@/pages/farm/seed/SeedManagement";
 import CreateFarmProject from "@/pages/farm/farm_project/CreateFarmProject";
+import ProjectLog from "../pages/system_admin/project_detail/project_log/Project_Log";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -65,9 +66,9 @@ const Routers = () => {
                     path="/techAd-account-management"
                     element={<AccountManagement />}
                   />
-                  <Route path="/techAd-account-management/:userId" element={<AccountDetail/>} />
+                  <Route path="/techAd-account-management/:userId" element={<AccountDetail />} />
                   <Route path="/techAd-farm-management" element={<TechAdminFarm />} />
-                  <Route path="/techAd-farm-management/:farmId" element={<TechAdminFarmDetail/>}/>
+                  <Route path="/techAd-farm-management/:farmId" element={<TechAdminFarmDetail />} />
                 </>
               ) : userName.role === 2 ? (  // System Admin Router
                 <>
@@ -84,42 +85,47 @@ const Routers = () => {
                     path="/project-management/:projectId"
                     element={<ProjectDetail />}
                   />
+
+                  <Route
+                    path="/project-management/:projectId/project-log"
+                    element={<ProjectLog />}
+                  />
                 </>
               ) : userName.role === 3 ? ( // Farm Router
                 <>
-                  <Route path="/" element={<Navigate to="/farm-info"/>}/>
-                  <Route 
+                  <Route path="/" element={<Navigate to="/farm-info" />} />
+                  <Route
                     path="/farm-info"
-                    element={<FarmInfo/>}
+                    element={<FarmInfo />}
                   />
                   {userName.isOwner ? (
                     <Route>
                       <Route
                         path="/farm-project-management"
-                        element={<FarmProjectManagement/>}
+                        element={<FarmProjectManagement />}
                       />
                       <Route
                         path="/farm-project-management/:farmProjectId"
-                        element={<FarmProjectDetail/>}
+                        element={<FarmProjectDetail />}
                       />
                       <Route
                         path="/land-management"
-                        element={<LandManagement/>}
+                        element={<LandManagement />}
                       />
                       <Route
                         path="/seed-management"
-                        element={<SeedManagement/>}
+                        element={<SeedManagement />}
                       />
                       <Route
                         path="farm-project-management/create-farm-project"
-                        element={<CreateFarmProject/>}
+                        element={<CreateFarmProject />}
                       />
                     </Route>
                   ) : (
-                    <Route/>
+                    <Route />
                   )}
                 </>
-              ) : userName.role === 4 &&  userName.department === 1 ? (
+              ) : userName.role === 4 && userName.department === 1 ? (
                 <></>
               ) : userName.role === 4 && userName.department === 2 ? (
                 <>
@@ -190,7 +196,7 @@ const Routers = () => {
           <>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/forgot-password" element={<ForgotPassword/>} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </>
         )}
       </Routes>

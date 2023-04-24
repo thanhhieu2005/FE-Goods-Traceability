@@ -1,0 +1,39 @@
+.title {
+    font-size: 24px;
+    padding-top: 24px;
+    padding-left: 64px;
+    font-weight: 500;
+}
+
+.btn-update {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-right: 48px;
+}
+
+.main-content {
+    background-color: white;
+    position: relative;
+
+    .layout-btn-save {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 72px;
+
+        .btn-save {
+            width: 100px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .btn-cancel {
+            width: 100px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 400;
+        }
+    }
+}

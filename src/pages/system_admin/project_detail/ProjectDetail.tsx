@@ -11,7 +11,7 @@ import { formatDateTime } from "@/utils/formatDateTime";
 import { FormOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row } from "antd";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../common.scss";
 import InfoHarvestModal from "../../../components/Modal/InfoHarvestModal";
 import InfoProductionModal from "../../../components/Modal/InfoProductionModal";
@@ -31,6 +31,8 @@ const layout = {
 let disabled = true;
 
 const ProjectDetail = () => {
+  const navigate = useNavigate();
+
   const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
 
   const [dataProject, setDataProject] = useState<ProjectDetailModel>();
@@ -252,6 +254,20 @@ const ProjectDetail = () => {
                     danger
                   >
                     Cancel
+                  </Button>
+
+                  <Button
+                    className="btn-view-log"
+                    type="primary"
+                    // icon={<FormOutlined />}
+                    onClick={() => {
+                      navigate(`/project-management/${dataProject.projectId}/project-log`);
+                    }}
+                    hidden={false}
+                    size={"large"}
+                    style={{ marginRight: "12px" }}
+                  >
+                    Show Log List
                   </Button>
                   {/* <Button
                     className="btn-save"

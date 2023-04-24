@@ -19,6 +19,7 @@ const layout = {
 let disabled = true;
 
 function ProduceDetail() {
+
   const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
 
   const [dataProduction, setDataProduction] = useState<Production>();
