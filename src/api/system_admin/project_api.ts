@@ -11,7 +11,6 @@ export const GetAllProjectAPI = async () => {
                 headers: { Authorization: `Bearer ${currentToken}` },
             }
         );
-        console.log("Test", res);
         return res;
     } catch (err) {
         console.log(err);
@@ -30,7 +29,6 @@ export const GetProjectDetailByID = async (projectId: string) => {
                 headers: { Authorization: `Bearer ${currentToken}` },
             }
         );
-        console.log(res);
         return res;
     } catch (err) {
         console.log(err);
@@ -69,7 +67,6 @@ export const UpdateProjectState = async (value: any, projectId: string) => {
                 headers: { Authorization: `Bearer ${currentToken}`},
             },
         );
-        console.log(res);
         return res;
     } catch (err) {
         console.log(err);

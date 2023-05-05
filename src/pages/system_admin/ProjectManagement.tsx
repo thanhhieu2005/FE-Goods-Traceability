@@ -6,6 +6,10 @@ import "../common.scss";
 import { useNavigate } from "react-router-dom";
 import CreateProjectForm from "./CreateProjectForm";
 import { GetAllProjectAPI } from "@/api/system_admin/project_api";
+import moment from "moment";
+import Search from "antd/lib/input/Search";
+import { CommonProjectState } from "@/types/project_model";
+import { TagStateCommonProject } from "@/components/Tag/StateTag";
 
 interface ProjectInfo {
   key: string;
@@ -50,8 +54,6 @@ export const ProjectManagement = () => {
     });
   }, []);
 
-  console.log(dataProjects);
-
   const columns: ColumnsType<ProjectInfo> = [
     {
       title: "Project Identify Address",
@@ -87,6 +89,7 @@ export const ProjectManagement = () => {
       dataIndex: "dateCreated",
       key: "dateCreated",
       fixed: "left",
+      render: (date: string) => <div>{moment(date).format("DD/MM/YYYY")}</div>,
     },
     {
       title: "Status",
@@ -94,66 +97,51 @@ export const ProjectManagement = () => {
       dataIndex: "status",
       key: "status",
       fixed: "left",
-      render: (value: number) =>
-        value == 1 ? (
-          <span>
-            <Badge status="processing" style={{ paddingRight: "4px" }} />
-            Processing
-          </span>
-        ) : value == 2 ? (
-          <span>
-            <Badge status="success" style={{ paddingRight: "4px" }} />
-            Completed
-          </span>
-        ) : (
-          <span>
-            <Badge status="error" style={{ paddingRight: "4px" }} />
-            Canceled
-          </span>
-        ),
+      render: (state: CommonProjectState) => TagStateCommonProject(state),
     },
-    // {
-    //   title: "Edit",
-    //   key: "operation",
-    //   fixed: "right",
-    //   width: 100,
-    //   render: () => (
-    //     <div
-    //       style={{ cursor: "pointer" }}
-    //       onClick={() => {
-    //         console.log(dataTest)
-    //         // navigate("/project-management/id");
-    //       }}
-    //     >
-    //       <FormOutlined />
-    //     </div>
-    //   ),
-    // },
   ];
 
   return (
     <div>
       <Col>
-        <div className="header-content">Project Management</div>
-        <div className="action-button">
-          <Row>
-            <CreateProjectForm />
-          </Row>
+        <div className="header-content">
+          <Col>
+            <div className="title-header">Project Management</div>
+            <div className="sub-title-header">
+              List of all projects of the enterprise being managing and
+              following the process
+            </div>
+          </Col>
         </div>
-        <Table
-          columns={columns}
-          dataSource={dataProjects}
-          scroll={{ x: 1300 }}
-          onRow={(record: ProjectInfo, rowIndex: any) => {
-            return {
-              onClick: () => {
-                navigate(`/project-management/${record.key}`, {
-                  state: record.key,
-                });
-              },
-            };
-          }}
-        />
+        <div className="content-page">
+          <Row
+            style={{ paddingBottom: "12px", justifyContent: "space-between" }}
+          >
+            <Row style={{ width: "80%" }}>
+              <div className="label-search">Find project</div>
+              <div className="search-item">
+                <Search placeholder="Enter your project" enterButton />
+              </div>
+            </Row>
+            <div className="action-layout-btn">
+              <CreateProjectForm />
+            </div>
+          </Row>
+          <Table
+            columns={columns}
+            dataSource={dataProjects}
+            scroll={{ x: 1300 }}
+            onRow={(record: ProjectInfo, rowIndex: any) => {
+              return {
+                onClick: () => {
+                  navigate(`/project-management/${record.key}`, {
+                    state: record.key,
+                  });
+                },
+              };
+            }}
+          />
+        </div>
       </Col>
     </div>
   );
