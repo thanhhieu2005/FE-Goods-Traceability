@@ -11,7 +11,7 @@
     }
     .title-header {
         font-weight: bold;
-        font-size: 36px;
+        font-size: 32px;
         color: black;
         padding-bottom: 8px;
     }
@@ -84,6 +84,13 @@
     .text-content-form {
         font-size: 14px;
         font-weight: 500;
+    }
+
+    .row-btn-layout {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin: 24px 0px;
     }
 }
 

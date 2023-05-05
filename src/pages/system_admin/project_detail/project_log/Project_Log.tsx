@@ -1,23 +1,28 @@
-import { Button, Col, Form, Input, Row } from "antd";
+import { Breadcrumb, Button, Card, Col, Form, Input, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-const ProjectLog = () => {
 
+import './log.scss'
+
+const ProjectLog = () => {
     return (
         <Col>
-            <div className="header-content">Project Log</div>
-            <div className="main-content">
-                <Button
-                    className="btn-cancel"
-                    type="primary"
-                    // icon={<FormOutlined />
-                    hidden={false}
-                    size={"large"}
-                    style={{ marginRight: "12px" }}
-                    danger
-                >
-                    Cancel
-                </Button>
+            <div className="header-content">
+                <Col>
+                    <Breadcrumb className="breadcrumb-style">
+                        <Breadcrumb.Item>Project ID Here</Breadcrumb.Item>
+                        <Breadcrumb.Item>Project Log Here</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div className="title-header">Project Log Page</div>
+                    <div className="sub-title-header">
+                        Information about the status update changes of the shipment is described in the form of tracking information
+                    </div>
+                </Col>
+            </div>
+            <div className="content-page">
+                <Col>
+                    
+                </Col>
             </div>
         </Col>
     );

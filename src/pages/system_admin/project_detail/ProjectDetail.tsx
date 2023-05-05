@@ -2,14 +2,11 @@ import {
   GetProjectDetailByID,
   UpdateProjectState,
 } from "@/api/system_admin/project_api";
-import {
-  CheckProjectStatus,
-  StateComponent,
-} from "@/pages/common/CheckProjectStatus";
-import { parseProjectData, ProjectDetailModel } from "@/types/project_model";
+import { CheckProjectStatus } from "@/pages/common/CheckProjectStatus";
+import {  ProjectDetailModel } from "@/types/project_model";
 import { formatDateTime } from "@/utils/formatDateTime";
-import { FormOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Row } from "antd";
+import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
+import { Breadcrumb, Button, Col, Form, Input, Row, Steps, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../common.scss";
@@ -18,10 +15,10 @@ import InfoProductionModal from "../../../components/Modal/InfoProductionModal";
 import InfoTransportModal from "../../../components/Modal/InfoTransportModal";
 import InfoWarehouseModal from "../../../components/Modal/InfoWarehouseModal";
 import "./ProjectDetail.scss";
-import { StateTag } from "@/components/Tag/StateTag";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import moment from "moment";
-import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
+import { StateInfoProject } from "@/components/Tag/StateTag";
+import { checkCurrentStepProject } from "@/utils/check_current_step";
 
 const layout = {
   labelCol: { span: 6 },
@@ -39,18 +36,23 @@ const ProjectDetail = () => {
 
   const { state: projectId } = useLocation();
 
-  // console.log("project ID", projectId);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     GetProjectDetailByID(projectId).then((res: any) => {
-      const projectDetail = parseProjectData(res.data);
+      const projectDetail = res.data as ProjectDetailModel;
 
       setDataProject(projectDetail);
+
+      const currentStep = checkCurrentStepProject(projectDetail);
+
+      setCurrentStep(currentStep);
     });
+
+    
   }, [projectId]);
-
-  console.log(dataProject);
-
+  
+  
   const handleUpdateProjectState = async (projectId: string, state: number) => {
     const value = { state: state };
 
@@ -59,9 +61,7 @@ const ProjectDetail = () => {
 
     const res: any = await UpdateProjectState(value, projectId);
 
-    console.log(res);
-
-    const newInfoProject = parseProjectData(res.data.project);
+    const newInfoProject = res.data.project as ProjectDetailModel;
 
     if (res.status === 200) {
       state == 2
@@ -76,31 +76,100 @@ const ProjectDetail = () => {
     }
   };
 
+  // Steps project
+  const stepsProject = [
+    {
+      title: 'Farm',
+    },
+    {
+      title: 'Harvest',
+    },
+    {
+      title: 'Transport',
+    },
+    {
+      title: 'Import/ Export Warehouse',
+    },
+    {
+      title: 'Production',
+    }
+  ]
+
   return (
     <Col>
-      <div className="header-content">Project Detail</div>
-      <div className="main-content">
+      <div className="header-content">
+        <Col>
+          <Breadcrumb className="breadcrumb-style">
+            <Breadcrumb.Item>Project Management</Breadcrumb.Item>
+            <Breadcrumb.Item>Project Detail</Breadcrumb.Item>
+          </Breadcrumb>
+          <div className="title-header">Project Detail</div>
+          <div className="sub-title-header">
+            Display project information, status and details of{" "}
+            {dataProject?.projectName}
+          </div>
+        </Col>
+      </div>
+      <div className="content-page">
         {dataProject ? (
           <Col>
-            <p className="title"> Project Information </p>
-            {dataProject.state === 1 ? (
-              <div className="btn-update">
+            <Row style={{display: 'flex', justifyItems: 'center', alignItems: 'center'}}>
+              <p className="title">
+                Information of Project - {dataProject.projectName}{" "}
+              </p>
+              <div style={{marginLeft: '12px'}}>{StateInfoProject(dataProject.state)}</div>
+            </Row>
+            <div style={{padding: '24px'}}>
+              <Steps current={currentStep} labelPlacement="vertical" items={stepsProject}></Steps>
+            </div>
+            <Row className="row-btn-layout">
+              {dataProject.state === 1 ? (
+                <div>
+                  <Button
+                    type="primary"
+                    icon={<FormOutlined />}
+                    size="large"
+                    onClick={() => {
+                      // disabled = false;
+                      // setComponentDisabled(disabled);
+                    }}
+                    disabled={!componentDisabled}
+                    style={{ marginRight: "24px" }}
+                  >
+                    Update
+                  </Button>
+                </div>
+              ) : (
+                // <StateTag myProp={dataProject.state}></StateTag>
+                <div>
+                  <Button
+                    type="primary"
+                    icon={<FormOutlined />}
+                    size="large"
+                    onClick={() => {
+                      // disabled = false;
+                      // setComponentDisabled(disabled);
+                    }}
+                    disabled={!componentDisabled}
+                    style={{ marginRight: "24px" }}
+                  >
+                    Update
+                  </Button>
+                </div>
+              )}
+              <div>
                 <Button
-                  type="primary"
-                  icon={<FormOutlined />}
+                  type="default"
                   size="large"
+                  icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
                   onClick={() => {
-                    disabled = false;
-                    setComponentDisabled(disabled);
+                    navigate("/project-log");
                   }}
-                  disabled={!componentDisabled}
                 >
-                  Update
+                  View Log
                 </Button>
               </div>
-            ) : (
-              <StateTag myProp={dataProject.state}></StateTag>
-            )}
+            </Row>
             <div>
               <Form {...layout}>
                 <Form.Item
@@ -152,7 +221,7 @@ const ProjectDetail = () => {
                   <Input disabled={true} />
                 </Form.Item>
 
-                <Form.Item label="Harvest Inspection" name="harvester">
+                {/* <Form.Item label="Harvest Inspection" name="harvester">
                   <Row>
                     {CheckProjectStatus(dataProject?.harvest.state)}
                     <div>
@@ -185,105 +254,8 @@ const ProjectDetail = () => {
                       <InfoProductionModal myProp={dataProject?.production} />
                     </div>
                   </Row>
-                </Form.Item>
-                {componentDisabled ? (
-                  StateComponent(dataProject.state)
-                ) : (
-                  <Form.Item label="Update new State" name="newState">
-                    <Row>
-                      <Button
-                        type="primary"
-                        style={{
-                          marginRight: "24px",
-                          width: "100px",
-                          borderRadius: "6px",
-                        }}
-                        danger
-                        onClick={async () => {
-                          disabled = true;
-                          setComponentDisabled(disabled);
-                          handleUpdateProjectState(dataProject?.projectId, 3);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        style={{
-                          width: "100px",
-                          background: "#87d068",
-                          borderColor: "#87d068",
-                          color: "white",
-                          borderRadius: "6px",
-                        }}
-                        onClick={async () => {
-                          if (
-                            dataProject.harvest.state === 1 ||
-                            dataProject.transport.state === 1 ||
-                            dataProject.warehouseStorage.state === 1 ||
-                            dataProject.production.state === 1
-                          ) {
-                            errorMessage(
-                              "Other steps have not been completed!"
-                            );
-                          } else {
-                            disabled = true;
-                            setComponentDisabled(disabled);
-                            handleUpdateProjectState(dataProject.projectId, 2);
-                          }
-                        }}
-                      >
-                        Completed
-                      </Button>
-                    </Row>
-                  </Form.Item>
-                )}
+                </Form.Item> */}
               </Form>
-              <div className="layout-btn-save">
-                <Row>
-                  <Button
-                    className="btn-cancel"
-                    type="primary"
-                    // icon={<FormOutlined />}
-                    onClick={() => {
-                      disabled = true;
-                      setComponentDisabled(disabled);
-                    }}
-                    hidden={disabled}
-                    size={"large"}
-                    style={{ marginRight: "12px" }}
-                    danger
-                  >
-                    Cancel
-                  </Button>
-
-                  <Button
-                    className="btn-view-log"
-                    type="primary"
-                    // icon={<FormOutlined />}
-                    onClick={() => {
-                      navigate(`/project-management/${dataProject.projectId}/project-log`);
-                    }}
-                    hidden={false}
-                    size={"large"}
-                    style={{ marginRight: "12px" }}
-                  >
-                    Show Log List
-                  </Button>
-                  {/* <Button
-                    className="btn-save"
-                    type="primary"
-                    // icon={<FormOutlined />}
-                    onClick={() => {
-                      disabled = true;
-                      setComponentDisabled(disabled);
-                    }}
-                    hidden={disabled}
-                    size={"large"}
-                  >
-                    Save
-                  </Button> */}
-                </Row>
-              </div>
             </div>
           </Col>
         ) : (

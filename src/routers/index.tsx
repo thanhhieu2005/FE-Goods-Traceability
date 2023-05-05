@@ -87,7 +87,7 @@ const Routers = () => {
                   />
 
                   <Route
-                    path="/project-management/:projectId/project-log"
+                    path="/project-log"
                     element={<ProjectLog />}
                   />
                 </>

@@ -1,3 +1,4 @@
+import { CommonProjectState } from "./project_model";
 import { UserModel } from "./user";
 
 export interface Harvest {
@@ -6,7 +7,7 @@ export interface Harvest {
     harvestId: string;
     totalHarvest?: number;
     ripeness?: number;
-    state: number;
+    state: CommonProjectState;
     dateCompleted?: string;
     moisture?: number;
     inspector?: string;
@@ -24,7 +25,7 @@ export interface Transport {
     numberOfVehicle?: number;
     dateExpected?: string;
     dateCompleted?: string;
-    state: number;
+    state: CommonProjectState;
     inspector?: string;
     projectCode: string;
 }
@@ -38,7 +39,7 @@ export interface WarehouseStorage {
     totalExport?: number;
     inputDate?: string;
     outputDate?: string;
-    state: number;
+    state: CommonProjectState;
     inspector?: string;
     projectCode: string;
 }
@@ -57,7 +58,7 @@ export interface Production {
     expiredDate?: string;
     inspector?: string;
     productName?: string;
-    state: number;
+    state: CommonProjectState;
 }
 
 

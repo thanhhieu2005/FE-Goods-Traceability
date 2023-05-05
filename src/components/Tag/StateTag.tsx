@@ -24,7 +24,7 @@ export const StateTag = ({ myProp: state }: any) => {
         >
           This Project has been Completed
         </Tag>
-      ) : (
+      )  : (
         <Tag
           style={{
             fontWeight: "bold",
@@ -37,6 +37,41 @@ export const StateTag = ({ myProp: state }: any) => {
       )}
     </div>
   );
+};
+
+export const StateInfoProject = (state : any) => {
+  switch(state) {
+    case 4:
+      return (
+        <div>
+          <Tag color="warning" style={{padding: '0 12px'}}>PENDING</Tag>
+        </div>
+      );
+    case 2:
+      return (
+        <div>
+          <Tag color="success" style={{padding: '0 12px'}}>COMPLETED</Tag>
+        </div>
+      )
+    case 3:
+      return (
+        <div>
+          <Tag color='error' style={{padding: '0 12px'}}>CANCELED</Tag>
+        </div>
+      )
+    case 1:
+      return (
+        <div>
+          <Tag color="processing" style={{padding: '0 12px'}}>PROCESSING</Tag>
+        </div>
+      )
+    default:
+      return (
+        <div>
+          <Tag color="default" style={{padding: '0 12px', color: 'black'}}>UNKNOW</Tag>
+        </div>
+      )
+  }
 };
 
 export const StateTagStep = ({ myProp: state }: any) => {
