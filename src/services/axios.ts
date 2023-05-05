@@ -5,7 +5,7 @@ const baseURLRender = "https://coffee-supply-chain.onrender.com/";
 const local = "http://localhost:3000/"
 
 const config = {
-    baseURL: local,
+    baseURL: baseURLRender,
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json'
