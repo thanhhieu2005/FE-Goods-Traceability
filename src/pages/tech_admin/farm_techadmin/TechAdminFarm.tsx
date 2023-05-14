@@ -134,6 +134,7 @@ export const TechAdminFarm = () => {
               columns={columns} 
               dataSource={dataListFarms} 
               scroll={{ x: 1300 }} 
+              pagination={{ defaultPageSize: 10, showSizeChanger: true}}
               onRow={(farm : FarmInfoModel, rowIndex : any) => {
                 return {
                   onClick: () => {

@@ -137,6 +137,7 @@ const FarmProjectManagement = () => {
             columns={columns}
             dataSource={dataFarmProjects}
             scroll={{ x: 1300 }}
+            pagination={{ defaultPageSize: 10, showSizeChanger: true}}
             onRow={(farmProject: any, rowIndex: any) => {
               return {
                 onClick: () => {

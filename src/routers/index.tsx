@@ -28,6 +28,7 @@ import LandManagement from "@/pages/farm/land/LandManagement";
 import SeedManagement from "@/pages/farm/seed/SeedManagement";
 import CreateFarmProject from "@/pages/farm/farm_project/CreateFarmProject";
 import ProjectLog from "../pages/system_admin/project_detail/project_log/Project_Log";
+import CreateNewProject from "@/pages/system_admin/CreateNewProject";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -66,11 +67,20 @@ const Routers = () => {
                     path="/techAd-account-management"
                     element={<AccountManagement />}
                   />
-                  <Route path="/techAd-account-management/:userId" element={<AccountDetail />} />
-                  <Route path="/techAd-farm-management" element={<TechAdminFarm />} />
-                  <Route path="/techAd-farm-management/:farmId" element={<TechAdminFarmDetail />} />
+                  <Route
+                    path="/techAd-account-management/:userId"
+                    element={<AccountDetail />}
+                  />
+                  <Route
+                    path="/techAd-farm-management"
+                    element={<TechAdminFarm />}
+                  />
+                  <Route
+                    path="/techAd-farm-management/:farmId"
+                    element={<TechAdminFarmDetail />}
+                  />
                 </>
-              ) : userName.role === 2 ? (  // System Admin Router
+              ) : userName.role === 2 ? ( // System Admin Router
                 <>
                   <Route
                     path="/"
@@ -86,18 +96,16 @@ const Routers = () => {
                     element={<ProjectDetail />}
                   />
 
+                  <Route path="/project-log" element={<ProjectLog />} />
                   <Route
-                    path="/project-log"
-                    element={<ProjectLog />}
+                    path="/create-new-project"
+                    element={<CreateNewProject />}
                   />
                 </>
               ) : userName.role === 3 ? ( // Farm Router
                 <>
                   <Route path="/" element={<Navigate to="/farm-info" />} />
-                  <Route
-                    path="/farm-info"
-                    element={<FarmInfo />}
-                  />
+                  <Route path="/farm-info" element={<FarmInfo />} />
                   {userName.isOwner ? (
                     <Route>
                       <Route

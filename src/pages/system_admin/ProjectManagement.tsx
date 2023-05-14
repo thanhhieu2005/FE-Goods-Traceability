@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Col, Row, Table } from "antd";
+import { Badge, Button, Col, Pagination, Row, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { FormOutlined } from "@ant-design/icons";
+import { FormOutlined, PlusOutlined } from "@ant-design/icons";
 import "../common.scss";
 import { useNavigate } from "react-router-dom";
 import CreateProjectForm from "./CreateProjectForm";
@@ -124,13 +124,23 @@ export const ProjectManagement = () => {
               </div>
             </Row>
             <div className="action-layout-btn">
-              <CreateProjectForm />
+              {/* <CreateProjectForm /> */}
+              <Button
+                type="primary"
+                onClick={
+                  () => navigate(`/create-new-project`)
+                }
+                icon={<PlusOutlined />}
+              >
+                Create new Project
+              </Button>
             </div>
           </Row>
           <Table
             columns={columns}
             dataSource={dataProjects}
-            scroll={{ x: 1300 }}
+            scroll={{ x: 1300}}
+            pagination={{ defaultPageSize: 10, showSizeChanger: true}}
             onRow={(record: ProjectInfo, rowIndex: any) => {
               return {
                 onClick: () => {

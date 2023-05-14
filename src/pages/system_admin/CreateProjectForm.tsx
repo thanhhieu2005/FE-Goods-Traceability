@@ -2,7 +2,7 @@ import { Button, Modal, Input, Form, Select, Row } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import { CreateNewProject } from "@/api/system_admin/project_api";
+import { CreateNewProjectService } from "@/api/system_admin/project_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 
 const CreateProjectForm = () => {
@@ -30,7 +30,7 @@ const CreateProjectForm = () => {
     const finalValue = { ...value, manager: manager };
     console.log(finalValue);
 
-    const result : any = await CreateNewProject(finalValue);
+    const result : any = await CreateNewProjectService(finalValue);
 
     if(result?.status === 200) {
       console.log("Tạo mới thành công")

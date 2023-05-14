@@ -111,6 +111,7 @@ function ProduceManagement() {
           columns={columns}
           dataSource={dataProduction}
           scroll={{ x: 1300 }}
+          pagination={{ defaultPageSize: 10, showSizeChanger: true}}
           onRow={(production: Production, rowIndex : any) => {
             return {
               onClick: () => {

@@ -1,4 +1,5 @@
 import { axiosClient } from "@/services/axios";
+import { AxiosError } from "axios";
 
 export const GetAllProjectAPI = async () => {
     try {
@@ -36,7 +37,7 @@ export const GetProjectDetailByID = async (projectId: string) => {
     }
 };
 
-export const CreateNewProject = async (value : any) => {
+export const CreateNewProjectService = async (value : any) => {
     try {
         const currentToken = localStorage.getItem('token');
 
@@ -50,8 +51,9 @@ export const CreateNewProject = async (value : any) => {
             },
         );
         return res;
-    } catch (err) {
-        console.log(err);
+    } catch (err : any) {
+        console.log("Test", err);
+        if(err === AxiosError) return err.response;
         return err;
     }
 };

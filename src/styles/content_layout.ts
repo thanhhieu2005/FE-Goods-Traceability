@@ -3,6 +3,11 @@ export const contentLayout = {
   wrapperCol: { span: 8 },
 };
 
+export const tailContentLayout = {
+  offset: 8,
+  span: 16,
+}
+
 export const editContentLayout = {
   labelCol: { span: 6 },
   // wrapperCol: {span: 12},

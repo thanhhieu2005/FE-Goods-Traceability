@@ -90,6 +90,7 @@ const TransportManagement = () => {
         columns={columns}
         dataSource={dataTransport}
         scroll={{ x: 1300 }}
+        pagination={{ defaultPageSize: 10, showSizeChanger: true}}
         onRow={(transport : Transport, rowIndex : any) => {
           return {
             onClick: () => {

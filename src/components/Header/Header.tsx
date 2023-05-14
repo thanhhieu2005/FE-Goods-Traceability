@@ -70,6 +70,10 @@ export const HeaderCustom: React.FC = () => {
     navigate("/login", { replace: true });
   };
 
+  const onBackHomePage = () => {
+    navigate(`/`);
+  }
+
   const onMenuHeaderClick: MenuProps["onClick"] = (event: MenuInfo) => {
     const { key } = event;
 
@@ -113,8 +117,8 @@ export const HeaderCustom: React.FC = () => {
         }}
       >
         <div>
-          <Row style={{ display: "flex", alignItems: "center" }}>
-            <img style={{ width: "48px", margin: "0 12px", }} src={logo} />
+          <Row style={{ display: "flex", alignItems: "center" }} onClick={onBackHomePage}>
+            <img style={{ width: "48px", margin: "0 12px", cursor: 'pointer'}} src={logo} />
             <div className="app-name">HK Solution</div>
           </Row>
         </div>

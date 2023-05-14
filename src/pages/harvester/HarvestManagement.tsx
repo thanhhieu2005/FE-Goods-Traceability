@@ -111,7 +111,7 @@ const HarvestManagement = () => {
     <div>
       <Col>
         <div className="header-content">Harvest Management</div>
-        <Table columns={columns} dataSource={dataHarvests} scroll={{ x: 1300 }} onRow = {(harvest : Harvest, rowIndex : any) => {
+        <Table columns={columns} dataSource={dataHarvests} scroll={{ x: 1300 }} pagination={{ defaultPageSize: 10, showSizeChanger: true}} onRow = {(harvest : Harvest, rowIndex : any) => {
           return {
             onClick: () => {
               navigate(`/harvest-management/${harvest.harvestId}`, {state: harvest.harvestId})

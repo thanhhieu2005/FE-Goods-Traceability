@@ -10,7 +10,7 @@
         padding-bottom: 16px;
     }
     .title-header {
-        font-weight: bold;
+        font-weight: 600;
         font-size: 32px;
         color: black;
         padding-bottom: 8px;
@@ -49,13 +49,11 @@
         margin-right: 24px;
     }
 
-    .action-layout-btn {
+    .btn-layout-center-form {
         display: flex;
-        flex-wrap: wrap;
+        width: 100%;
         align-items: center;
-        justify-content: flex-end;
-        padding: 0 12px;
-        width: 20%;
+        justify-content: center;
     }
     
     .text-title {

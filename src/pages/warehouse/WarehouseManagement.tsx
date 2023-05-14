@@ -98,6 +98,7 @@ function WarehouseManagement() {
           columns={columns}
           dataSource={dataWarehouseStorage}
           scroll={{ x: 1300 }}
+          pagination={{ defaultPageSize: 10, showSizeChanger: true}}
           onRow={(warehouseStorage : WarehouseStorage, rowIndex : any) => {
             return {
               onClick: () => {

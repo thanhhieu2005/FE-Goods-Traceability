@@ -131,6 +131,7 @@ export const AccountManagement = () => {
               columns={columns} 
               dataSource={dataUsers} 
               scroll={{ x: 1300 }}
+              pagination={{ defaultPageSize: 10, showSizeChanger: true}}
               onRow={(user : ListUserInfo, rowIndex: any) => {
                 return {
                   onClick: () => {
