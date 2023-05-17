@@ -18,6 +18,16 @@ export const createContentLayout = {
   wrapperCol: { span: 16 },
 };
 
+export const modalUpdateContentLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 16 },
+};
+
+export const tailUpdateContentLayout = {
+  offset: 6,
+  span: 16,
+};
+
 export const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };

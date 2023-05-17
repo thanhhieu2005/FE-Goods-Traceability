@@ -1,4 +1,4 @@
-import { Layout, Avatar, Dropdown, Menu, Row, Col } from "antd";
+import { Layout, Avatar, Dropdown, Menu, Row, Col, message } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import type { MenuProps } from "antd";
@@ -28,17 +28,6 @@ const HeaderListItem: React.FC<HeaderListItemProps> = ({ title }) => {
   );
 };
 
-const headerlistDropdownItems: ItemType[] = [
-  {
-    key: "1",
-    label: <HeaderListItem title="User Profile" />,
-  },
-  {
-    key: "2",
-    itemIcon: <LogoutOutlined />,
-    label: <HeaderListItem title="Logout" />,
-  },
-];
 
 export const HeaderCustom: React.FC = () => {
   const userName = useSelector((state: any) => state.authen.currentUserInfo);
@@ -72,36 +61,33 @@ export const HeaderCustom: React.FC = () => {
 
   const onBackHomePage = () => {
     navigate(`/`);
-  }
-
-  const onMenuHeaderClick: MenuProps["onClick"] = (event: MenuInfo) => {
-    const { key } = event;
-
-    switch (key) {
-      case "1":
-        console.log("Chưa phát triển!");
-        break;
-      case "2":
-        onLogout();
-        break;
-      default:
-        break;
-    }
   };
 
-  const menu = (
-    <Menu
-      items={headerlistDropdownItems}
-      onClick={onMenuHeaderClick}
-      selectedKeys={[]}
-    ></Menu>
-  );
+  const onClickItems: MenuProps['onClick'] = e => {
+    if(e.key === '2') {
+      onLogout();
+    } else if(e.key === "1") {
+      message.info("Feature is delevoping!");
+    }
+  }
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <HeaderListItem title="User Profile" />,
+    },
+    {
+      key: "2",
+      itemIcon: <LogoutOutlined />,
+      label: <HeaderListItem title="Logout" />,
+    },
+  ];
 
   return (
     <Header
       className="site-layout-sub-header-background"
-      style={{ 
-        minHeight: '64px',
+      style={{
+        minHeight: "64px",
         padding: "0",
         marginBottom: "100px",
         position: "fixed",
@@ -109,7 +95,7 @@ export const HeaderCustom: React.FC = () => {
         top: "0",
         right: "0",
         zIndex: "1000",
-        backgroundColor: '#111d2c',
+        backgroundColor: "#111d2c",
       }}
     >
       <Row
@@ -118,8 +104,14 @@ export const HeaderCustom: React.FC = () => {
         }}
       >
         <div>
-          <Row style={{ display: "flex", alignItems: "center" }} onClick={onBackHomePage}>
-            <img style={{ width: "48px", margin: "0 12px", cursor: 'pointer'}} src={logo} />
+          <Row
+            style={{ display: "flex", alignItems: "center" }}
+            onClick={onBackHomePage}
+          >
+            <img
+              style={{ width: "48px", margin: "0 12px", cursor: "pointer" }}
+              src={logo}
+            />
             <div className="app-name">HK Solution</div>
           </Row>
         </div>
@@ -131,7 +123,13 @@ export const HeaderCustom: React.FC = () => {
         >
           <span className="item-header item-role"> {role} </span>
           <span className="item-header">Hi, {userName.firstName}</span>
-          <Dropdown overlay={menu} placement="bottomRight">
+          <Dropdown 
+            menu={{
+              items,
+              onClick: onClickItems,
+            }} 
+            placement="bottomRight"
+          >
             <Avatar size="large" icon={<UserOutlined />} />
           </Dropdown>
         </div>

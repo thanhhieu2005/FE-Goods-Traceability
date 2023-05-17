@@ -39,7 +39,6 @@ export const ProjectManagement = () => {
   useEffect(() => {
     const fetchAPI = GetAllProjectAPI();
     fetchAPI.then((res: any) => {
-      console.log("res:", res);
       res?.data.map((element: any) => {
         var project = {} as ProjectInfo;
         project.key = element._id;
