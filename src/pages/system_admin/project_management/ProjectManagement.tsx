@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Badge, Button, Col, Pagination, Row, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FormOutlined, PlusOutlined } from "@ant-design/icons";
-import "../common.scss";
 import { useNavigate } from "react-router-dom";
 import CreateProjectForm from "./CreateProjectForm";
 import { GetAllProjectAPI } from "@/api/system_admin/project_api";
@@ -114,7 +113,7 @@ export const ProjectManagement = () => {
         </div>
         <div className="content-page">
           <Row
-            style={{ paddingBottom: "12px", justifyContent: "space-between" }}
+            style={{ paddingBottom: "12px", justifyContent: "space-between", alignItems: 'center'}}
           >
             <Row style={{ width: "80%" }}>
               <div className="label-search">Find project</div>
@@ -126,9 +125,7 @@ export const ProjectManagement = () => {
               {/* <CreateProjectForm /> */}
               <Button
                 type="primary"
-                onClick={
-                  () => navigate(`/create-new-project`)
-                }
+                onClick={() => navigate(`/create-new-project`)}
                 icon={<PlusOutlined />}
               >
                 Create new Project
@@ -138,8 +135,8 @@ export const ProjectManagement = () => {
           <Table
             columns={columns}
             dataSource={dataProjects}
-            scroll={{ x: 1300}}
-            pagination={{ defaultPageSize: 10, showSizeChanger: true}}
+            scroll={{ x: 1300 }}
+            pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(record: ProjectInfo, rowIndex: any) => {
               return {
                 onClick: () => {

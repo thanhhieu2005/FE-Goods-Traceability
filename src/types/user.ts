@@ -62,6 +62,7 @@ export const parseListUserInfo = (data: any) => {
     user.phoneNumber = data.phoneNumber ?? '-';
     user.role = data.role as UserRole;
     user.walletAddress = data.walletAddress ?? '-';
+    user.department = data.department as StaffDepartment;
     return user;
   };
   

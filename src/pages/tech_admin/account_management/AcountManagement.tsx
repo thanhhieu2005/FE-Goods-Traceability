@@ -13,7 +13,7 @@ import Search from "antd/lib/input/Search";
 
 const columns: ColumnsType<ListUserInfo> = [
   {
-    title: "User Id",
+    title: "User ID",
     width: 120,
     dataIndex: "userId",
     key: "userId",

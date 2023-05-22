@@ -24,6 +24,7 @@ const AccountDetail = () => {
         console.log(dataUserDetail);
     })
   }, []);
+  
   return (
     <Col>
         <div className='header-content'>

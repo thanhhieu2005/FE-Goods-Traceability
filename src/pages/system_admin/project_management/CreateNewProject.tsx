@@ -80,9 +80,13 @@ const CreateNewProject = () => {
     if (result?.status === 200) {
       console.log("Tạo mới thành công");
 
-      successMessage("Create new project successfully!");
+      Modal.success({
+        content: "Create new project successfully!",
+        onOk: () => {
+          navigate(`/project-management`);
+        }
+      });
 
-      navigate(`/project-management`);
     } else {
       if (result.response.status === 400) {
         console.log(result.response.data.message);

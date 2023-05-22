@@ -1,4 +1,5 @@
 import { CommonProjectState } from "@/types/project_model"
+import { StaffDepartment } from "@/types/user";
 
 export const parseToStringCommonState =(state: CommonProjectState) => {
     switch(state) {
@@ -27,5 +28,22 @@ export const parseColorByCommonState = (state: CommonProjectState) => {
             return '#ff4d4f';
         default:
             return 'grey';
+    }
+}
+
+export const parseToStringDepartment = (department: StaffDepartment) => {
+    switch(department) {
+        case StaffDepartment.Empty:
+            return 'Not Department Yet';
+        case StaffDepartment.HarvestInspection:
+            return 'Harvest Inspection';
+        case StaffDepartment.TransportSupervision:
+            return 'Transport Supervision';
+        case StaffDepartment.WarehouseSupervision:
+            return 'Warehouse Supervision';
+        case StaffDepartment.SupervisingProducer:
+            return 'Supervising Producer';
+        default:
+            return '';
     }
 }
