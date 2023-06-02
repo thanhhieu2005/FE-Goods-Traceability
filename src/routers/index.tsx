@@ -32,6 +32,7 @@ import CreateNewProject from "@/pages/system_admin/project_management/CreateNewP
 import StaffManagement from "@/pages/system_admin/staff_management/StaffManagement";
 import StaffInfoDetail from "@/pages/system_admin/staff_management/StaffInfoDetail";
 import CreateStaffForm from "@/pages/system_admin/staff_management/CreateStaffForm";
+import DashBoardSystemAdmin from "@/pages/system_admin/dashboard/DashBoardSystemAdmin";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -87,9 +88,10 @@ const Routers = () => {
                 <>
                   <Route
                     path="/"
-                    element={<Navigate to="/project-management" />}
+                    element={<Navigate to="/dashboard"/>}
                   />
                   {/* Project Management Router */}
+                  <Route path="/dashboard" element={<DashBoardSystemAdmin/>}/>
                   <Route
                     path="/project-management"
                     element={<ProjectManagement />}

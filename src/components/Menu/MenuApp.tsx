@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { AppstoreOutlined, TeamOutlined } from "@ant-design/icons";
+import { DashboardOutlined, TeamOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { UserRole } from "@/types/user";
 
@@ -49,6 +49,7 @@ export const MenuApp = () => {
       }
       if (location.pathname.includes("/staff-management"))
         setPath("/staff-management");
+      if(location.pathname.includes("/dashboard")) setPath("/dashboard");
     } else if(userName.role === UserRole.Farmer && userName.isOwner === true) {
       if(location.pathname.includes('/')) {
         setPath("/farm-info");
@@ -98,6 +99,7 @@ export const MenuApp = () => {
     ];
   } else if (userName.role == UserRole.SystemAdmin) {
     items = [
+      getItem("Dashboard", "/dashboard", <DashboardOutlined />),
       getItem("Batch/ Project Management", "/project-management", <TfiViewListAlt/>),
       getItem("Staff Management", '/staff-management', <TeamOutlined />),
     ];

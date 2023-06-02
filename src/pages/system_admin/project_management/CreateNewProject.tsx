@@ -16,9 +16,8 @@ import React, { useEffect, useState } from "react";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { CreateNewProjectService } from "@/api/system_admin/project_api";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import { errorMessage } from "@/components/Message/MessageNoti";
 import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
 import StaffServices from "@/api/system_admin/staff_service";
 import { UserDetailModel, parseUserDetail } from "@/types/user";
 

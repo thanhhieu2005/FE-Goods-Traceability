@@ -32,6 +32,39 @@ const StaffServices = {
             return err;
         }
     },
+    createNewStaff : async(value: any) => {
+        try {
+            const currentToken = localStorage.getItem('token');
+            const res = await axiosClient.post(
+                '/users',
+                value,
+                {
+                    headers: { Authorization: `Bearer ${currentToken}` },
+                },
+                
+            );
+
+            return res;
+        } catch (err) {
+            return err;
+        }
+    },
+    updateProfileUser : async(value: any, userId: string) => {
+        try {
+            const currentToken = localStorage.getItem('token');
+            const res = await axiosClient.patch(
+                '/users/' + userId,
+                value,
+                {
+                    headers: { Authorization: `Bearer ${currentToken}` },
+                }
+            );
+
+            return res;
+        } catch (err) {
+            return err;
+        }
+    },
 };
 
 export default StaffServices;

@@ -4,7 +4,6 @@ import {
 } from "@/api/system_admin/project_api";
 import { CheckProjectStatus } from "@/pages/common/CheckProjectStatus";
 import { CommonProjectState, ProjectDetailModel } from "@/types/project_model";
-import { formatDateTime } from "@/utils/formatDateTime";
 import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import {
   Breadcrumb,
@@ -17,7 +16,6 @@ import {
   Select,
   Spin,
   Steps,
-  Tag,
   Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
@@ -36,7 +34,6 @@ import { FarmInfoModel, FarmProjectModel } from "@/types/farm_model";
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
 import {
   modalUpdateContentLayout,
-  tailContentLayout,
   tailUpdateContentLayout,
 } from "@/styles/content_layout";
 import FarmServices from "@/api/farm/farm_api";

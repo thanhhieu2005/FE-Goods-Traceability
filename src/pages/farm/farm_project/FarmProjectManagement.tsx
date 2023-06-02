@@ -7,7 +7,7 @@ import { Button, Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import Search from "antd/lib/input/Search";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

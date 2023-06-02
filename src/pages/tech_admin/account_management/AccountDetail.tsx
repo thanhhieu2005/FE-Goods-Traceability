@@ -7,7 +7,6 @@ import { UserOutlined } from '@ant-design/icons';
 
 import '../../common.scss';
 import { parseUserDetail, UserDetailModel } from '@/types/user';
-import Column from 'antd/lib/table/Column';
 import { contentLayout } from '@/styles/content_layout';
 
 
@@ -24,7 +23,7 @@ const AccountDetail = () => {
         console.log(dataUserDetail);
     })
   }, []);
-  
+
   return (
     <Col>
         <div className='header-content'>

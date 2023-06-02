@@ -1,12 +1,17 @@
+import StaffServices from "@/api/system_admin/staff_service";
+import { errorMessage } from "@/components/Message/MessageNoti";
 import { contentLayout, tailContentLayout } from "@/styles/content_layout";
 import { StaffDepartment } from "@/types/user";
 import { parseToStringDepartment } from "@/utils/format_state";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Col, Form, Input, Modal, Select, message } from "antd";
+import { Breadcrumb, Button, Col, Form, Input, Modal, Select } from "antd";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const CreateStaffForm = () => {
   const [form] = Form.useForm();
+
+  const navigate = useNavigate();
 
   const listDepartments = [
     StaffDepartment.Empty,
@@ -37,6 +42,42 @@ const CreateStaffForm = () => {
     });
   };
 
+  const handleSubmitCreateStaff = async (value: any) => {
+    if(value.department === undefined) {
+      value.department = 1;
+    } else if(value.address === undefined) {
+      value.address = null;
+    } else if(value.phoneNumber === undefined) {
+      value.phoneNumber = null;
+    }
+
+    const finalValue = {...value, role: 4};
+
+    const result: any = await StaffServices.createNewStaff(finalValue);
+
+    console.log(value);
+    if(result?.status === 201 || result?.status === 200) {
+      console.log('Success');
+
+
+      Modal.success({
+        content: "Create new staff successfully!",
+        onOk: () => {
+          navigate(`/staff-management`);
+        }
+      });
+    } else {
+      console.log(result);
+      if(result.response.status === 400) {
+        console.log(result.response);
+        errorMessage(result.response.data.message);
+      }
+      else {
+        errorMessage('Have another Error');
+      }
+    }
+  }
+
   return (
     <div>
       <Col>
@@ -54,7 +95,13 @@ const CreateStaffForm = () => {
         </div>
         <div className="content-page">
           <Col style={{ paddingTop: "64px" }}>
-            <Form {...contentLayout} form={form}>
+            <Form 
+              {...contentLayout} 
+              form={form}
+              onFinish={(value) => {
+                handleSubmitCreateStaff(value);
+              }}
+            >
               <Form.Item
                 name="email"
                 label="Email"

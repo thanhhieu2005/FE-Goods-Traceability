@@ -124,7 +124,7 @@ const StaffManagement = () => {
             dataSource={dataUsers}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
-            onRow={(user: ListUserInfo, rowIndex: any) => {
+            onRow={(user: ListUserInfo) => {
               return {
                 onClick: () => {
                   navigate(`/staff-management/${user.key}`, {
