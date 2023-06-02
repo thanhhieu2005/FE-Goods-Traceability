@@ -1,0 +1,18 @@
+export interface DashboardInfoDefault {
+    numberOfProject: number,
+    numberOfPendingProject: number,
+    numberOfProccessingProject: number,
+    numberOfCompletedProject: number,
+    numberOfCanceledProject: number,
+    numberOfNotYetProject: number,
+    numberOfUser: number,
+    numberOfSystemAdmin: number,
+    numberOfTechAdmin: number,
+    numberOfFarmer: number,
+    numberOfStaff: number,
+    numberOfHarvestInspector: number,
+    numberOfProduceSupervision: number,
+    numberOfTransportInspector: number,
+    numberOfWarehouseInspector: number,
+    numberOfFarms: number,
+}

@@ -16,9 +16,10 @@ import React, { useEffect, useState } from "react";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { CreateNewProjectService } from "@/api/system_admin/project_api";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import { errorMessage } from "@/components/Message/MessageNoti";
 import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import StaffServices from "@/api/system_admin/staff_service";
+import { UserDetailModel, parseUserDetail } from "@/types/user";
 
 const CreateNewProject = () => {
   const [form] = Form.useForm();
@@ -36,6 +37,14 @@ const CreateNewProject = () => {
   const [listFarmProjects, setListFarmProjects] = useState<FarmProjectModel[]>(
     []
   );
+
+  const [listHavesters, setListHavesters] = useState<UserDetailModel[]>([]);
+
+  const [listWarehouseInspectors, setListWarehouseInspectors] = useState<UserDetailModel[]>([]);
+
+  const [listTransporters, setListTransporters] = useState<UserDetailModel[]>([]);
+
+  const [listProduceInspectors, setListProduceInspectors] = useState<UserDetailModel[]>([]);
 
   const cancelButtonResetForm = () => {
     console.log("Close cofirm dialog");
@@ -63,22 +72,30 @@ const CreateNewProject = () => {
 
     const finalValue = { ...value, manager: managerId };
 
+    console.log(finalValue);
+
     const result: any = await CreateNewProjectService(finalValue);
 
-    if (result.response.status === 400) {
-      console.log(result.response.data.message);
-      errorMessage(result.response.data.message);
-
-      setLoadingButton(false);
-    } else if (result?.status === 200) {
+    if (result?.status === 200) {
       console.log("Tạo mới thành công");
 
-      successMessage("Create new project successfully!");
+      Modal.success({
+        content: "Create new project successfully!",
+        onOk: () => {
+          navigate(`/project-management`);
+        }
+      });
 
-      navigate(`/project-management`);
     } else {
-      errorMessage("Have another Error");
-      setLoadingButton(false);
+      if (result.response.status === 400) {
+        console.log(result.response.data.message);
+        errorMessage(result.response.data.message);
+
+        setLoadingButton(false);
+      } else {
+        errorMessage("Have another Error");
+        setLoadingButton(false);
+      }
     }
   };
 
@@ -103,7 +120,7 @@ const CreateNewProject = () => {
       setListFarmProjects([]);
       FarmServices.getAllFarmProjectsService(selectedFarmId).then(
         (res: any) => {
-          if (res?.status == 200) {
+          if (res?.status === 200) {
             res.data.map((element: any) => {
               const farm = element as FarmProjectModel;
               if (farm.projectId === null) {
@@ -118,6 +135,70 @@ const CreateNewProject = () => {
       );
     }
   }, [selectedFarmId]);
+
+  // get all staff department Harvester
+  useEffect(() => {
+    StaffServices.getAllStaffByDepartment(2).then(
+      (res: any) => {
+        if(res?.status === 200) {
+          res.data.map((element: any) => {
+            const harvester = parseUserDetail(element);
+            setListHavesters((prev) => [
+              ...prev, harvester,
+            ])
+          });
+        }
+      }
+    );
+  }, []);
+
+  // get all staff Transport Inspector
+  useEffect(() => {
+    StaffServices.getAllStaffByDepartment(3).then(
+      (res: any) => {
+        if(res?.status === 200) {
+          res.data.map((element: any) => {
+            const transporter = parseUserDetail(element);
+            setListTransporters((prev) => [
+              ...prev, transporter,
+            ])
+          });
+        }
+      }
+    );
+  }, []);
+
+  // get all staff Warehouse Inspector
+  useEffect(() => {
+    StaffServices.getAllStaffByDepartment(4).then(
+      (res: any) => {
+        if(res?.status === 200) {
+          res.data.map((element: any) => {
+            const warehouse = parseUserDetail(element);
+            setListWarehouseInspectors((prev) => [
+              ...prev, warehouse,
+            ])
+          });
+        }
+      }
+    );
+  }, []);
+
+  // get all staff Produce Inspector
+  useEffect(() => {
+    StaffServices.getAllStaffByDepartment(5).then(
+      (res: any) => {
+        if(res?.status === 200) {
+          res.data.map((element: any) => {
+            const produce = parseUserDetail(element);
+            setListProduceInspectors((prev) => [
+              ...prev, produce,
+            ])
+          });
+        }
+      }
+    );
+  }, []);
 
   const onReset = () => {
     form.resetFields();
@@ -193,6 +274,74 @@ const CreateNewProject = () => {
                       key={farmProject.farmProjectId}
                     >
                       {farmProject.farmProjectCode}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item label="Harvestor" name="harvestor">
+                <Select placeholder="Select harvestor in Harvest Inspection">
+                  {listHavesters.map((harvester) => (
+                    <Select.Option
+                      value={harvester.userId}
+                      key={harvester.userId}
+                    >
+                      <Tooltip
+                        placement="right"
+                        title={`${harvester.lastName} ${harvester.firstName}` ?? "No name"}
+                      >
+                        {harvester.email}
+                      </Tooltip>
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item label="Transport Inspector" name="transportInspector">
+                <Select placeholder="Select Transport Inspector">
+                  {listTransporters.map((transporter) => (
+                    <Select.Option
+                      value={transporter.userId}
+                      key={transporter.userId}
+                    >
+                      <Tooltip
+                        placement="right"
+                        title={`${transporter.lastName} ${transporter.firstName}` ?? "No name"}
+                      >
+                        {transporter.email}
+                      </Tooltip>
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item label="Warehouse Inspector" name="warehouseInspector">
+                <Select placeholder="Select Warehouse Inspector">
+                  {listWarehouseInspectors.map((warehouse) => (
+                    <Select.Option
+                      value={warehouse.userId}
+                      key={warehouse.userId}
+                    >
+                      <Tooltip
+                        placement="right"
+                        title={`${warehouse.lastName} ${warehouse.firstName}` ?? "No name"}
+                      >
+                        {warehouse.email}
+                      </Tooltip>
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item label="Produce Inspector" name="produceInspector">
+                <Select placeholder="Select Produce Inspector">
+                  {listProduceInspectors.map((produce) => (
+                    <Select.Option
+                      value={produce.userId}
+                      key={produce.userId}
+                    >
+                      <Tooltip
+                        placement="right"
+                        title={`${produce.lastName} ${produce.firstName}` ?? "No name"}
+                      >
+                        {produce.email}
+                      </Tooltip>
                     </Select.Option>
                   ))}
                 </Select>

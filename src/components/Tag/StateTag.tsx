@@ -3,6 +3,7 @@ import React from "react";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { CommonProjectState } from "@/types/project_model";
 import { LandState } from "@/types/farm_model";
+import { StaffDepartment } from "@/types/user";
 
 export const StateTag = ({ myProp: state }: any) => {
   return (
@@ -228,6 +229,47 @@ export const TagRoleUser = (value: number) => {
           <Tag color="default">
             Unknow
           </Tag>
+        </div>
+      );
+  }
+};
+
+export const TagDepartmentUser = (value: StaffDepartment) => {
+  switch(value) {
+    case StaffDepartment.Empty:
+      return (
+        <div>
+          <Tag color="default">Empty</Tag>
+        </div>
+      );
+    case StaffDepartment.HarvestInspection:
+      return (
+        <div>
+          <Tag color="green">Harvest Inspection</Tag>
+        </div>
+      );
+    case StaffDepartment.TransportSupervision:
+      return (
+        <div>
+          <Tag color="blue">Transport Supervision</Tag>
+        </div>
+      );
+    case StaffDepartment.WarehouseSupervision:
+      return (
+        <div>
+          <Tag color="#fa541c">Warehouse Supervision</Tag>
+        </div>
+      );
+    case StaffDepartment.SupervisingProducer:
+      return (
+        <div>
+          <Tag color="#b37feb">Supervising Producer</Tag>
+        </div>
+      );
+    default:
+      return (
+        <div>
+          <Tag color="default">Unknown</Tag>
         </div>
       );
   }

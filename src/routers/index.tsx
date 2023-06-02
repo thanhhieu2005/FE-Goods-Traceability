@@ -7,7 +7,7 @@ import Login from "@/pages/auth/Login";
 import { LayoutCustom } from "@/pages/layout/LayoutCustom";
 import { AccountManagement } from "@/pages/tech_admin/account_management/AcountManagement";
 import { TechAdminFarm } from "@/pages/tech_admin/farm_techadmin/TechAdminFarm";
-import { ProjectManagement } from "@/pages/system_admin/ProjectManagement";
+import { ProjectManagement } from "@/pages/system_admin/project_management/ProjectManagement";
 import { useSelector } from "react-redux";
 import HarvestManagement from "@/pages/harvester/HarvestManagement";
 import HarvestDetail from "@/pages/harvester/HarvestDetail";
@@ -28,7 +28,11 @@ import LandManagement from "@/pages/farm/land/LandManagement";
 import SeedManagement from "@/pages/farm/seed/SeedManagement";
 import CreateFarmProject from "@/pages/farm/farm_project/CreateFarmProject";
 import ProjectLog from "../pages/system_admin/project_detail/project_log/Project_Log";
-import CreateNewProject from "@/pages/system_admin/CreateNewProject";
+import CreateNewProject from "@/pages/system_admin/project_management/CreateNewProject";
+import StaffManagement from "@/pages/system_admin/staff_management/StaffManagement";
+import StaffInfoDetail from "@/pages/system_admin/staff_management/StaffInfoDetail";
+import CreateStaffForm from "@/pages/system_admin/staff_management/CreateStaffForm";
+import DashBoardSystemAdmin from "@/pages/system_admin/dashboard/DashBoardSystemAdmin";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -84,9 +88,10 @@ const Routers = () => {
                 <>
                   <Route
                     path="/"
-                    element={<Navigate to="/project-management" />}
+                    element={<Navigate to="/dashboard"/>}
                   />
-                  {/* System Admin Router */}
+                  {/* Project Management Router */}
+                  <Route path="/dashboard" element={<DashBoardSystemAdmin/>}/>
                   <Route
                     path="/project-management"
                     element={<ProjectManagement />}
@@ -100,6 +105,19 @@ const Routers = () => {
                   <Route
                     path="/create-new-project"
                     element={<CreateNewProject />}
+                  />
+                  {/* Staff Management Router */}
+                  <Route
+                    path="/staff-management"
+                    element={<StaffManagement/>}
+                  />
+                  <Route
+                    path="/staff-management/:userId"
+                    element={<StaffInfoDetail/>}
+                  />
+                  <Route
+                    path="/create-new-staff"
+                    element={<CreateStaffForm/>}
                   />
                 </>
               ) : userName.role === 3 ? ( // Farm Router

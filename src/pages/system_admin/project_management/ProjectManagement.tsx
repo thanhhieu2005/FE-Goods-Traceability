@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Col, Pagination, Row, Table } from "antd";
+import {  Button, Col, Row, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { FormOutlined, PlusOutlined } from "@ant-design/icons";
-import "../common.scss";
+import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import CreateProjectForm from "./CreateProjectForm";
 import { GetAllProjectAPI } from "@/api/system_admin/project_api";
 import moment from "moment";
 import Search from "antd/lib/input/Search";
@@ -34,12 +32,15 @@ interface ProjectInfo {
 export const ProjectManagement = () => {
   const navigate = useNavigate();
 
+  // const accountMetamask = useSelector((state: any) => state.account);
+
+  // console.log(accountMetamask);
+
   const [dataProjects, setDataProjects] = useState<ProjectInfo[]>([]);
 
   useEffect(() => {
     const fetchAPI = GetAllProjectAPI();
     fetchAPI.then((res: any) => {
-      console.log("res:", res);
       res?.data.map((element: any) => {
         var project = {} as ProjectInfo;
         project.key = element._id;
@@ -115,7 +116,7 @@ export const ProjectManagement = () => {
         </div>
         <div className="content-page">
           <Row
-            style={{ paddingBottom: "12px", justifyContent: "space-between" }}
+            style={{ paddingBottom: "12px", justifyContent: "space-between", alignItems: 'center'}}
           >
             <Row style={{ width: "80%" }}>
               <div className="label-search">Find project</div>
@@ -127,9 +128,7 @@ export const ProjectManagement = () => {
               {/* <CreateProjectForm /> */}
               <Button
                 type="primary"
-                onClick={
-                  () => navigate(`/create-new-project`)
-                }
+                onClick={() => navigate(`/create-new-project`)}
                 icon={<PlusOutlined />}
               >
                 Create new Project
@@ -139,9 +138,9 @@ export const ProjectManagement = () => {
           <Table
             columns={columns}
             dataSource={dataProjects}
-            scroll={{ x: 1300}}
-            pagination={{ defaultPageSize: 10, showSizeChanger: true}}
-            onRow={(record: ProjectInfo, rowIndex: any) => {
+            scroll={{ x: 1300 }}
+            pagination={{ defaultPageSize: 10, showSizeChanger: true }}
+            onRow={(record: ProjectInfo) => {
               return {
                 onClick: () => {
                   navigate(`/project-management/${record.key}`, {

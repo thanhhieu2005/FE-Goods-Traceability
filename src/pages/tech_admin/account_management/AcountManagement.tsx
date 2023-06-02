@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Col, Row } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { FormOutlined } from "@ant-design/icons";
 import "../../common.scss"
 import CreateAccountForm from "./CreateAccountForm";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +12,7 @@ import Search from "antd/lib/input/Search";
 
 const columns: ColumnsType<ListUserInfo> = [
   {
-    title: "User Id",
+    title: "User ID",
     width: 120,
     dataIndex: "userId",
     key: "userId",
@@ -132,7 +131,7 @@ export const AccountManagement = () => {
               dataSource={dataUsers} 
               scroll={{ x: 1300 }}
               pagination={{ defaultPageSize: 10, showSizeChanger: true}}
-              onRow={(user : ListUserInfo, rowIndex: any) => {
+              onRow={(user : ListUserInfo) => {
                 return {
                   onClick: () => {
                     navigate(`/techAd-account-management/${user.key}`, {

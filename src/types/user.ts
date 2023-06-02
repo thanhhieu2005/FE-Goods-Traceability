@@ -34,6 +34,7 @@ export interface UserDetailModel {
     farmList?: Array<FarmInfoModel>;
     phoneNumber: string;
     isOwner?: boolean;
+    address?: string;
 }
 
 export enum UserRole {
@@ -62,6 +63,7 @@ export const parseListUserInfo = (data: any) => {
     user.phoneNumber = data.phoneNumber ?? '-';
     user.role = data.role as UserRole;
     user.walletAddress = data.walletAddress ?? '-';
+    user.department = data.department as StaffDepartment;
     return user;
   };
   
@@ -84,6 +86,7 @@ export const parseListUserInfo = (data: any) => {
     userDetail.farmList = farmList;
     userDetail.phoneNumber = data.phoneNumber;
     userDetail.isOwner = data.isOwner;
+    userDetail.address = data.address;
   
     return userDetail;
   }

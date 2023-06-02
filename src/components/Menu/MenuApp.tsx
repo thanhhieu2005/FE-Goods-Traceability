@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { AppstoreOutlined } from "@ant-design/icons";
+import { DashboardOutlined, TeamOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { UserRole } from "@/types/user";
 
 import { TbHomeEco, TbColumns3 } from 'react-icons/tb';
 import { FaTasks } from 'react-icons/fa';
 import { RiSeedlingLine } from 'react-icons/ri';
+import { TfiViewListAlt } from 'react-icons/tfi'
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -46,8 +47,9 @@ export const MenuApp = () => {
       if (location.pathname.includes("/")) {
         setPath("/project-management");
       }
-      // if (location.pathname.includes("/farm-management"))
-      //   setPath("/farm-management");
+      if (location.pathname.includes("/staff-management"))
+        setPath("/staff-management");
+      if(location.pathname.includes("/dashboard")) setPath("/dashboard");
     } else if(userName.role === UserRole.Farmer && userName.isOwner === true) {
       if(location.pathname.includes('/')) {
         setPath("/farm-info");
@@ -97,7 +99,9 @@ export const MenuApp = () => {
     ];
   } else if (userName.role == UserRole.SystemAdmin) {
     items = [
-      getItem("Batch/ Project Management", "/project-management"),
+      getItem("Dashboard", "/dashboard", <DashboardOutlined />),
+      getItem("Batch/ Project Management", "/project-management", <TfiViewListAlt/>),
+      getItem("Staff Management", '/staff-management', <TeamOutlined />),
     ];
   } else if(userName.role == UserRole.Farmer && userName.isOwner === true) {
     items = [
