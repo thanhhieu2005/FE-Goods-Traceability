@@ -5,7 +5,7 @@ import { ProjectOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import "../dashboard/dashboard.scss";
-import LineChartProject from "./LineChartProject";
+import LineChartProject from "../../../components/Charts/LineChartProject";
 
 const DashBoardSystemAdmin = () => {
   const [basicInfo, setBasicInfo] = useState<DashboardInfoDefault>();
@@ -71,8 +71,17 @@ const DashBoardSystemAdmin = () => {
           />
         </Row>
         <Row style={{ paddingTop: "24px" }}>
-          <div style={{ width: "65%" }}>
-            <LineChartProject></LineChartProject>
+          <div style={{ width: "60%" }}>
+            <LineChartProject 
+              myProp={{ 
+                data: [3, 6, 9], 
+                colorChart: "#597ef7", 
+                title: "Number of projects in the year",
+                label: 'Projects'
+              }}/>
+          </div>
+          <div style={{ width: '40%' }}>
+
           </div>
         </Row>
       </Col>
