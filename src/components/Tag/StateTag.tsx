@@ -181,7 +181,7 @@ export const TagStateCommonProject = (value: CommonProjectState) => {
       return (
         <div>
           <Tag color="default">
-            UNDEFINED
+            NOT YET
           </Tag>
         </div>
        

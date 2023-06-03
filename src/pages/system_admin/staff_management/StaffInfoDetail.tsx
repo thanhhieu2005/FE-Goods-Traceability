@@ -1,6 +1,9 @@
 import UserManagementService from "@/api/admin_tech/user_management_service";
-import { contentLayout } from "@/styles/content_layout";
-import { UserDetailModel, parseUserDetail } from "@/types/user";
+import StaffServices from "@/api/system_admin/staff_service";
+import { successMessage } from "@/components/Message/MessageNoti";
+import { contentLayout, tailUpdateContentLayout } from "@/styles/content_layout";
+import { StaffDepartment, UserDetailModel, parseUserDetail } from "@/types/user";
+import { parseToStringDepartment } from "@/utils/format_state";
 import { UserOutlined } from "@ant-design/icons";
 import {
   Avatar,
@@ -11,23 +14,30 @@ import {
   Input,
   Modal,
   Row,
-  Skeleton,
+  Select,
   Spin,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const StaffInfoDetail = () => {
   const { state: userId } = useLocation();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [dataUserDetail, setDataUserDetail] = useState<UserDetailModel>();
 
   useEffect(() => {
     UserManagementService.getDetailUserByIdService(userId).then((res: any) => {
+      console.log(res);
+      
       const userDetail = parseUserDetail(res.data);
+      
       setDataUserDetail(userDetail);
 
       console.log(dataUserDetail);
+
+      setIsLoading(false);
     });
   }, []);
 
@@ -36,32 +46,99 @@ const StaffInfoDetail = () => {
 
   const showUpdateModal = () => {
     setUpdateIsModalOpen(true);
-  }; 
+  };
 
-  const handleOkUpdate = () => {
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
+  const handleOkUpdate = async(value: any) => {
+    setIsLoadingUpdate(true);
+    setIsLoading(true);
+
+    if(dataUserDetail?.userId != undefined) {
+      const result: any = await StaffServices.updateProfileUser(value, dataUserDetail?.userId);
+
+      console.log(result);
+
+      if(result.status === 200) {
+        setIsLoadingUpdate(true);
+        const userDetail = parseUserDetail(result.data);
+        setDataUserDetail(userDetail);
+
+        successMessage("Update Department Successfully!");
+      }
+
+    }
+
     setUpdateIsModalOpen(false);
+    setIsLoadingUpdate(false);
+    setIsLoading(false);
   };
 
   const handleCancelUpdate = () => {
-    setUpdateIsModalOpen  (false);
+    setUpdateIsModalOpen(false);
   };
 
+  const listDepartments = [
+    StaffDepartment.Empty,
+    StaffDepartment.HarvestInspection,
+    StaffDepartment.TransportSupervision,
+    StaffDepartment.WarehouseSupervision,
+    StaffDepartment.SupervisingProducer,
+  ];
+
+
   return (
-   <>
-    {/* Modal */}
-    {isUpdateModalOpen && (
-      <Modal
-        title="Update Staff Role"
-        open={isUpdateModalOpen}
-        onCancel={handleCancelUpdate}
-        onOk={handleOkUpdate}
-        maskClosable={false}
-      >
+    <>
+      {/* Modal */}
+      {isUpdateModalOpen && (
+        <Modal
+          title="Update Staff Role"
+          open={isUpdateModalOpen}
+          maskClosable={false}
+          footer={null}
+        >
+          <Form
+            onFinish={(value) => {
+              handleOkUpdate(value);
+            }}
+          >
+            <Form.Item label="Department" name="department" initialValue={dataUserDetail?.department}>
+              <Select placeholder="Select department">
+                {listDepartments.map((department) => (
+                  <Select.Option value={department} key={department}>
+                    <span>{parseToStringDepartment(department)}</span>
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <div style={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
+                <Row>
+                <Button
+                    type="default"
+                    size="middle"
+                    onClick={handleCancelUpdate}
+                  >
+                    Cancel
+                  </Button>
+                  <div style={{paddingRight: '8px'}}/>
+                  <Button
+                    type="primary"
+                    size="middle"
+                    htmlType="submit"
+                    loading={isLoadingUpdate}
+                  >
+                    Update
+                  </Button>
+                </Row>
+              </div>
+            </Form.Item>
+           
+          </Form>
+        </Modal>
+      )}
 
-      </Modal>
-    )}
-
-    {/* UI screen */}
+      {/* UI screen */}
       <Col>
         <div className="header-content">
           <Col>
@@ -77,7 +154,7 @@ const StaffInfoDetail = () => {
           </Col>
         </div>
         <div className="content-page">
-          {dataUserDetail ? (
+          {!isLoading && dataUserDetail ? (
             <Col>
               <div style={{ paddingBottom: "64px" }}>
                 <Row style={{ display: "flex", alignContent: "center" }}>
@@ -105,7 +182,9 @@ const StaffInfoDetail = () => {
                       justifyContent: "flex-end",
                     }}
                   >
-                    <Button type="primary" onClick={showUpdateModal}>Update Role</Button>
+                    <Button type="primary" onClick={showUpdateModal}>
+                      Update Role
+                    </Button>
                   </div>
                 </Row>
               </div>
@@ -140,6 +219,18 @@ const StaffInfoDetail = () => {
                     <Input />
                   </Form.Item>
                   <Form.Item
+                    label="Department"
+                    name="department"
+                    initialValue={
+                      dataUserDetail?.department != null ||
+                      dataUserDetail?.department != undefined
+                        ? parseToStringDepartment(dataUserDetail?.department)
+                        : ""
+                    }
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
                     label="Phone Number"
                     name="phoneNumber"
                     initialValue={dataUserDetail?.phoneNumber ?? ""}
@@ -165,7 +256,7 @@ const StaffInfoDetail = () => {
           )}
         </div>
       </Col>
-   </>
+    </>
   );
 };
 

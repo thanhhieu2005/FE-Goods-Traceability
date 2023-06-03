@@ -19,26 +19,14 @@ ChartJS.register(
 );
 
 import { Bar } from "react-chartjs-2";
+import { mainColor, whiteColor } from "@/utils/app_color";
 
 const LineChartProject = ({ myProp: props }: any) => {
   const data = {
-    labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
+    labels: props.labels,
     datasets: [
       {
-        label: props.label,
+        label: props.labelDatasets,
         data: props.data,
         backgroundColor: props.colorChart,
       },
@@ -66,7 +54,7 @@ const LineChartProject = ({ myProp: props }: any) => {
     }
   };
   return (
-    <div style={{ backgroundColor: "white", padding: "12px" }}>
+    <div style={{ backgroundColor: "white", padding: "12px", height: '100%', justifyContent: 'space-between' }}>
       <div
         style={{
           display: "flex",
@@ -77,10 +65,17 @@ const LineChartProject = ({ myProp: props }: any) => {
           fontWeight: "500",
         }}
       >
-        {props.title}
+        <div style={{
+          padding: '6px 8px',
+          borderRadius: '4px',
+          backgroundColor: mainColor,
+          color: whiteColor,
+        }}>
+          {props.title}
+        </div>
       </div>
       <Bar
-        style={{ padding: "12px", width: "100%" }}
+        style={{ padding: "12px", width: "100%"}}
         data={data}
         options={options}
       ></Bar>

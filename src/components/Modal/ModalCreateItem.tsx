@@ -6,9 +6,7 @@ export const ShowModalCreateNewItem = ({ myProps: props }: any) => {
         <Modal
           title={props.title}
           open={props.isOpen}
-          onOk={props.onCreate}
-          onCancel={props.onCancel}
-          okText={props.okText ?? "Create"}
+          footer={null}
           closable={false}
           maskClosable={false}
           destroyOnClose={true}

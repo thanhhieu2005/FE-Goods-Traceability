@@ -31,7 +31,8 @@ export enum CommonProjectState {
   Processing = 1,
   Completed = 2,
   Canceled = 3,
-  Pending = 4,
+  NotYet = 4,
+  Pending = 5,
 }
 
 /// parse model

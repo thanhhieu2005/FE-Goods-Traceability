@@ -6,14 +6,22 @@ import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import "../dashboard/dashboard.scss";
 import LineChartProject from "../../../components/Charts/LineChartProject";
+import PieChartProjects from "@/components/Charts/PieChartProjects";
+import { canceledColor, canceledColorBackground, completedColor, completedColorBackground, greyBackground, pendingColorBackground, processingColor, processingColorBackground } from "@/utils/app_color";
 
 const DashBoardSystemAdmin = () => {
   const [basicInfo, setBasicInfo] = useState<DashboardInfoDefault>();
+  const [projectsPerMonth, setProjectsPerMonth] = useState<[]>([]);
 
   useEffect(() => {
     DashboardService.getBasicInfo().then((res: any) => {
       if (res?.status === 200) {
         setBasicInfo(res.data as DashboardInfoDefault);
+      }
+    });
+    DashboardService.getProjectsPerMonth().then((res: any) => {
+      if(res?.status === 200) {
+        setProjectsPerMonth(res.data.data);
       }
     });
   }, []);
@@ -40,7 +48,7 @@ const DashBoardSystemAdmin = () => {
               ),
             }}
           />
-          <div style={{ padding: "8px" }} />
+          <div style={{ padding: "4px" }} />
           <CardDashBoard
             myProp={{
               title: "System Admin",
@@ -49,7 +57,7 @@ const DashBoardSystemAdmin = () => {
               icon: <UserOutlined style={{ color: "red", fontSize: "200%" }} />,
             }}
           />
-          <div style={{ padding: "8px" }} />
+          <div style={{ padding: "4px" }} />
           <CardDashBoard
             myProp={{
               title: "Staffs",
@@ -60,7 +68,7 @@ const DashBoardSystemAdmin = () => {
               ),
             }}
           />
-          <div style={{ padding: "8px" }} />
+          <div style={{ padding: "4px" }} />
           <CardDashBoard
             myProp={{
               title: "Total Partner Farms",
@@ -70,20 +78,57 @@ const DashBoardSystemAdmin = () => {
             }}
           />
         </Row>
-        <Row style={{ paddingTop: "24px" }}>
-          <div style={{ width: "60%" }}>
-            <LineChartProject 
-              myProp={{ 
-                data: [3, 6, 9], 
-                colorChart: "#597ef7", 
-                title: "Number of projects in the year",
-                label: 'Projects'
-              }}/>
-          </div>
-          <div style={{ width: '40%' }}>
-
-          </div>
-        </Row>
+        <div style={{ padding: '12px'}}>
+          <Row style={{ paddingTop: "24px", justifyContent: 'space-between' }}>
+            <div style={{ width: "60%"}}>
+              <LineChartProject 
+                myProp={{ 
+                  data: projectsPerMonth, 
+                  colorChart: "#597ef7", 
+                  title: "Number of projects in the year",
+                  labelDatasets: 'Projects',
+                  labels:  [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                  ],
+                }}/>
+            </div>
+            <div style={{ width: '2%' }}/>
+            <div style={{ width: '38%' }}>
+                <PieChartProjects
+                  myProp={{
+                    labels: ["Processing", "Pending", "Completed", "Canceled", "Not Yet"],
+                    labelDatasets: "#Number of projects",
+                    data: [
+                      basicInfo?.numberOfProccessingProject, 
+                      basicInfo?.numberOfPendingProject, 
+                      basicInfo?.numberOfCompletedProject, 
+                      basicInfo?.numberOfCanceledProject, 
+                      basicInfo?.numberOfNotYetProject,
+                    ],
+                    backgroundColors: [
+                      processingColorBackground,
+                      pendingColorBackground,
+                      completedColorBackground,
+                      canceledColorBackground,
+                      greyBackground,
+                    ],
+                    title: "Detail projects status in year",
+                  }}
+                />
+            </div>
+          </Row>
+        </div>
       </Col>
     </>
   );

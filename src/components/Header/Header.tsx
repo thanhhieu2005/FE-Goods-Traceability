@@ -1,16 +1,16 @@
-import { Layout, Avatar, Dropdown, Menu, Row, Col, message } from "antd";
-import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
-import type { MenuProps } from "antd";
-import React, { useCallback, useEffect } from "react";
-import { ItemType, MenuInfo } from "rc-menu/lib/interface";
-import "./Header.scss";
 import { logout } from "@/redux/authenSlice";
-import { useNavigate } from "react-router-dom";
-import { checkRole } from "@/utils/checkRole";
-import { connect } from "../../features/connectWalletAPI";
-import logo from "../../assets/images/img-logo.png";
 import { useAppDispatch } from "@/redux/hook";
+import { backgroundColor } from "@/utils/app_color";
+import { checkRole } from "@/utils/checkRole";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { Avatar, Col, Dropdown, Layout, Row, message } from "antd";
+import React, { useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import logo from "../../assets/images/img-logo.png";
+import { connect } from "../../features/connectWalletAPI";
+import "./Header.scss";
 
 const { Header } = Layout;
 
@@ -95,7 +95,7 @@ export const HeaderCustom: React.FC = () => {
         top: "0",
         right: "0",
         zIndex: "1000",
-        backgroundColor: "#111d2c",
+        backgroundColor: backgroundColor,
       }}
     >
       <Row

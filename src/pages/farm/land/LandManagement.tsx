@@ -105,8 +105,6 @@ const LandManagement = () => {
                     myProps={{
                       title: "Create new Land",
                       isOpen: isModalCreateLand,
-                      onCreate: createNewLand,
-                      onCancel: cancelCreateNewLand,
                       content: (
                         <div>
                           <Form {...createContentLayout}>

@@ -1,0 +1,13 @@
+export const mainColor = "#e8b26e";
+export const backgroundColor ="#111d2c";
+export const textMainColor = '#111d2c';
+export const blackColor = 'black';
+export const whiteColor = 'white';
+export const pendingColorBackground = "rgba(255, 206, 86, 0.2)";
+export const canceledColorBackground = "rgba(255, 56, 56, 0.3)";
+export const completedColorBackground = "rgba(0, 255, 0, 0.2)";
+export const processingColorBackground = "rgba(102, 139, 242, 0.5)";
+export const greyBackground = "#E6E6E6";
+export const completedColor = "#52c41a";
+export const canceledColor = "#ff4d4f";
+export const processingColor = '#1677ff';
