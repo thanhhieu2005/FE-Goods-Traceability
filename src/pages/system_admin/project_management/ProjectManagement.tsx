@@ -18,17 +18,6 @@ interface ProjectInfo {
   status: number;
 }
 
-// const data: ProjectInfo[] = [
-//   {
-//     key: "123",
-//     projectCode: "project123",
-//     projectName: "test project",
-//     manager: "Tran Quoc Khanh",
-//     dateCreated: "14/2/2023",
-//     status: 1,
-//   },
-// ];
-
 export const ProjectManagement = () => {
   const navigate = useNavigate();
 

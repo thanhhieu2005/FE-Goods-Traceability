@@ -29,6 +29,7 @@ export interface FarmDetailInfoModel {
 }
 
 export interface FarmProjectModel {
+    key: string;
     farmProjectId: string;
     farmId: string;
     farmProjectCode: string;

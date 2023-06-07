@@ -1,6 +1,9 @@
 import FarmServices from "@/api/farm/farm_api";
 import { TagStateCommonProject } from "@/components/Tag/StateTag";
-import { FarmProjectModel, ProjectInFarmProjectModel } from "@/types/farm_model";
+import {
+  FarmProjectModel,
+  ProjectInFarmProjectModel,
+} from "@/types/farm_model";
 import { CommonProjectState } from "@/types/project_model";
 import { UserDetailModel } from "@/types/user";
 import { Button, Col, Row, Table } from "antd";
@@ -51,9 +54,7 @@ const columns: ColumnsType<FarmProjectModel> = [
     align: "center",
     render: (farmer: UserDetailModel) =>
       farmer === null ? (
-        <div style={{color: 'red'}}>
-          Not farmer yet
-        </div>
+        <div style={{ color: "red" }}>Not farmer yet</div>
       ) : (
         <div>
           {" "}
@@ -92,21 +93,27 @@ const FarmProjectManagement = () => {
     (state: any) => state.authen.currentUserInfo.farmId
   );
 
-  console.log(farmId);
-
   useEffect(() => {
-    FarmServices.getAllFarmProjectsService(farmId).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const farmProject = element as FarmProjectModel;
-          setDataFarmProjects((prevFarmProject) => [
-            ...prevFarmProject,
-            farmProject,
-          ]);
-        });
+    const handleGetAllFarm = async () => {
+      try {
+        const res: any = await FarmServices.getAllFarmProjectsService(farmId);
+        if (res?.status === 200) {
+          const formattedData = res.data.map((element: FarmProjectModel) => {
+            return {
+              ...element,
+              key: element.farmProjectId,
+            };
+          });
+
+          setDataFarmProjects(formattedData);
+        }
+      } catch (error) {
+        // handle error
       }
-    });
-  }, [setDataFarmProjects]);
+    };
+
+    handleGetAllFarm();
+  }, [farmId]);
 
   return (
     <div>
@@ -130,14 +137,21 @@ const FarmProjectManagement = () => {
               </div>
             </Row>
             <div className="action-layout-btn">
-              <Button type="primary" onClick={() => {navigate(`/farm-project-management/create-farm-project`)}}>Create new Project</Button>
+              <Button
+                type="primary"
+                onClick={() => {
+                  navigate(`/farm-project-management/create-farm-project`);
+                }}
+              >
+                Create new Project
+              </Button>
             </div>
           </Row>
           <Table
             columns={columns}
             dataSource={dataFarmProjects}
             scroll={{ x: 1300 }}
-            pagination={{ defaultPageSize: 10, showSizeChanger: true}}
+            pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(farmProject: any, rowIndex: any) => {
               return {
                 onClick: () => {

@@ -60,7 +60,6 @@ const StaffInfoDetail = () => {
       console.log(result);
 
       if(result.status === 200) {
-        setIsLoadingUpdate(true);
         const userDetail = parseUserDetail(result.data);
         setDataUserDetail(userDetail);
 
