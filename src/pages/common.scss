@@ -3,6 +3,7 @@
     background-color: white;
     padding: 12px 24px;
     margin-bottom: 36px;
+    border-radius: 4px;
 
     .breadcrumb-style {
         font-size: 16px;
@@ -34,6 +35,7 @@
     padding: 12px 24px;
     width: 100%;
     padding-bottom: 64px;
+    border-radius: 4px;
 
     .search-item {
         width: 60%;
@@ -90,6 +92,61 @@
         display: flex;
         justify-content: flex-end;
         margin: 24px 0px;
+    }
+
+    .text-main-label {
+        font-size: 24px;
+        font-weight: 700;
+        color: #111d2c;
+    }
+
+    p {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.divided {
+    height: 1px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    background-color: #D9DDDC;
+    width: 100%;
+}
+
+.sub-text {
+    font-size: 14px;
+    font-weight: 400;
+    font-style: italic;
+    color: #999DA0;
+}
+
+.content-sub-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111d2c;
+}
+
+.title-text {
+    font-size: 18px;
+    font-weight: 400;
+    color: #111d2c;
+}
+
+.content-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111d2c;
+}
+
+.outlined-border-box {
+
+    p {
+        margin: 0;
+        padding: 0;
+        color: black;
+        font-size: 18px;
+        font-weight: 700;
     }
 }
 

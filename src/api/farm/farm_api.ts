@@ -12,6 +12,18 @@ const FarmServices = {
       return error;
     }
   },
+  getAllFarmersInFarm: async (farmId: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.get("/farm/farmer/all" + farmId, {
+        headers: { Authorization: `Bearer ${currentToken}` },
+      });
+      return res;
+    } catch (error) {
+      return error;
+    }
+  },
   getAllFarmProjectsService: async (farmId: string) => {
     try {
       const currentToken = localStorage.getItem("token");

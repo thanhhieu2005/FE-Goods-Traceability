@@ -22,7 +22,6 @@ import { icLand } from "@/assets";
 import { TagLandState } from "@/components/Tag/StateTag";
 import { createContentLayout } from "@/styles/content_layout";
 import { ShowModalCreateNewItem } from "@/components/Modal/ModalCreateItem";
-import { ShowModalConfirmDelete } from "@/components/Modal/ModalDeleteItem";
 import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 

@@ -152,7 +152,7 @@ const FarmProjectManagement = () => {
             dataSource={dataFarmProjects}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
-            onRow={(farmProject: any, rowIndex: any) => {
+            onRow={(farmProject: any) => {
               return {
                 onClick: () => {
                   navigate(
