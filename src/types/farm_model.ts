@@ -43,6 +43,11 @@ export interface FarmProjectModel {
     dateCreated: string;
     farmer: UserDetailModel;
     projectId: ProjectInFarmProjectModel;
+    ripeness: number;
+    totalFertilizers: number;
+    totalSeeds: number;
+    plantDensity: number;
+    pesticide: string;
 }
 
 export interface ProjectInFarmProjectModel {

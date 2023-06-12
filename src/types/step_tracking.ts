@@ -134,3 +134,11 @@ export const parseProductionData = (data: any) => {
 
   return production;
 };
+
+export const listCommonState = [
+  CommonProjectState.Processing,
+  CommonProjectState.Completed,
+  CommonProjectState.Pending,
+  CommonProjectState.Canceled,
+  CommonProjectState.NotYet,
+];

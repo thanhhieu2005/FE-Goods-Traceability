@@ -16,7 +16,7 @@ const FarmServices = {
     try {
       const currentToken = localStorage.getItem("token");
 
-      const res = await axiosClient.get("/farm/farmer/all" + farmId, {
+      const res = await axiosClient.get("/farm/farmer/all/" + farmId, {
         headers: { Authorization: `Bearer ${currentToken}` },
       });
       return res;
@@ -142,6 +142,55 @@ const FarmServices = {
       return err;
     }
   },
+  addFarmerIntoFarm: async (farmId: string, email: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.post(
+        "/farm/add-farmer/" + farmId,
+        email,
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        }
+      );
+
+      return res;
+    } catch (err) {
+      return err;
+    }
+  },
+  updateFarmProject: async (farmProjectId: string, value: any) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.patch(
+        "/farm-project/" + farmProjectId,
+        value,
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        }
+      );
+      return res;
+    } catch(err) {
+      return err;
+    }
+  },
+  getFarmProjectDetail: async (farmProjectId: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.get(
+        "/farm-project/" + farmProjectId,
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        }
+      );
+
+      return res;
+    } catch(err) {
+      return err;
+    }
+  }
 };
 
 export default FarmServices;

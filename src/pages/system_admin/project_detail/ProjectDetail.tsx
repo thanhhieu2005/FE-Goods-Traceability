@@ -1,9 +1,10 @@
 import {
-  GetProjectDetailByID,
-  UpdateProjectState,
+  GetProjectDetailByID
 } from "@/api/system_admin/project_api";
+import { StateInfoProject } from "@/components/Tag/StateTag";
 import { CheckProjectStatus } from "@/pages/common/CheckProjectStatus";
-import { CommonProjectState, ProjectDetailModel } from "@/types/project_model";
+import { ProjectDetailModel } from "@/types/project_model";
+import { checkCurrentStepProject } from "@/utils/check_current_step";
 import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import {
   Breadcrumb,
@@ -11,51 +12,34 @@ import {
   Col,
   Form,
   Input,
-  Modal,
   Row,
-  Select,
   Spin,
-  Steps,
-  Tooltip,
+  Steps
 } from "antd";
-import React, { useEffect, useState } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "../../common.scss";
 import InfoHarvestModal from "../../../components/Modal/InfoHarvestModal";
 import InfoProductionModal from "../../../components/Modal/InfoProductionModal";
 import InfoTransportModal from "../../../components/Modal/InfoTransportModal";
 import InfoWarehouseModal from "../../../components/Modal/InfoWarehouseModal";
+import "../../common.scss";
+import EditProject from "./EditProject";
 import "./ProjectDetail.scss";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import moment from "moment";
-import { StateInfoProject } from "@/components/Tag/StateTag";
-import { checkCurrentStepProject } from "@/utils/check_current_step";
-import { FarmInfoModel, FarmProjectModel } from "@/types/farm_model";
-import FarmManagementService from "@/api/admin_tech/farm_management_services";
-import {
-  modalUpdateContentLayout,
-  tailUpdateContentLayout,
-} from "@/styles/content_layout";
-import FarmServices from "@/api/farm/farm_api";
-import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
-import { UserDetailModel, parseUserDetail } from "@/types/user";
-import StaffServices from "@/api/system_admin/staff_service";
-import {
-  parseColorByCommonState,
-  parseToStringCommonState,
-} from "@/utils/format_state";
 
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 12 },
 };
 
-let disabled = true;
+// let disabled = true;
 
 const ProjectDetail = () => {
   const navigate = useNavigate();
 
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
+  const [formUpdate] = Form.useForm();
+
+  // const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
 
   const [dataProject, setDataProject] = useState<ProjectDetailModel>();
 
@@ -75,28 +59,28 @@ const ProjectDetail = () => {
     });
   }, [projectId]);
 
-  const handleUpdateProjectState = async (projectId: string, state: number) => {
-    const value = { state: state };
+  // const handleUpdateProjectState = async (projectId: string, state: number) => {
+  //   const value = { state: state };
 
-    disabled = true;
-    setComponentDisabled(disabled);
+  //   disabled = true;
+  //   setComponentDisabled(disabled);
 
-    const res: any = await UpdateProjectState(value, projectId);
+  //   const res: any = await UpdateProjectState(value, projectId);
 
-    const newInfoProject = res.data.project as ProjectDetailModel;
+  //   const newInfoProject = res.data.project as ProjectDetailModel;
 
-    if (res.status === 200) {
-      state == 2
-        ? successMessage("Project has been Completed")
-        : successMessage("Project has been Canceled");
+  //   if (res.status === 200) {
+  //     state == 2
+  //       ? successMessage("Project has been Completed")
+  //       : successMessage("Project has been Canceled");
 
-      setDataProject(newInfoProject);
+  //     setDataProject(newInfoProject);
 
-      // addTrackingBlock("test", "testProject"); // test
-    } else {
-      errorMessage("Update Failed");
-    }
-  };
+  //     // addTrackingBlock("test", "testProject"); // test
+  //   } else {
+  //     errorMessage("Update Failed");
+  //   }
+  // };
 
   // Steps project
   const stepsProject = [
@@ -117,130 +101,18 @@ const ProjectDetail = () => {
     },
   ];
 
-  // update project
-  const [selectedFarmId, setSelectedFarmId] = useState<string>();
-
-  const [listFarms, setListFarms] = useState<FarmInfoModel[]>([]);
-
-  const handleOnChangeFarm = (newFarmId: string) => {
-    setSelectedFarmId(newFarmId);
-  };
-
-  const [listFarmProjects, setListFarmProjects] = useState<FarmProjectModel[]>(
-    []
-  );
-
-  useEffect(() => {
-    FarmManagementService.getAllFarmService().then((res: any) => {
-      if (res?.status == 200) {
-        res.data.map((element: any) => {
-          const farm = element as FarmInfoModel;
-          setListFarms((prevFarm) => [...prevFarm, farm]);
-        });
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (selectedFarmId !== undefined) {
-      setListFarmProjects([]);
-      FarmServices.getAllFarmProjectsService(selectedFarmId).then(
-        (res: any) => {
-          if (res?.status === 200) {
-            res.data.map((element: any) => {
-              const farm = element as FarmProjectModel;
-              if (farm.projectId === null) {
-                setListFarmProjects((prevFarmProject) => [
-                  ...prevFarmProject,
-                  farm,
-                ]);
-              }
-            });
-          }
-        }
-      );
-    }
-  }, [selectedFarmId]);
-
-  // update status project
-  const [listHavesters, setListHavesters] = useState<UserDetailModel[]>([]);
-
-  const [listWarehouseInspectors, setListWarehouseInspectors] = useState<
-    UserDetailModel[]
-  >([]);
-
-  const [listTransporters, setListTransporters] = useState<UserDetailModel[]>(
-    []
-  );
-
-  const [listProduceInspectors, setListProduceInspectors] = useState<
-    UserDetailModel[]
-  >([]);
 
   const showEditProjectDrawer = () => {
     setOpenModalUpdate(true);
   };
 
   const closeEditProjectDrawer = () => {
+    formUpdate.resetFields();
     setOpenModalUpdate(false);
   };
 
   const [isOpenModalUpdate, setOpenModalUpdate] = useState(false);
 
-  // get all staff department Harvester
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(2).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const harvester = parseUserDetail(element);
-          setListHavesters((prev) => [...prev, harvester]);
-        });
-      }
-    });
-  }, []);
-
-  // get all staff Transport Inspector
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(3).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const transporter = parseUserDetail(element);
-          setListTransporters((prev) => [...prev, transporter]);
-        });
-      }
-    });
-  }, []);
-
-  // get all staff Warehouse Inspector
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(4).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const warehouse = parseUserDetail(element);
-          setListWarehouseInspectors((prev) => [...prev, warehouse]);
-        });
-      }
-    });
-  }, []);
-
-  // get all staff Produce Inspector
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(5).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const produce = parseUserDetail(element);
-          setListProduceInspectors((prev) => [...prev, produce]);
-        });
-      }
-    });
-  }, []);
-
-  const listState = [
-    CommonProjectState.Processing,
-    CommonProjectState.Completed,
-    CommonProjectState.Pending,
-    CommonProjectState.Canceled,
-  ];
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -251,225 +123,43 @@ const ProjectDetail = () => {
   }
 
   const handleUpdateProject = async (value: any) => {
+    console.log("final value",value);
     setIsLoadingUpdate(true);
 
-    if (dataProject !== undefined) {
-      const result: any = await UpdateProjectState(
-        value,
-        dataProject?.projectId
-      );
+    // if (dataProject !== undefined) {
+    //   const result: any = await UpdateProjectState(
+    //     value,
+    //     dataProject?.projectId
+    //   );
 
-      if (result.status === 200) {    
-        setIsLoading(true);
+    //   if (result.status === 200) {    
+    //     setIsLoading(true);
 
-        setOpenModalUpdate(false);
+    //     setOpenModalUpdate(false);
 
-        Modal.success({
-          content: "Update project successfully!",
-          onOk: handleOkUpdateSuccess
-        });
+    //     Modal.success({
+    //       content: "Update project successfully!",
+    //       onOk: handleOkUpdateSuccess
+    //     });
 
-        setDataProject(result.data.project);
+    //     setDataProject(result.data.project);
 
-        setIsLoadingUpdate(false); 
-      }
-    }
+    //     setIsLoadingUpdate(false); 
+    //   }
+    // }
   };
 
   return (
     <>
       {isOpenModalUpdate && (
-        <ShowDrawerEdit
+        <EditProject
           myProps={{
-            title: "Edit Information of Project",
-            onOpen: showEditProjectDrawer,
-            onClose: closeEditProjectDrawer,
-            content: (
-              <Col>
-                <Form
-                  {...modalUpdateContentLayout}
-                  onFinish={(value) => {
-                    handleUpdateProject(value);
-                  }}
-                >
-                  <Form.Item
-                    label="Project Name"
-                    name="projectName"
-                    initialValue={dataProject?.projectName}
-                  >
-                    <Input />
-                  </Form.Item>
-                  {dataProject?.farmProject === null ? (
-                    <Col>
-                      <Form.Item label="Farm in Charge" name="farmId">
-                        <Select
-                          placeholder="Select farm in charge"
-                          onChange={handleOnChangeFarm}
-                        >
-                          {listFarms.map((farm) => (
-                            <Select.Option
-                              value={farm.farmId}
-                              key={farm.farmId}
-                            >
-                              <Tooltip
-                                placement="right"
-                                title={`${farm.farmName}` ?? "No name"}
-                              >
-                                {" "}
-                                {farm.farmCode}
-                              </Tooltip>
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                      <Form.Item label="Farm Project" name="farmProjectId">
-                        <Select placeholder="Select farm project in charge">
-                          {listFarmProjects.map((farmProject) => (
-                            <Select.Option
-                              value={farmProject.farmProjectId}
-                              key={farmProject.farmProjectId}
-                            >
-                              {farmProject.farmProjectCode}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                  ) : (
-                    <></>
-                  )}
-                  <Form.Item
-                    label="Havestor"
-                    name="havestor"
-                    initialValue={dataProject?.harvest.inspector?.email}
-                  >
-                    <Select placeholder="Select harvestor in Harvest Inspection">
-                      {listHavesters.map((harvester) => (
-                        <Select.Option
-                          value={harvester.userId}
-                          key={harvester.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${harvester.lastName} ${harvester.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {harvester.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    label="Transport Inspector"
-                    name="transportInspector"
-                    initialValue={dataProject?.transport.inspector?.email}
-                  >
-                    <Select placeholder="Select Transport Inspector">
-                      {listTransporters.map((transporter) => (
-                        <Select.Option
-                          value={transporter.userId}
-                          key={transporter.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${transporter.lastName} ${transporter.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {transporter.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    label="Warehouse Inspector"
-                    name="warehouseInspector"
-                    initialValue={dataProject?.warehouseStorage.inspector?.email}
-                  >
-                    <Select placeholder="Select Warehouse Inspector">
-                      {listWarehouseInspectors.map((warehouse) => (
-                        <Select.Option
-                          value={warehouse.userId}
-                          key={warehouse.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${warehouse.lastName} ${warehouse.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {warehouse.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item 
-                    label="Produce Inspector" 
-                    name="produceInspector"
-                    initialValue={dataProject?.produce.inspector?.email}
-                  >
-                    <Select placeholder="Select Produce Inspector">
-                      {listProduceInspectors.map((produce) => (
-                        <Select.Option
-                          value={produce.userId}
-                          key={produce.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${produce.lastName} ${produce.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {produce.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    label="State"
-                    name="state"
-                    initialValue={dataProject?.state}
-                  >
-                    <Select
-                      placeholder="Select new State"
-                      // onChange={onChangeState}
-                    >
-                      {listState.map((state) => (
-                        <Select.Option value={state} key={state}>
-                          <span
-                            style={{
-                              color: `${parseColorByCommonState(state)}`,
-                            }}
-                          >
-                            {parseToStringCommonState(state)}
-                          </span>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item wrapperCol={tailUpdateContentLayout}>
-                    <Button
-                      type="primary"
-                      size="large"
-                      htmlType="submit"
-                      style={{ marginRight: "12px" }}
-                      loading={isLoadingUpdate}
-                    >
-                      Update
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Col>
-            ),
+            dataProject: dataProject,
+            showEditProjectDrawer: showEditProjectDrawer,
+            closeEditProjectDrawer: closeEditProjectDrawer,
+            handleUpdateProject: handleUpdateProject,
+            isLoadingUpdate: isLoadingUpdate,
+            formUpdate: formUpdate,
           }}
         />
       )}
@@ -534,7 +224,7 @@ const ProjectDetail = () => {
                     // setComponentDisabled(disabled);
                     setOpenModalUpdate(true);
                   }}
-                  disabled={!componentDisabled}
+                  // disabled={!componentDisabled}
                 >
                   Update
                 </Button>
