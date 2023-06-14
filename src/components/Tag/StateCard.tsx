@@ -4,6 +4,7 @@ import React from "react";
 
 const StateCard = ({ myProps: props }: any) => {
   const state: CommonProjectState = props.state;
+
   switch (state) {
     case CommonProjectState.Processing:
       return (
@@ -11,8 +12,8 @@ const StateCard = ({ myProps: props }: any) => {
           <Tag
             color="processing"
             style={{
-              fontSize: "16px",
-              padding: "8px 16px",
+              fontSize: props.fontSizeText ?? "16px",
+              padding: props.padding ?? "8px 16px",
               borderRadius: "4px",
             }}
           >
@@ -26,8 +27,8 @@ const StateCard = ({ myProps: props }: any) => {
           <Tag
             color="success"
             style={{
-              fontSize: "16px",
-              padding: "8px 16px",
+              fontSize: props.fontSizeText ?? "16px",
+              padding: props.padding ??  "8px 16px",
               borderRadius: "4px",
             }}
           >
@@ -41,8 +42,8 @@ const StateCard = ({ myProps: props }: any) => {
           <Tag
             color="error"
             style={{
-              fontSize: "16px",
-              padding: "8px 16px",
+              fontSize: props.fontSizeText ?? "16px",
+              padding: props.padding ??  "8px 16px",
               borderRadius: "4px",
             }}
           >
@@ -56,8 +57,8 @@ const StateCard = ({ myProps: props }: any) => {
           <Tag
             color="warning"
             style={{
-              fontSize: "16px",
-              padding: "8px 16px",
+              fontSize: props.fontSizeText ?? "16px",
+              padding: props.padding ??  "8px 16px",
               borderRadius: "4px",
             }}
           >
@@ -71,8 +72,8 @@ const StateCard = ({ myProps: props }: any) => {
           <Tag
             color="default"
             style={{
-              fontSize: "16px",
-              padding: "8px 16px",
+              fontSize: props.fontSizeText ?? "16px",
+              padding: props.padding ??  "8px 16px",
               borderRadius: "4px",
             }}
           >

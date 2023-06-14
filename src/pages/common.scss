@@ -32,9 +32,9 @@
 
 .content-page {
     background-color: white;
-    padding: 12px 24px;
+    padding: 24px 32px;
     width: 100%;
-    padding-bottom: 64px;
+    // padding-bottom: 64px;
     border-radius: 4px;
 
     .search-item {
@@ -104,6 +104,12 @@
         padding: 0;
         margin: 0;
     }
+
+    .divide-width-item-in-row {
+        display: flex;
+        align-items: center;
+        width: "25%";
+    }
 }
 
 .divided {
@@ -128,7 +134,7 @@
 }
 
 .title-text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     color: #111d2c;
 }
@@ -150,13 +156,23 @@
     }
 }
 
-.common-tag-state {
-    padding: 8px 16px;
+.common-border-tag {
+    padding: 4px 16px;
     background-color: white;
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
     font-size: 16px;
     font-weight: 700;
+}
+
+.space-padding {
+    padding: 12px;
+}
+
+.row-space-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 

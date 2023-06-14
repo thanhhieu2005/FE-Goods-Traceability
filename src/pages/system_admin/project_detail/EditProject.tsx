@@ -5,6 +5,7 @@ import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
 import { modalUpdateContentLayout, tailUpdateContentLayout } from "@/styles/content_layout";
 import { FarmInfoModel, FarmProjectModel } from "@/types/farm_model";
 import { CommonProjectState, ProjectDetailModel } from "@/types/project_model";
+import { listCommonState } from "@/types/step_tracking";
 import { UserDetailModel, parseUserDetail } from "@/types/user";
 import { parseColorByCommonState, parseToStringCommonState } from "@/utils/format_state";
 import { Button, Col, Form, Input, Select, Tooltip } from "antd";
@@ -76,13 +77,6 @@ const EditProject = ({ myProps: props }: any) => {
       }
     });
   }, []);
-
-  const listState = [
-    CommonProjectState.Processing,
-    CommonProjectState.Completed,
-    CommonProjectState.Pending,
-    CommonProjectState.Canceled,
-  ];
   
   
   const handleOnChangeFarm = (newFarmId: string) => {
@@ -140,7 +134,7 @@ const EditProject = ({ myProps: props }: any) => {
   >([]);
 
   const formatValue = (value: any) => {
-    Object.keys(value).forEach(function(key, index) {
+    Object.keys(value).forEach(function(key) {
       if(key === "harvestor") {
         value[key] = selectedHarvestor;
       }
@@ -315,7 +309,7 @@ const EditProject = ({ myProps: props }: any) => {
                     placeholder="Select new State"
                     // onChange={onChangeState}
                   >
-                    {listState.map((state) => (
+                    {listCommonState.map((state) => (
                       <Select.Option value={state} key={state}>
                         <span
                           style={{

@@ -7,7 +7,7 @@ export interface FarmInfoModel {
     farmCode: string;
     farmName: string;
     farmAddress?: string;
-    farmOwner?: string;
+    farmOwner?: UserDetailModel;
     farmPhoneNumber?: string;
     farmerList: string[];
     statusFarm: StatusFarm;
