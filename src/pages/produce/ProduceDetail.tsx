@@ -120,14 +120,14 @@ function ProduceDetail() {
                 <Form.Item
                   label="Production ID"
                   name="productionId"
-                  initialValue={dataProduction.productionId}
+                  initialValue={dataProduction.produceSupervisionId}
                 >
                   <Input />
                 </Form.Item>
                 <Form.Item
                   label="Project ID"
                   name="projectId"
-                  initialValue={dataProduction.productionId}
+                  initialValue={dataProduction.produceSupervisionId}
                 >
                   <Input />
                 </Form.Item>
@@ -162,7 +162,7 @@ function ProduceDetail() {
                 disabled={componentDisabled}
                 onFinish={(value) => {
                   console.log("On Submit");
-                  handleSubmitForm(value, dataProduction.productionId);
+                  handleSubmitForm(value, dataProduction.produceSupervisionId);
                   disabled = true;
                   setComponentDisabled(disabled);
                 }}
@@ -236,7 +236,7 @@ function ProduceDetail() {
                         onClick={async () => {
                           disabled = true;
                           setComponentDisabled(disabled);
-                          handleUpdateState(dataProduction.productionId, 3);
+                          handleUpdateState(dataProduction.produceSupervisionId, 3);
                         }}
                       >
                         Cancel
@@ -255,7 +255,7 @@ function ProduceDetail() {
                             disabled = true;
                             setComponentDisabled(disabled);
                             await handleUpdateState(
-                              dataProduction.productionId,
+                              dataProduction.produceSupervisionId,
                               2
                             );
                           } else {

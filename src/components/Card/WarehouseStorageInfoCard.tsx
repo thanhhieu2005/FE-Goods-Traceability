@@ -1,72 +1,72 @@
-import { Transport } from "@/types/step_tracking";
 import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
+import { WarehouseStorage } from "@/types/step_tracking";
 import { FormOutlined } from "@ant-design/icons";
 import LabelContentItem from "../Label/LabelContentItem";
 import moment from "moment";
-import { errorMessage, successMessage } from "../Message/MessageNoti";
 import ProjectServices from "@/api/system_admin/project_api";
+import { errorMessage, successMessage } from "../Message/MessageNoti";
 import ModalUpdateInspector from "../Modal/ModalUpdateInspector";
 import { StaffDepartment } from "@/types/user";
 
-const TransportInfoCard = ({ myProps: props }: any) => {
-  const [dataTransport, setDatTransport] = useState<Transport>(
-    props.dataTransport
-  );
+const WarehouseStorageInfoCard = ({ myProps: props }: any) => {
+  const [dataWarehouseStorage, setDataWarehouseStorage] =
+    useState<WarehouseStorage>(props.dataWarehouseStorage);
 
-  const [
-    isModalUpdateTransportSupervision,
-    setIsModalUpdateTransportSupervision,
-  ] = useState(false);
+  const [isModalUpdate, setIsModalUpdate] = useState(false);
 
-  const hanleOnClickUpdateInspector = () => {
-    setIsModalUpdateTransportSupervision(true);
+  const handleOnClickUpdateInspector = () => {
+    setIsModalUpdate(true);
   };
 
   const onCancelUpdateInspectorModal = () => {
-    console.log('test');
-    setIsModalUpdateTransportSupervision(false);
+    setIsModalUpdate(false);
   };
 
   const onHandleAssignInspector = async (value: any) => {
-    console.log(value.emailInspector, dataTransport.transportId);
+    console.log(value.emailInspector, dataWarehouseStorage.warehouseStorageId);
 
-    const res: any = await ProjectServices.addTransportSupervisor(value.emailInspector, dataTransport.transportId);
+    const res: any = await ProjectServices.addWarehouseStorageSupervisor(
+      value.emailInspector,
+      dataWarehouseStorage.warehouseStorageId
+    );
 
-    if(res.status === 200) {
-      setDatTransport(res.data);
+    if (res.status === 200) {
+      setDataWarehouseStorage(res.data);
       successMessage("Assing inspector success!");
     } else {
       console.log(res);
       errorMessage(res.response.data.message);
     }
 
-    setIsModalUpdateTransportSupervision(false);
+    setIsModalUpdate(false);
   };
 
   const onHandleRemoveInspector = async () => {
-    const res: any = await ProjectServices.removeTransportSupervisor(dataTransport.transportId);
+    const res: any = await ProjectServices.removeWarehouseStorageSupervisor(
+      dataWarehouseStorage.warehouseStorageId
+    );
 
-    if(res.status === 200) {
-      setDatTransport(res.data);
+    if (res.status === 200) {
+      setDataWarehouseStorage(res.data);
       successMessage("Remove Inspector Successfully!");
     } else {
       errorMessage(res.response.data.message);
     }
 
-    setIsModalUpdateTransportSupervision(false);
-  }
+    setIsModalUpdate(false);
+  };
 
   return (
     <>
       <ModalUpdateInspector
         myProps={{
-          department: StaffDepartment.TransportSupervision,
-          inspector: dataTransport.inspector,
-          title: "Update Transport Supervision",
+          department: StaffDepartment.WarehouseSupervision,
+          inspector: dataWarehouseStorage.inspector,
+          title: "Update Warehouse Storage Supervision",
           onCancel: onCancelUpdateInspectorModal,
-          isOpen: isModalUpdateTransportSupervision,
+          isOpen: isModalUpdate,
           onFinsh: onHandleAssignInspector,
           onRemoveInspector: onHandleRemoveInspector,
         }}
@@ -76,7 +76,7 @@ const TransportInfoCard = ({ myProps: props }: any) => {
           <div style={{ margin: "12px 0px" }}>
             <StateCard
               myProps={{
-                state: dataTransport.state,
+                state: dataWarehouseStorage.state,
                 padding: "4px 12px",
                 fontSizeText: "14px",
               }}
@@ -85,9 +85,9 @@ const TransportInfoCard = ({ myProps: props }: any) => {
           <Row className="row-space-between">
             <p
               className="text-main-label"
-              style={{ color: "#0E2954", fontWeight: "700" }}
+              style={{ color: "#B31312", fontWeight: "700" }}
             >
-              Transport Supervision
+              Warehouse Storage Supervision
             </p>
             <Button
               type="primary"
@@ -95,7 +95,7 @@ const TransportInfoCard = ({ myProps: props }: any) => {
               size="middle"
               style={{ borderRadius: "4px" }}
               onClick={() => {
-                hanleOnClickUpdateInspector();
+                handleOnClickUpdateInspector();
               }}
             >
               Edit Inspector
@@ -104,18 +104,18 @@ const TransportInfoCard = ({ myProps: props }: any) => {
           <div className="space-padding" />
           <LabelContentItem
             myProps={{
-              label: "Transport ID",
-              content: dataTransport.transportId,
+              label: "Warehouse Storage ID",
+              content: dataWarehouseStorage.warehouseStorageId,
               width: "100%",
             }}
           />
           <div className="space-padding" />
           <LabelContentItem
             myProps={{
-              label: "Transport Inspector",
+              label: "Warehosue Inspector",
               content:
-                dataTransport.inspector !== null
-                  ? dataTransport.inspector?.email
+                dataWarehouseStorage.inspector !== null
+                  ? dataWarehouseStorage.inspector?.email
                   : "Not assigned yet",
               width: "100%",
             }}
@@ -123,49 +123,42 @@ const TransportInfoCard = ({ myProps: props }: any) => {
           <div className="space-padding" />
           <LabelContentItem
             myProps={{
-              label: "Date Completed",
+              label: "Date Imported",
               content:
-                dataTransport.dateCompleted !== null
-                  ? moment(dataTransport.dateCompleted).format("DD/MM/YYYY")
+                dataWarehouseStorage.inputDate !== null
+                  ? moment(dataWarehouseStorage.inputDate).format("DD/MM/YYYY")
                   : "Not update",
               width: "100%",
             }}
           />
           <LabelContentItem
             myProps={{
-              label: "Total Input (ton)",
-              content: dataTransport.totalInput ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Transport Name",
-              content: dataTransport.transportName ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Vehicle Type",
-              content: dataTransport.vehicleType ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Number of Vehicles",
-              content: dataTransport.numberOfVehicle ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Date Expected",
+              label: "Date Exported",
               content:
-                dataTransport.dateExpected !== null
-                  ? moment(dataTransport.dateExpected).format("DD/MM/YYYY")
+                dataWarehouseStorage.outputDate !== null
+                  ? moment(dataWarehouseStorage.outputDate).format("DD/MM/YYYY")
                   : "Not update",
+              width: "100%",
+            }}
+          />
+          <LabelContentItem
+            myProps={{
+              label: "Warehouse Name",
+              content: dataWarehouseStorage.warehouseName ?? "Not update",
+              width: "100%",
+            }}
+          />
+          <LabelContentItem
+            myProps={{
+              label: "Total Import",
+              content: dataWarehouseStorage.totalInput ?? "Not update",
+              width: "100%",
+            }}
+          />
+          <LabelContentItem
+            myProps={{
+              label: "Total Export",
+              content: dataWarehouseStorage.totalExport ?? "Not update",
               width: "100%",
             }}
           />
@@ -175,4 +168,4 @@ const TransportInfoCard = ({ myProps: props }: any) => {
   );
 };
 
-export default TransportInfoCard;
+export default WarehouseStorageInfoCard;

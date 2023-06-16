@@ -1,5 +1,5 @@
 import { CommonProjectState } from "./project_model";
-import { UserDetailModel, UserModel, parseUserDetail } from "./user";
+import { UserDetailModel, parseUserDetail } from "./user";
 
 export interface Harvest {
   key: string;
@@ -47,7 +47,7 @@ export interface WarehouseStorage {
 export interface Production {
   key: string;
   projectId: string;
-  productionId: string;
+  produceSupervisionId: string;
   projectCode: string;
   totalInput?: number;
   factoryName?: string;
@@ -118,7 +118,7 @@ export const parseProductionData = (data: any) => {
   var production = {} as Production;
 
   production.key = data._id;
-  production.productionId = data._id;
+  production.produceSupervisionId = data._id;
   production.projectId = data.projectId._id;
   production.projectCode = data.projectCode;
   production.totalInput = data?.totalInput;

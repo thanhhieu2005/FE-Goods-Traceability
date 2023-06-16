@@ -115,8 +115,8 @@ function ProduceManagement() {
           onRow={(production: Production, rowIndex : any) => {
             return {
               onClick: () => {
-                navigate(`/produce-management/${production.productionId}`, {
-                  state: production.productionId,
+                navigate(`/produce-management/${production.produceSupervisionId}`, {
+                  state: production.produceSupervisionId,
                 });
               },
             };
