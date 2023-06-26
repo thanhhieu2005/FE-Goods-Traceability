@@ -1,4 +1,4 @@
-import { Production } from "@/types/step_tracking";
+import { ProductionModel } from "@/types/step_tracking";
 import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
@@ -11,7 +11,7 @@ import ModalUpdateInspector from "../Modal/ModalUpdateInspector";
 import { StaffDepartment } from "@/types/user";
 
 const ProduceInfoCard = ({ myProps: props }: any) => {
-  const [dataProduce, setDataProduce] = useState<Production>(props.dataProduce);
+  const [dataProduce, setDataProduce] = useState<ProductionModel>(props.dataProduce);
 
   console.log(dataProduce);
 

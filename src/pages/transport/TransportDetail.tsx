@@ -1,338 +1,257 @@
-import {
-  GetTransportDetailByIdAPI,
-  UpdateTransportAPI,
-} from "@/api/transport_api";
-import { StateTagStep } from "@/components/Tag/StateTag";
-import { parseTransportData, Transport } from "@/types/step_tracking";
-import { dateFormat, formatDateTime } from "@/utils/formatDateTime";
-import { FormOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { StateComponent } from "@/pages/common/CheckProjectStatus";
+import { GetTransportDetailByIdAPI, UpdateTransportAPI } from "@/api/transport_api";
+import DrawerEditTransport from "@/components/Drawer/DrawerEditTransport";
+import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import SpinApp from "@/components/Spin/SpinApp";
+import StateCard from "@/components/Tag/StateCard";
+import { CommonProjectState } from "@/types/project_model";
+import { TransportModel, parseTransportData } from "@/types/step_tracking";
+import { FormOutlined } from "@ant-design/icons";
+import { Breadcrumb, Button, Col, Modal, Row } from "antd";
 import moment from "moment";
-import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
-
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
-};
-
-let disabled = true;
-
-// const dateFormat = "YYYY/MM/DD";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const TransportDetail = () => {
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
-
-  const [dataTransport, setDataTransport] = useState<Transport>();
+  const [dataTransport, setDataTransport] = useState<TransportModel>();
 
   const { state: transportId } = useLocation();
 
+  const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
+
   useEffect(() => {
     GetTransportDetailByIdAPI(transportId).then((res: any) => {
+      console.log(res);
       const transport = parseTransportData(res.data);
-
       setDataTransport(transport);
     });
   }, []);
 
-  const handleUpdateTransportState = async (
-    transportId: string,
-    state: number
-  ) => {
-    const valueState = { state: state };
-
-    const res: any = await UpdateTransportAPI(valueState, transportId);
-
-    return res;
+  const handleShowDrawerUpdate = () => {
+    setIsOpenModalUpdate(true);
   };
 
-  const handleSubmitForm = async (value: any, transportId: string) => {
-    const finalValue = { ...value };
+  const handleCancelDrawerUpdate = () => {
+    setIsOpenModalUpdate(false);
+  };
 
-    console.log(finalValue);
-
-    const result: any = await UpdateTransportAPI(finalValue, transportId);
-
-    if (result.status === 200) {
-      const newTransport: Transport = parseTransportData(
-        result.data.shippingPop
-      );
-
-      setDataTransport(newTransport);
-
-      successMessage("Update new information successfully!");
+  const checkHasProject = () => {
+    if (dataTransport?.projectId !== null) {
+      setIsOpenModalUpdate(true);
     } else {
-      errorMessage("Update new information failed!");
+      Modal.warning({
+        content:
+          "You can't update this step because the project has not assigned yet.",
+      });
     }
   };
 
-  const checkCanBeCompleted = (transport: Transport) => {
-    if (
-      transport.dateExpected === undefined ||
-      transport.numberOfVehicle === 0 ||
-      transport.transportName === "" ||
-      transport.vehicleType === undefined ||
-      transport.totalInput === 0
-    ) {
-      return false;
+  const onUpdateTransportSupervision = async(value: any) => {
+    console.log(value);
+
+    const res: any = await UpdateTransportAPI(value, transportId);
+
+    if(res.status == 200) {
+      const newTransportSupervision = parseTransportData(res.data);
+
+      setDataTransport(newTransportSupervision);
+
+      setIsOpenModalUpdate(false);
+      successMessage("Update Successfully!");
+    } else if(res.response.status === 400) {
+      errorMessage(res.response.data.message);
     }
-    return true;
-  };
+     else {
+      console.log(res);
+      errorMessage("Update Failed!");
+    }
+  }
 
   return (
-    <Col>
-      <div className="header-content">Transport Detail</div>
-      <div className="main-content">
-        {dataTransport ? (
+    <>
+      {isOpenModalUpdate && (
+        <DrawerEditTransport
+          myProps={{
+            dataTransport: dataTransport,
+            showUpdate: handleShowDrawerUpdate,
+            cancelCloseUpdate: handleCancelDrawerUpdate,
+            onUpdate: onUpdateTransportSupervision,
+          }}
+        />
+      )}
+      <Col>
+        <div className="header-content">
           <Col>
-            <p className="title">Transport Information</p>
-            {dataTransport.state === 1 ? (
-              <div className="btn-update">
-                <Button
-                  type="primary"
-                  icon={<FormOutlined />}
-                  onClick={() => {
-                    disabled = false;
-                    setComponentDisabled(disabled);
-                  }}
-                >
-                  Update
-                </Button>
-              </div>
-            ) : (
-              <StateTagStep myProp={dataTransport.state}></StateTagStep>
-            )}
-            <div className="main-content">
-              <Form {...layout} disabled={true}>
-                <Form.Item
-                  label="Transport ID"
-                  name="transportId"
-                  initialValue={dataTransport.transportId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project ID"
-                  name="projectId"
-                  initialValue={dataTransport.projectId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project Code"
-                  name="projectCode"
-                  initialValue={dataTransport.projectCode}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Inspector"
-                  name="inspector"
-                  initialValue={dataTransport.inspector}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="dateCompleted"
-                  name="dateCompleted"
-                  initialValue={
-                    dataTransport?.dateCompleted
-                      ? moment(dataTransport?.dateCompleted)
-                      : ""
-                  }
-                >
-                  <Input />
-                </Form.Item>
-              </Form>
-              <Form
-                {...layout}
-                disabled={componentDisabled}
-                onFinish={(value) => {
-                  console.log("On Submit");
-                  handleSubmitForm(value, dataTransport.transportId);
-                  disabled = true;
-                  setComponentDisabled(disabled);
-                }}
-              >
-                <Form.Item
-                  label="Total Input"
-                  name="totalInput"
-                  initialValue={dataTransport.totalInput}
-                  rules={[
-                    { required: true, message: "Please enter Total Input" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Transport Company"
-                  name="transport"
-                  initialValue={dataTransport.transportName}
-                  rules={[
-                    { required: true, message: "Please enter Transport" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Vehicle"
-                  name="vehicleType"
-                  initialValue={dataTransport.vehicleType}
-                  rules={[{ required: true, message: "Please enter Vehicle" }]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Number of Vehicles"
-                  name="numberOfVehicle"
-                  initialValue={dataTransport.numberOfVehicle}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter Number of Vehicle",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Date Expected"
-                  name="dateExpected"
-                  initialValue={
-                    dataTransport.dateExpected !== undefined
-                      ? moment(dataTransport.dateExpected)
-                      : null
-                  }
-                >
-                  {componentDisabled ? (
-                    <Input />
-                  ) : (
-                    <DatePicker style={{ width: "70%" }} format={dateFormat} />
-                  )}
-                </Form.Item>
-                {componentDisabled ? (
-                  StateComponent(dataTransport.state)
-                ) : (
-                  <Form.Item label="Update new State" name="newState">
-                    <Row>
-                      <Button
-                        type="primary"
-                        style={{
-                          marginRight: "24px",
-                          width: "100px",
-                          borderRadius: "6px",
-                        }}
-                        danger
-                        onClick={async () => {
-                          disabled = true;
-                          setComponentDisabled(disabled);
-                          const res = await handleUpdateTransportState(
-                            dataTransport?.transportId,
-                            3
-                          );
-
-                          const transport = parseTransportData(
-                            res.data.shipping
-                          );
-
-                          setDataTransport(transport);
-
-                          if (res?.status === 200) {
-                            successMessage("Prject has been Canceled");
-                          } else {
-                            errorMessage("Update Failed");
-                          }
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        style={{
-                          width: "100px",
-                          background: "#87d068",
-                          borderColor: "#87d068",
-                          color: "white",
-                          borderRadius: "6px",
-                        }}
-                        onClick={async () => {
-                          const check = await checkCanBeCompleted(
-                            dataTransport
-                          );
-                          if (check) {
-                            disabled = true;
-                            setComponentDisabled(disabled);
-                            const res = await handleUpdateTransportState(
-                              dataTransport?.transportId,
-                              2
-                            );
-
-                            const transport = parseTransportData(
-                              res.data.shipping
-                            );
-
-                            setDataTransport(transport);
-
-                            if (res?.status === 200) {
-                              successMessage("This Step has been Completed");
-                              addTrackingBlock("test2", "contentTransport"); // test2
-                            } else {
-                              errorMessage("Update Failed");
-                            }
-                          } else {
-                            errorMessage(
-                              "The information in the step must be entered completely!"
-                            );
-                          }
-                        }}
-                      >
-                        Completed
-                      </Button>
-                    </Row>
-                  </Form.Item>
-                )}
-                <div className="layout-btn-save">
-                  <Row>
-                    <Button
-                      className="btn-cancel"
-                      type="primary"
-                      // icon={<FormOutlined />}
-                      onClick={() => {
-                        disabled = true;
-                        setComponentDisabled(disabled);
-                      }}
-                      hidden={disabled}
-                      size={"large"}
-                      style={{ marginRight: "12px" }}
-                      danger
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      className="btn-save"
-                      type="primary"
-                      htmlType="submit"
-                      // icon={<FormOutlined />}
-                      // onClick={() => {
-
-                      // }}
-                      hidden={disabled}
-                      size={"large"}
-                    >
-                      Save
-                    </Button>
-                  </Row>
-                </div>
-              </Form>
+            <Breadcrumb className="breadcrumb-style">
+              <Breadcrumb.Item>
+                Transport Supervision Management
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                Transport Supervision Project Detail
+              </Breadcrumb.Item>
+            </Breadcrumb>
+            <div className="title-header">Transport Supervision</div>
+            <div className="sub-title-header">
+              Display transport project information, status and details of{" "}
+              {dataTransport?.projectCode}
             </div>
           </Col>
-        ) : (
-          <></>
-        )}
-      </div>
-    </Col>
+        </div>
+        <div>
+          {dataTransport ? (
+            <Col>
+              <div className="content-page">
+                <Col>
+                  <div style={{ margin: "12px 0px" }}>
+                    <StateCard myProps={{ state: dataTransport.state }} />
+                  </div>
+                  <Row
+                    style={{
+                      display: "flex",
+                      justifyItems: "center",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <p className="text-main-label">
+                      Project:{" "}
+                      <span style={{ color: "#0E2954", fontWeight: "700" }}>
+                        {dataTransport.projectCode}
+                      </span>
+                    </p>
+
+                    {dataTransport.state === CommonProjectState.Completed ||
+                    dataTransport.state === CommonProjectState.Canceled ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <Button
+                          type="primary"
+                          icon={<FormOutlined />}
+                          size="large"
+                          style={{ borderRadius: "4px" }}
+                          onClick={() => {
+                            checkHasProject();
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </div>
+                    )}
+                  </Row>
+                  <div style={{ padding: "8px 0px" }}>
+                    <Row
+                      style={{
+                        display: "flex",
+                        // justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Project ID: </span>
+                        <span className="content-text">
+                          {dataTransport.projectId}
+                        </span>
+                      </p>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Transport ID: </span>
+                        <span className="content-text">
+                          {dataTransport.transportId}
+                        </span>
+                      </p>
+                    </Row>
+                  </div>
+                  <div className="space-padding" />
+                  <Col>
+                    <p className="text-main-label">Transport Supervisor</p>
+                    <Row style={{ paddingTop: "8px" }}>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Email: </span>
+                        <span className="content-text">
+                          {dataTransport.inspector?.email}
+                        </span>
+                      </p>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Full Name: </span>
+                        <span className="content-text">
+                          {dataTransport.inspector?.lastName}{" "}
+                          {dataTransport.inspector?.firstName}
+                        </span>
+                      </p>
+                    </Row>
+                  </Col>
+                </Col>
+              </div>
+              <div className="space-padding" />
+              <div className="content-page">
+                <Col>
+                  <p className="text-main-label">
+                    Transport Supervision Infomation
+                  </p>
+                  <div className="space-padding" />
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Total Input (ton)",
+                        content: dataTransport.totalInput ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Transport Company",
+                        content: dataTransport.transportName ?? "Not Update",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Type of Vehicle",
+                        content: dataTransport.vehicleType ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Number of Vehicles",
+                        content: dataTransport.numberOfVehicle ?? "Not Update",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Date Expected",
+                        content:
+                          dataTransport.dateExpected !== null
+                            ? moment(dataTransport.dateExpected).format(
+                                "DD/MM/YYYY"
+                              )
+                            : "Not update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Date Completed",
+                        content:
+                          dataTransport.dateCompleted !== null
+                            ? moment(dataTransport.dateCompleted).format(
+                                "DD/MM/YYYY"
+                              )
+                            : "Not update",
+                      }}
+                    />
+                  </Row>
+                </Col>
+              </div>
+            </Col>
+          ) : (
+            <>
+              <SpinApp/>
+            </>
+          )}
+        </div>
+      </Col>
+    </>
   );
 };
 

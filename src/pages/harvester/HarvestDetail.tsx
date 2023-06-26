@@ -1,301 +1,251 @@
-import { FormOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
-import { Badge, Button, Col, Form, Input, Row } from "antd";
-import "../common.scss";
-import { useLocation } from "react-router-dom";
-import { formatDateTime } from "@/utils/formatDateTime";
-import { StateComponent } from "@/pages/common/CheckProjectStatus";
-import { StateTagStep } from "@/components/Tag/StateTag";
 import {
   GetHarvestDetailByIdAPI,
   UpdateHarvestAPI,
 } from "@/api/harvest/harvest_api";
+import DrawerEditHarvestor from "@/components/Drawer/DrawerEditHarvestor";
+import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import { Harvest, parseHarvestData } from "@/types/step_tracking";
-import {
-  addTrackingBlock,
-  getTrackingBlock,
-} from "@/api/node_api/blockchain_helper";
+import StateCard from "@/components/Tag/StateCard";
+import { CommonProjectState } from "@/types/project_model";
+import { HarvestModel, parseHarvestData } from "@/types/step_tracking";
+import { FormOutlined } from "@ant-design/icons";
+import { Breadcrumb, Button, Col, Modal, Row, Spin } from "antd";
 import moment from "moment";
-
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
-};
-
-let disabled = true;
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import "../common.scss";
 
 const HarvestDetail = () => {
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
-
-  const [dataHarvest, setDataHarvest] = useState<Harvest>();
+  const [dataHarvest, setDataHarvest] = useState<HarvestModel>();
 
   const { state: harvestId } = useLocation();
 
+  const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
+
   useEffect(() => {
     GetHarvestDetailByIdAPI(harvestId).then((res: any) => {
-      console.log("bb", res);
       const harvest = parseHarvestData(res.data);
-
       setDataHarvest(harvest);
     });
-  }, []);
+  }, [harvestId]);
 
-  const handleUpdateHarvestState = async (harvestId: string, state: number) => {
-    const valueState = { state: state };
-
-    const res: any = await UpdateHarvestAPI(valueState, harvestId);
-
-    return res;
+  const handleShowDrawerUpdate = () => {
+    setIsOpenModalUpdate(true);
   };
 
-  const checkCanbeCompleted = (harvest: Harvest) => {
-    if (
-      harvest.totalHarvest === 0 ||
-      harvest.ripeness === 0 ||
-      harvest.moisture === 0
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+  const handleCancelDrawerUpdate = () => {
+    setIsOpenModalUpdate(false);
   };
 
-  const handleSubmitForm = async (value: any, harvestId: string) => {
-    const finalValue = { ...value };
+  const onUpdateHarvestProject = async (value: any) => {
 
-    console.log(finalValue);
+    const res: any = await UpdateHarvestAPI(value, harvestId);
 
-    const result: any = await UpdateHarvestAPI(finalValue, harvestId);
-
-    if (result.status === 200) {
-      const newHarvest: Harvest = parseHarvestData(result.data.harvestPop);
+    if (res.status == 200) {
+      console.log(res);
+      const newHarvest = parseHarvestData(res.data.harvest);
 
       setDataHarvest(newHarvest);
 
-      successMessage("Update new information successfully!");
-    } else {
-      errorMessage("Update new information failed!");
+      setIsOpenModalUpdate(false);
+
+      successMessage("Update Successfully!");
+    } else if(res.response.status === 400) {
+      errorMessage(res.response.data.message);
+    } 
+    else {
+      errorMessage("Update Failed!");
     }
   };
 
+  const checkHasProject = () => {
+    if(dataHarvest?.projectId !== null) {
+      setIsOpenModalUpdate(true);
+    } else {
+      Modal.warning({
+        content: "You can't update this step because the project has not assigned yet."
+      });
+    }
+  }
+
   return (
-    <Col>
-      <div className="header-content">Harvest Detail</div>
-      <div className="main-content">
-        {dataHarvest ? (
+    <>
+      {isOpenModalUpdate && (
+        <DrawerEditHarvestor
+          myProps={{
+            dataHarvest: dataHarvest,
+            showUpdate: handleShowDrawerUpdate,
+            cancelCloseUpdate: handleCancelDrawerUpdate,
+            submitUpdate: onUpdateHarvestProject,
+          }}
+        />
+      )}
+      <Col>
+        <div className="header-content">
           <Col>
-            <p className="title">Harvest Information</p>
-            {dataHarvest.state === 1 ? (
-              <div className="btn-update">
-                <Button
-                  type="primary"
-                  icon={<FormOutlined />}
-                  onClick={() => {
-                    disabled = false;
-                    setComponentDisabled(disabled);
-                  }}
-                >
-                  Update
-                </Button>
-              </div>
-            ) : (
-              <StateTagStep myProp={dataHarvest.state}></StateTagStep>
-            )}
-            <div className="main-content">
-              <Form {...layout} disabled={true}>
-                <Form.Item
-                  label="Harvest ID"
-                  name="harvestId"
-                  initialValue={dataHarvest.harvestId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project ID"
-                  name="projectId"
-                  initialValue={dataHarvest.projectId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project Code"
-                  name="projectCode"
-                  initialValue={dataHarvest.projectCode}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Date Completed"
-                  name="dateCompleted"
-                  initialValue={
-                    dataHarvest?.dateCompleted
-                      ? moment(dataHarvest?.dateCompleted)
-                      : "Not update information"
-                  }
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Inspector"
-                  name="inspector"
-                  initialValue={dataHarvest.inspector}
-                >
-                  <Input />
-                </Form.Item>
-              </Form>
-              <Form
-                {...layout}
-                disabled={componentDisabled}
-                onFinish={(value) => {
-                  handleSubmitForm(value, dataHarvest.harvestId);
-                  disabled = true;
-                  setComponentDisabled(disabled);
-                }}
-              >
-                <Form.Item
-                  label="Total Harvest"
-                  name="totalHarvest"
-                  initialValue={dataHarvest?.totalHarvest}
-                >
-                  <Input type={componentDisabled ? "text" : "number"} />
-                </Form.Item>
-                <Form.Item
-                  label="Ripeness"
-                  name="ripeness"
-                  initialValue={dataHarvest?.ripeness}
-                >
-                  <Input type={componentDisabled ? "text" : "number"} />
-                </Form.Item>
-                <Form.Item
-                  label="Temperature"
-                  name="temperature"
-                  initialValue={dataHarvest?.temperature}
-                >
-                  <Input type={componentDisabled ? "text" : "number"} />
-                </Form.Item>
-                <Form.Item
-                  label="Moisture"
-                  name="moisture"
-                  initialValue={dataHarvest?.moisture}
-                >
-                  <Input type={componentDisabled ? "text" : "number"} />
-                </Form.Item>
-                {componentDisabled ? (
-                  StateComponent(dataHarvest.state)
-                ) : (
-                  <Form.Item label="Update new State" name="newState">
-                    <Row>
-                      <Button
-                        type="primary"
-                        style={{
-                          marginRight: "24px",
-                          width: "100px",
-                          borderRadius: "6px",
-                        }}
-                        danger
-                        onClick={async () => {
-                          disabled = true;
-                          setComponentDisabled(disabled);
-                          const res = await handleUpdateHarvestState(
-                            dataHarvest?.harvestId,
-                            3
-                          );
-
-                          const harvest = parseHarvestData(res.data.harvest);
-
-                          setDataHarvest(harvest);
-
-                          console.log(dataHarvest);
-
-                          if (res?.status === 200) {
-                            successMessage("Prject has been Canceled");
-                          } else {
-                            errorMessage("Update Failed");
-                          }
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        style={{
-                          width: "100px",
-                          background: "#87d068",
-                          borderColor: "#87d068",
-                          color: "white",
-                          borderRadius: "6px",
-                        }}
-                        onClick={async () => {
-                          const check = checkCanbeCompleted(dataHarvest);
-                          console.log(check);
-
-                          if (check) {
-                            disabled = true;
-                            setComponentDisabled(disabled);
-                            const res = await handleUpdateHarvestState(
-                              dataHarvest?.harvestId,
-                              2
-                            );
-
-                            const harvest = parseHarvestData(res.data.harvest);
-
-                            setDataHarvest(harvest);
-
-                            if (res?.status === 200) {
-                              successMessage("Prject has been Completed");
-                              const a = addTrackingBlock("test1", "content123"); // test1
-                              console.log(a);
-                            } else {
-                              errorMessage("Update Failed");
-                            }
-                          } else {
-                            errorMessage(
-                              "The information in the step must be entered completely!"
-                            );
-                          }
-                        }}
-                      >
-                        Completed
-                      </Button>
-                    </Row>
-                  </Form.Item>
-                )}
-                <div className="layout-btn-save">
-                  <Row>
-                    <Button
-                      className="btn-cancel"
-                      type="primary"
-                      // icon={<FormOutlined />}
-                      onClick={() => {
-                        disabled = true;
-                        setComponentDisabled(disabled);
-                      }}
-                      hidden={disabled}
-                      size={"large"}
-                      style={{ marginRight: "12px" }}
-                      danger
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      className="btn-save"
-                      type="primary"
-                      htmlType="submit"
-                      hidden={disabled}
-                      size={"large"}
-                    >
-                      Save
-                    </Button>
-                  </Row>
-                </div>
-              </Form>
+            <Breadcrumb className="breadcrumb-style">
+              <Breadcrumb.Item>Harvest Management</Breadcrumb.Item>
+              <Breadcrumb.Item>Harvest Project Detail</Breadcrumb.Item>
+            </Breadcrumb>
+            <div className="title-header">Harvest Project Detail</div>
+            <div className="sub-title-header">
+              Display harvest project information, status and details of{" "}
+              {dataHarvest?.projectCode}
             </div>
           </Col>
-        ) : (
-          <></>
-        )}
-      </div>
-    </Col>
+        </div>
+        <div>
+          {dataHarvest ? (
+            <Col>
+              <div className="content-page">
+                <Col>
+                  <div style={{ margin: "12px 0px" }}>
+                    <StateCard myProps={{ state: dataHarvest?.state }} />
+                  </div>
+                  <Row
+                    style={{
+                      display: "flex",
+                      justifyItems: "center",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <p className="text-main-label">
+                      Project:{" "}
+                      <span style={{ color: "#1B9C85", fontWeight: "700" }}>
+                        {dataHarvest.projectCode}
+                      </span>
+                    </p>
+
+                    {dataHarvest.state === CommonProjectState.Completed ||
+                    dataHarvest.state === CommonProjectState.Canceled ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <Button
+                          type="primary"
+                          icon={<FormOutlined />}
+                          size="large"
+                          style={{ borderRadius: "4px" }}
+                          onClick={() => {
+                            checkHasProject();
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </div>
+                    )}
+                  </Row>
+                  <div style={{ padding: "8px 0px" }}>
+                    <Row
+                      style={{
+                        display: "flex",
+                        // justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Project ID: </span>
+                        <span className="content-text">
+                          {dataHarvest.projectId}
+                        </span>
+                      </p>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Harvest ID: </span>
+                        <span className="content-text">
+                          {dataHarvest.harvestId}
+                        </span>
+                      </p>
+                    </Row>
+                  </div>
+                  <div className="space-padding" />
+                  <Col>
+                    <p className="text-main-label">Harvestor</p>
+                    <Row style={{ paddingTop: "8px" }}>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Email: </span>
+                        <span className="content-text">
+                          {dataHarvest.inspector?.email}
+                        </span>
+                      </p>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Full Name: </span>
+                        <span className="content-text">
+                          {dataHarvest.inspector?.lastName}{" "}
+                          {dataHarvest.inspector?.firstName}
+                        </span>
+                      </p>
+                    </Row>
+                  </Col>
+                </Col>
+              </div>
+              <div className="space-padding" />
+              <div className="content-page">
+                <Col>
+                  <p className="text-main-label">Harvest Information</p>
+                  <div className="space-padding" />
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Total Harvest (ton)",
+                        content: dataHarvest.totalHarvest ?? "Not Updat",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Temperature (°C)",
+                        content: dataHarvest.totalHarvest ?? "Not Updat",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Ripeness (%)",
+                        content: dataHarvest.ripeness ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Moisture",
+                        content: dataHarvest.moisture ?? "Not Update",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Date Completed",
+                        content:
+                          dataHarvest.dateCompleted !== null
+                            ? moment(dataHarvest.dateCompleted).format(
+                                "DD/MM/YYYY"
+                              )
+                            : "Not update",
+                        width: "100%",
+                      }}
+                    />
+                  </Row>
+                  <LabelContentItem
+                    myProps={{
+                      label: "Note",
+                      content: dataHarvest.note ?? "Not Update",
+                      width: "100%",
+                    }}
+                  />
+                </Col>
+              </div>
+            </Col>
+          ) : (
+            <>
+              <Spin tip="Loading" size="large">
+                <div className="content-page" style={{ padding: "64px" }} />
+              </Spin>
+            </>
+          )}
+        </div>
+      </Col>
+    </>
   );
 };
 

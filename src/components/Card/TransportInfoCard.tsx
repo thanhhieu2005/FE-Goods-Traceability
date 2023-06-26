@@ -1,4 +1,4 @@
-import { Transport } from "@/types/step_tracking";
+import { TransportModel } from "@/types/step_tracking";
 import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
@@ -11,7 +11,7 @@ import ModalUpdateInspector from "../Modal/ModalUpdateInspector";
 import { StaffDepartment } from "@/types/user";
 
 const TransportInfoCard = ({ myProps: props }: any) => {
-  const [dataTransport, setDatTransport] = useState<Transport>(
+  const [dataTransport, setDatTransport] = useState<TransportModel>(
     props.dataTransport
   );
 

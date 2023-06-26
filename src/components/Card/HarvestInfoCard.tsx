@@ -1,4 +1,4 @@
-import { Harvest } from "@/types/step_tracking";
+import { HarvestModel } from "@/types/step_tracking";
 import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
@@ -11,7 +11,7 @@ import ProjectServices from "@/api/system_admin/project_api";
 import { errorMessage, successMessage } from "../Message/MessageNoti";
 
 const HarvestInfoCard = ({ myProps: props }: any) => {
-  const [dataHarvest, setDataHarvest] = useState<Harvest>(props.dataHarvest);
+  const [dataHarvest, setDataHarvest] = useState<HarvestModel>(props.dataHarvest);
 
   // update inspector in step
   const [isModalUpdateHarvestor, setIsModalUpdateHarvestor] = useState(false);

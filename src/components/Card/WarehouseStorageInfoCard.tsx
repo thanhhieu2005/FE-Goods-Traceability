@@ -1,7 +1,7 @@
 import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
-import { WarehouseStorage } from "@/types/step_tracking";
+import { WarehouseStorageModel } from "@/types/step_tracking";
 import { FormOutlined } from "@ant-design/icons";
 import LabelContentItem from "../Label/LabelContentItem";
 import moment from "moment";
@@ -12,7 +12,7 @@ import { StaffDepartment } from "@/types/user";
 
 const WarehouseStorageInfoCard = ({ myProps: props }: any) => {
   const [dataWarehouseStorage, setDataWarehouseStorage] =
-    useState<WarehouseStorage>(props.dataWarehouseStorage);
+    useState<WarehouseStorageModel>(props.dataWarehouseStorage);
 
   const [isModalUpdate, setIsModalUpdate] = useState(false);
 

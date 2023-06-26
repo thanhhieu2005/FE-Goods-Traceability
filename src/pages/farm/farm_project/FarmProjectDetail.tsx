@@ -5,6 +5,7 @@ import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import StateCard from "@/components/Tag/StateCard";
 import { FarmProjectModel, LandState } from "@/types/farm_model";
 import { CommonProjectState } from "@/types/project_model";
+import { UserDetailModel } from "@/types/user";
 import { mainColor, whiteColor } from "@/utils/app_color";
 import { EditOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Col, Modal, Progress, Row, Spin } from "antd";
@@ -21,6 +22,8 @@ const FarmProjectDetail = () => {
   const isOwner = useSelector(
     (state: any) => state.authen.currentUserInfo.isOwner
   );
+
+  const currentUser : UserDetailModel = useSelector((state: any) => state.authen.currentUserInfo);
 
   useEffect(() => {
     const getFarmProjectDetail = async () => {
@@ -149,6 +152,23 @@ const FarmProjectDetail = () => {
     }
   };
 
+  const checkPermissionToUpdateProject = () => {
+    if(dataFarmProject.farmer !== null) {
+      if(dataFarmProject.farmer.userId === currentUser.userId) {
+        setIsUpdateFarmProjectProgress(true);
+      } else {
+        Modal.warning({
+          content: 'You are not a farmer in this project!',
+        })
+      }
+    } else {
+      Modal.warning({
+        content: "Farm Project has not been implemented by farmer yet!",
+        onOk: () => {setIsDrawerEditFarmProject(true)},
+      })
+    }
+  }
+
   return (
     <>
       {isUpdateFarmProjectProgress && (
@@ -229,7 +249,8 @@ const FarmProjectDetail = () => {
                           <Button
                             type="primary"
                             onClick={() => {
-                              setIsUpdateFarmProjectProgress(true);
+                              // setIsUpdateFarmProjectProgress(true);
+                              checkPermissionToUpdateProject();
                             }}
                             icon={<EditOutlined key="edit" />}
                             style={{
@@ -395,7 +416,7 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "25%",
+                              width: "15%",
                             }}
                           >
                             <p className="title-text">Total seeds:</p>
@@ -408,7 +429,7 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "25%",
+                              width: "35%",
                             }}
                           >
                             <p className="title-text">Fertilizer Used:</p>
@@ -453,7 +474,7 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "25%",
+                              width: "15%",
                             }}
                           >
                             <p className="title-text">Ripeness(%):</p>
@@ -466,7 +487,7 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "25%",
+                              width: "35%",
                             }}
                           >
                             <p className="title-text">Pesticides:</p>
@@ -498,7 +519,7 @@ const FarmProjectDetail = () => {
                         >
                           <p className="title-text">Note:</p>
                           <div style={{ padding: "4px" }}></div>
-                          <p className="content-text">{"Not update"}</p>
+                          <p className="content-text">{ dataFarmProject.note }</p>
                         </Row>
                       </Col>
                     </div>

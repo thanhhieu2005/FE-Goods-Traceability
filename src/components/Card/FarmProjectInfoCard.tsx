@@ -5,6 +5,7 @@ import { greyBlurColor, mainColor, seedMainColor } from "@/utils/app_color";
 import moment from "moment";
 import { ProjectDetailModel } from "@/types/project_model";
 import { FarmInfoModel } from "@/types/farm_model";
+import StateCard from "../Tag/StateCard";
 
 const FarmProjectInfoCard = ({ myProps: props }: any) => {
   const dataProject: ProjectDetailModel = props.dataProject;
@@ -66,12 +67,23 @@ const FarmProjectInfoCard = ({ myProps: props }: any) => {
           </Col>
         </div>
         <div className="text-main-label">
-          <p>
-            <span>Farm Project: </span>
-            <span style={{ color: "#ABC4AA" }}>
-              {dataProject.farmProject.farmProjectCode}
-            </span>
-          </p>
+          <Row>
+            <p>
+              <span>Farm Project: </span>
+              <span style={{ color: "#ABC4AA" }}>
+                {dataProject.farmProject.farmProjectCode}
+              </span>
+            </p>
+            <div style={{ marginLeft: "12px" }}>
+              <StateCard
+                myProps={{
+                  state: dataProject.farmProject.state,
+                  padding: "4px 12px",
+                  fontSizeText: "14px",
+                }}
+              />
+            </div>
+          </Row>
           <div>
             <p>
               <span className="sub-text">Date Created: </span>

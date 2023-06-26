@@ -18,6 +18,8 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
     console.log(state);
   }
 
+  const { TextArea } = Input;
+
   return (
     <>
       <ShowDrawerEdit
@@ -112,7 +114,7 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
                   name="note"
                   initialValue={dataFarmProject.note}
                 >
-                  <Input/>
+                  <TextArea rows={4}/>
                 </Form.Item>
               </Form>
             </div>

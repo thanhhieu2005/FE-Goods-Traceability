@@ -14,8 +14,8 @@ export const editContentLayout = {
 };
 
 export const createContentLayout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 12 },
 };
 
 export const modalUpdateContentLayout = {

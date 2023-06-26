@@ -32,7 +32,7 @@ const StateCard = ({ myProps: props }: any) => {
               borderRadius: "4px",
             }}
           >
-            COMPLETE
+            COMPLETED
           </Tag>
         </div>
       );

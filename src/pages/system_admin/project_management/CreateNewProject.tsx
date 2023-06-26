@@ -354,7 +354,7 @@ const CreateNewProject = () => {
                   type="primary"
                   size="large"
                   htmlType="submit"
-                  style={{ marginRight: "12px" }}
+                  style={{ marginRight: "12px", borderRadius: '4px' }}
                   loading={loadingButton}
                 >
                   Create
@@ -364,6 +364,7 @@ const CreateNewProject = () => {
                   size="large"
                   htmlType="button"
                   onClick={showResetConfirmDialog}
+                  style={{ borderRadius: '4px' }}
                 >
                   Reset
                 </Button>

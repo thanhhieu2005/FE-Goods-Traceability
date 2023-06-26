@@ -33,6 +33,7 @@ import StaffManagement from "@/pages/system_admin/staff_management/StaffManageme
 import StaffInfoDetail from "@/pages/system_admin/staff_management/StaffInfoDetail";
 import CreateStaffForm from "@/pages/system_admin/staff_management/CreateStaffForm";
 import DashBoardSystemAdmin from "@/pages/system_admin/dashboard/DashBoardSystemAdmin";
+import AddProductPage from "@/pages/product/AddProductPage";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -211,6 +212,10 @@ const Routers = () => {
                   <Route
                     path="/produce-management/:productionId"
                     element={<ProduceDetail />}
+                  />
+                  <Route
+                    path="/add-product"
+                    element={<AddProductPage/>}
                   />
                 </>
               ) : (

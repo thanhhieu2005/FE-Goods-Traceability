@@ -23,8 +23,8 @@ export interface FarmDetailInfoModel {
     statusFarm: StatusFarm;
     farmerList?: UserDetailModel[];
     farmProjectList: [];
-    seedList: [];
-    landList: [];
+    seedList: SeedModel[];
+    landList: LandModel[];
     dateCreated: string;
 }
 

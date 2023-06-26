@@ -1,30 +1,30 @@
-import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
 import { GetProduceDetailByIdAPI, UpdateProduceAPI } from "@/api/produce_api";
+import ProductServices from "@/api/product_api";
+import ProductInfoCard from "@/components/Card/ProductInfoCard";
+import DrawerEditProduction from "@/components/Drawer/DrawerEditProduction";
+import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import { StateTagStep } from "@/components/Tag/StateTag";
-import { parseProductionData, Production } from "@/types/step_tracking";
-import { dateFormat, formatDateTime } from "@/utils/formatDateTime";
-import { FormOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, DatePicker, Form, Input, Row } from "antd";
+import SpinApp from "@/components/Spin/SpinApp";
+import StateCard from "@/components/Tag/StateCard";
+import { ProductModel } from "@/types/product_model";
+import { CommonProjectState } from "@/types/project_model";
+import { ProductionModel, parseProductionData } from "@/types/step_tracking";
+import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Breadcrumb, Button, Col, Empty, Modal, Row } from "antd";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { StateComponent } from "../common/CheckProjectStatus";
-
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
-};
-
-let disabled = true;
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function ProduceDetail() {
+  const [dataProduction, setDataProduction] = useState<ProductionModel>();
 
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
-
-  const [dataProduction, setDataProduction] = useState<Production>();
+  const [dataProducts, setDataProducts] = useState<ProductModel[]>();
 
   const { state: productionId } = useLocation();
+
+  const navigate = useNavigate();
+
+  const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
 
   useEffect(() => {
     GetProduceDetailByIdAPI(productionId).then((res: any) => {
@@ -32,282 +32,371 @@ function ProduceDetail() {
 
       setDataProduction(production);
     });
-  }, []);
+  }, [productionId]);
 
-  console.log(dataProduction);
+  useEffect(() => {
+    const getDetailProduct = async () => {
+      if (dataProduction !== undefined) {
+        const res: any = await ProductServices.getDetailProduct(
+          dataProduction?.projectId
+        );
 
-  const handleUpdateState = async (productionId: string, state: number) => {
-    const valueState = { state: state };
+        console.log(res);
 
-    const res: any = await UpdateProduceAPI(valueState, productionId);
+        if (res.status === 200) {
+          setDataProducts(res.data);
+        } else {
+          console.log("No data");
+        }
+      }
+    };
 
-    console.log("asda", res);
+    getDetailProduct();
+  }, [dataProduction]);
 
-    const newProduction = parseProductionData(res.data.produce);
+  const handleShowDrawerUpdate = () => {
+    setIsOpenModalUpdate(true);
+  };
 
-    setDataProduction(newProduction);
+  const handleCancelDrawerUpdate = () => {
+    setIsOpenModalUpdate(false);
+  };
 
-    if (res?.status === 200) {
-      state === 2
-        ? successMessage("This Step has been Completed")
-        : successMessage("This Step has been Canceled");
-      state === 2 ? addTrackingBlock("test4", "content") : null; // test 4
+  const checkHasProject = () => {
+    if (dataProduction?.projectId !== null) {
+      setIsOpenModalUpdate(true);
     } else {
-      errorMessage("Upload Failed");
+      Modal.warning({
+        content:
+          "You can't update this step because the project has not assigned yet.",
+      });
     }
   };
 
-  const handleSubmitForm = async (value: any, productionId: string) => {
-    const finalValue = { ...value };
+  const onUpdateProductionSupervision = async (value: any) => {
+    const res: any = await UpdateProduceAPI(value, productionId);
 
-    console.log(finalValue);
+    if (res.status === 200) {
+      const newUpdate = parseProductionData(res.data.produce);
 
-    const result: any = await UpdateProduceAPI(finalValue, productionId);
+      setDataProduction(newUpdate);
 
-    console.log(result);
-
-    if (result.status === 200) {
-      const newProduction: Production = parseProductionData(
-        result.data.produce
-      );
-
-      setDataProduction(newProduction);
-
-      successMessage("Update new information successfully!");
+      setIsOpenModalUpdate(false);
+      successMessage("Update Successfully!");
+    } else if (res.response.status === 400) {
+      errorMessage(res.response.data.message);
     } else {
-      errorMessage("Update new information failed!");
+      console.log(res);
+      errorMessage("Update Failed!");
     }
   };
 
-  const checkCanBeCompleted = (production: Production) => {
-    if (
-      production.totalInput === 0 ||
-      production.totalProduct === 0 ||
-      production.factoryName === "" ||
-      production.expiredDate === undefined
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  console.log(dataProducts);
 
   return (
-    <Col>
-      <div className="header-content">Production Detail</div>
-      <div className="main-content">
-        {dataProduction ? (
+    <>
+      {isOpenModalUpdate && (
+        <DrawerEditProduction
+          myProps={{
+            dataProduction: dataProduction,
+            showUpdate: handleShowDrawerUpdate,
+            cancelCloseUpdate: handleCancelDrawerUpdate,
+            onUpdate: onUpdateProductionSupervision,
+          }}
+        />
+      )}
+      <Col>
+        <div className="header-content">
           <Col>
-            <p className="title">Production Information</p>
-            {dataProduction.state === 1 ? (
-              <div className="btn-update">
-                <Button
-                  type="primary"
-                  icon={<FormOutlined />}
-                  onClick={() => {
-                    disabled = false;
-                    setComponentDisabled(disabled);
-                  }}
-                >
-                  Update
-                </Button>
-              </div>
-            ) : (
-              <StateTagStep myProp={dataProduction.state}></StateTagStep>
-            )}
-            <div className="main-content">
-              <Form {...layout} disabled={true}>
-                <Form.Item
-                  label="Production ID"
-                  name="productionId"
-                  initialValue={dataProduction.produceSupervisionId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project ID"
-                  name="projectId"
-                  initialValue={dataProduction.produceSupervisionId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project Code"
-                  name="projectCode"
-                  initialValue={dataProduction.projectCode}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Inspector"
-                  name="inspector"
-                  initialValue={dataProduction.inspector}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="dateCompleted"
-                  name="dateCompleted"
-                  initialValue={
-                    dataProduction?.dateCompleted
-                      ? moment(dataProduction?.dateCompleted)
-                      : ""
-                  }
-                >
-                  <Input />
-                </Form.Item>
-              </Form>
-              <Form
-                {...layout}
-                disabled={componentDisabled}
-                onFinish={(value) => {
-                  console.log("On Submit");
-                  handleSubmitForm(value, dataProduction.produceSupervisionId);
-                  disabled = true;
-                  setComponentDisabled(disabled);
-                }}
-              >
-                <Form.Item
-                  label="Total Input"
-                  name="totalInput"
-                  initialValue={dataProduction.totalInput}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Factory Company"
-                  name="factory"
-                  initialValue={dataProduction.factoryName}
-                >
-                  <Input />
-                </Form.Item>
-                {/* <Form.Item
-                  label="Product Name"
-                  name="factory"
-                  initialValue={dataProduction.productName}
-                >
-                  <Input />
-                </Form.Item> */}
-                <Form.Item
-                  label="Total Product"
-                  name="totalProduct"
-                  initialValue={dataProduction.totalProduct}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Humidity"
-                  name="humidity"
-                  initialValue={dataProduction.humidity}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Drying Temperature"
-                  name="dryingTemperature"
-                  initialValue={dataProduction.dryingTemperature}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Expired Date"
-                  name="expiredDate"
-                  initialValue={
-                    dataProduction.expiredDate !== undefined
-                      ? moment(dataProduction.expiredDate)
-                      : null
-                  }
-                >
-                  <DatePicker style={{ width: "70%" }} format={dateFormat} />
-                </Form.Item>
-                {componentDisabled ? (
-                  StateComponent(dataProduction.state)
-                ) : (
-                  <Form.Item label="Update new State" name="newState">
-                    <Row>
-                      <Button
-                        type="primary"
-                        style={{
-                          marginRight: "24px",
-                          width: "100px",
-                          borderRadius: "6px",
-                        }}
-                        danger
-                        onClick={async () => {
-                          disabled = true;
-                          setComponentDisabled(disabled);
-                          handleUpdateState(dataProduction.produceSupervisionId, 3);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        style={{
-                          width: "100px",
-                          background: "#87d068",
-                          borderColor: "#87d068",
-                          color: "white",
-                          borderRadius: "6px",
-                        }}
-                        onClick={async () => {
-                          const check = checkCanBeCompleted(dataProduction);
-                          if (check) {
-                            disabled = true;
-                            setComponentDisabled(disabled);
-                            await handleUpdateState(
-                              dataProduction.produceSupervisionId,
-                              2
-                            );
-                          } else {
-                            errorMessage(
-                              "The information in the step must be entered completely!"
-                            );
-                          }
-                        }}
-                      >
-                        Completed
-                      </Button>
-                    </Row>
-                  </Form.Item>
-                )}
-                <div className="in--btn-save">
-                  <Row>
-                    <Button
-                      className="btn-cancel"
-                      type="primary"
-                      // icon={<FormOutlined />}
-                      onClick={() => {
-                        disabled = true;
-                        setComponentDisabled(disabled);
-                      }}
-                      hidden={disabled}
-                      size={"large"}
-                      style={{ marginRight: "12px" }}
-                      danger
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      className="btn-save"
-                      type="primary"
-                      htmlType="submit"
-                      // icon={<FormOutlined />}
-
-                      hidden={disabled}
-                      size={"large"}
-                    >
-                      Save
-                    </Button>
-                  </Row>
-                </div>
-              </Form>
+            <Breadcrumb className="breadcrumb-style">
+              <Breadcrumb.Item>
+                Production Supervision Management
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                Production Supervision Project Detail
+              </Breadcrumb.Item>
+            </Breadcrumb>
+            <div className="title-header">Production Supervision</div>
+            <div className="sub-title-header">
+              Display production project information, status and details of{" "}
+              {dataProduction?.projectCode}
             </div>
           </Col>
-        ) : (
-          <></>
-        )}
-      </div>
-    </Col>
+        </div>
+        <div>
+          {dataProduction ? (
+            <Col>
+              <div className="content-page">
+                <Col>
+                  <div style={{ margin: "12px 0px" }}>
+                    <StateCard myProps={{ state: dataProduction.state }} />
+                  </div>
+                  <Row
+                    style={{
+                      display: "flex",
+                      justifyItems: "center",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <p className="text-main-label">
+                      Project:{" "}
+                      <span style={{ color: "#46458C", fontWeight: "700" }}>
+                        {dataProduction.projectCode}
+                      </span>
+                    </p>
+
+                    {dataProduction.state === CommonProjectState.Completed ||
+                    dataProduction.state === CommonProjectState.Canceled ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <Button
+                          type="primary"
+                          icon={<FormOutlined />}
+                          size="large"
+                          style={{ borderRadius: "4px" }}
+                          onClick={() => {
+                            checkHasProject();
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </div>
+                    )}
+                  </Row>
+                  <div style={{ padding: "8px 0px" }}>
+                    <Row
+                      style={{
+                        display: "flex",
+                        // justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Project ID: </span>
+                        <span className="content-text">
+                          {dataProduction.projectId}
+                        </span>
+                      </p>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Production ID: </span>
+                        <span className="content-text">
+                          {dataProduction.produceSupervisionId}
+                        </span>
+                      </p>
+                    </Row>
+                  </div>
+                  <div className="space-padding" />
+                  <Col>
+                    <p className="text-main-label">Production Supervisor</p>
+                    <Row style={{ paddingTop: "8px" }}>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Email: </span>
+                        <span className="content-text">
+                          {dataProduction.inspector?.email}
+                        </span>
+                      </p>
+                      <p style={{ width: "50%" }}>
+                        <span className="title-text">Full Name: </span>
+                        <span className="content-text">
+                          {dataProduction.inspector?.lastName}{" "}
+                          {dataProduction.inspector?.firstName}
+                        </span>
+                      </p>
+                    </Row>
+                  </Col>
+                </Col>
+              </div>
+              <div className="space-padding" />
+              <div className="content-page">
+                <Col>
+                  <p className="text-main-label">
+                    Production Supervision Infomation
+                  </p>
+                  <div className="space-padding" />
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Factory Name",
+                        content: dataProduction.factoryName ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Total Input (ton)",
+                        content: dataProduction.totalInput ?? "Not Update",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Drying Temperature (°C)",
+                        content:
+                          dataProduction.dryingTemperature ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Humidity (%)",
+                        content: dataProduction.humidity ?? "Not Update",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Total Product (ton)",
+                        content: dataProduction.totalProduct ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Expired Date",
+                        content:
+                          dataProduction.expiredDate !== null
+                            ? moment(dataProduction.expiredDate).format(
+                                "DD/MM/YYYY"
+                              )
+                            : "Not update",
+                      }}
+                    />
+                  </Row>
+                  <LabelContentItem
+                    myProps={{
+                      label: "Date Completed",
+                      content:
+                        dataProduction.dateCompleted !== null
+                          ? moment(dataProduction.dateCompleted).format(
+                              "DD/MM/YYYY"
+                            )
+                          : "Not update",
+                      width: "100%",
+                    }}
+                  />
+                  <LabelContentItem
+                    myProps={{
+                      label: "Note",
+                      content: dataProduction.note ?? "Not Update",
+                      width: "100%",
+                    }}
+                  />
+                </Col>
+              </div>
+              <div className="space-padding" />
+              <div className="content-page">
+                {dataProducts ? (
+                  <>
+                    <Col>
+                      <Row
+                        style={{
+                          display: "flex",
+                          justifyItems: "center",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p className="text-main-label">Product Information</p>
+                        <Button
+                          type="primary"
+                          icon={<PlusCircleOutlined />}
+                          size="middle"
+                          style={{ borderRadius: "4px" }}
+                          onClick={() => {
+                            navigate(`/add-product`, {
+                              state: dataProduction,
+                            });
+                          }}
+                        >
+                          Add Product
+                        </Button>
+                      </Row>
+                      <div className="space-padding" />
+                      {dataProducts.length !== 0 ? (
+                        dataProducts.map((product: ProductModel) => (
+                          <div key={product.productId}>
+                            <Row>
+                              <LabelContentItem
+                                myProps={{
+                                  label: "Product ID",
+                                  content: product.productId,
+                                }}
+                              />
+                              <LabelContentItem
+                                myProps={{
+                                  label: "Product Name",
+                                  content: product.productName,
+                                }}
+                              />
+                            </Row>
+                            <Row>
+                              <LabelContentItem
+                                myProps={{
+                                  label: "Product EXP",
+                                  content: product.exp,
+                                }}
+                              />
+                              <LabelContentItem
+                                myProps={{
+                                  label: "Product MFG",
+                                  content: product.mfg,
+                                }}
+                              />
+                            </Row>
+                            <LabelContentItem
+                              myProps={{
+                                label: "Certificate of Food Hygiene and Safety",
+                                content:
+                                  product.certificateOfFoodHygieneAndSafety,
+                                width: "100%",
+                              }}
+                            />
+                            <LabelContentItem
+                              myProps={{
+                                label: "Bussiness License Registration Number",
+                                content:
+                                  product.bussinessLicenseRegistrationNumber,
+                                width: "100%",
+                              }}
+                            />
+                            <Row>
+                              <LabelContentItem
+                                myProps={{
+                                  label: "Type of Product",
+                                  content: product.typeOfProduct,
+                                }}
+                              />
+                              <LabelContentItem
+                                myProps={{
+                                  label: "Measure Unit",
+                                  content: product.measureUnit,
+                                }}
+                              />
+                            </Row>
+                            <div className="space-padding"/>
+                          </div>
+                        ))
+                      ) : (
+                        <div>
+                          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                        </div>
+                      )}
+                    </Col>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </Col>
+          ) : (
+            <>
+              <SpinApp />
+            </>
+          )}
+        </div>
+      </Col>
+    </>
   );
 }
 

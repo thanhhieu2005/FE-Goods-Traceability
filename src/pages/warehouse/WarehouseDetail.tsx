@@ -1,33 +1,31 @@
-import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
 import {
   GetWarehouseDetailByIdAPI,
   UpdateWarehouseDetailByIdAPI,
 } from "@/api/warehouse_api";
+import DrawerEditWarehouseStorage from "@/components/Drawer/DrawerEditWarehouseStorage";
+import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import { StateTagStep } from "@/components/Tag/StateTag";
-import { parseWarehouseStorageData, WarehouseStorage } from "@/types/step_tracking";
+import SpinApp from "@/components/Spin/SpinApp";
+import StateCard from "@/components/Tag/StateCard";
+import { CommonProjectState } from "@/types/project_model";
+import {
+  WarehouseStorageModel,
+  parseWarehouseStorageData,
+} from "@/types/step_tracking";
 import { dateFormat } from "@/utils/formatDateTime";
 import { FormOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, DatePicker, Form, Input, Row } from "antd";
+import { Breadcrumb, Button, Col, Modal, Row } from "antd";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { StateComponent } from "../common/CheckProjectStatus";
-
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
-};
-
-let disabled = true;
 
 function WarehouseDetail() {
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
-
   const [dataWarehouseStorage, setDataWarehouseStorage] =
-    useState<WarehouseStorage>();
+    useState<WarehouseStorageModel>();
 
   const { state: warehouseStorageId } = useLocation();
+
+  const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
 
   useEffect(() => {
     GetWarehouseDetailByIdAPI(warehouseStorageId).then((res: any) => {
@@ -37,275 +35,234 @@ function WarehouseDetail() {
     });
   }, []);
 
-  const handleUpdateState = async (
-    warehouseStorageId: string,
-    state: number
-  ) => {
-    const newState = { state: state };
+  const handleShowDrawerUpdate = () => {
+    setIsOpenModalUpdate(true);
+  };
 
-    disabled = true;
-    setComponentDisabled(disabled);
+  const handleCancelDrawerUpdate = () => {
+    setIsOpenModalUpdate(false);
+  };
+
+  const checkHasProject = () => {
+    if (dataWarehouseStorage?.projectId !== null) {
+      setIsOpenModalUpdate(true);
+    } else {
+      Modal.warning({
+        content:
+          "You can't update this step because the project has not assigned yet.",
+      });
+    }
+  };
+
+  const onUpdateWarehouseStorageSupervision = async (value: any) => {
+    console.log(value);
 
     const res: any = await UpdateWarehouseDetailByIdAPI(
-      newState,
+      value,
       warehouseStorageId
     );
 
-    const newWarehouseStorage = parseWarehouseStorageData(res.data.warehouse);
+    if (res.status === 200) {
+      const newUpdate = parseWarehouseStorageData(res.data.warehouse);
 
-    setDataWarehouseStorage(newWarehouseStorage);
+      setDataWarehouseStorage(newUpdate);
 
-    if (res?.status === 200) {
-      state === 2
-        ? successMessage("This Step has been Completed")
-        : successMessage("This Step has been Canceled");
-      state === 2 ? addTrackingBlock("test3", "content") : null; // test 3
+      setIsOpenModalUpdate(false);
+      successMessage("Update Successfully!");
+    } else if (res.response.status === 400) {
+      errorMessage(res.response.data.message);
     } else {
-      errorMessage("Upload Failed");
-    }
-  };
-
-  const handleSubmitForm = async (value: any, warehouseStorageId: string) => {
-    const finalValue = { ...value };
-
-    console.log(finalValue);
-
-    const result: any = await UpdateWarehouseDetailByIdAPI(
-      finalValue,
-      warehouseStorageId
-    );
-
-    if (result.status === 200) {
-      const newWarehouseStorage: WarehouseStorage = parseWarehouseStorageData(
-        result.data.warehouse
-      );
-
-      setDataWarehouseStorage(newWarehouseStorage);
-
-      successMessage("Update new information successfully!");
-    } else {
-      errorMessage("Update new information failed!");
-    }
-  };
-
-  const checkCanBeCompleted = (warehouseStorage: WarehouseStorage) => {
-    if (
-      warehouseStorage.inputDate === undefined ||
-      warehouseStorage.outputDate === undefined ||
-      warehouseStorage.totalInput === 0 ||
-      warehouseStorage.totalExport === 0
-    ) {
-      return false;
-    } else {
-      return true;
+      console.log(res);
+      errorMessage("Update Failed!");
     }
   };
 
   return (
-    <Col>
-      <div className="header-content">Production Detail </div>
-      <div className="main-content">
-        {dataWarehouseStorage ? (
+    <>
+      {isOpenModalUpdate && (
+        <DrawerEditWarehouseStorage
+          myProps={{
+            dataWarehouseStorage: dataWarehouseStorage,
+            showUpdate: handleShowDrawerUpdate,
+            cancelCloseUpdate: handleCancelDrawerUpdate,
+            onUpdate: onUpdateWarehouseStorageSupervision,
+          }}
+        />
+      )}
+      <Col>
+        <div className="header-content">
           <Col>
-            <p className="title">Production Information</p>
-            {dataWarehouseStorage.state === 1 ? (
-              <div className="btn-update">
-                <Button
-                  type="primary"
-                  icon={<FormOutlined />}
-                  onClick={() => {
-                    disabled = false;
-                    setComponentDisabled(disabled);
-                  }}
-                >
-                  Update
-                </Button>
-              </div>
-            ) : (
-              <StateTagStep myProp={dataWarehouseStorage.state}></StateTagStep>
-            )}
-            <div>
-              <Form {...layout} disabled={true}>
-                <Form.Item
-                  label="Warehouse Storage ID"
-                  name="warehouseStorageId"
-                  initialValue={dataWarehouseStorage.warehouseStorageId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project ID"
-                  name="projectId"
-                  initialValue={dataWarehouseStorage.projectId}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Project Code"
-                  name="projectCode"
-                  initialValue={dataWarehouseStorage.projectCode}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Inspector"
-                  name="inspector"
-                  initialValue={dataWarehouseStorage.inspector}
-                >
-                  <Input />
-                </Form.Item>
-              </Form>
-              <Form
-                {...layout}
-                disabled={componentDisabled}
-                onFinish={(value) => {
-                  console.log("On Submit");
-                  handleSubmitForm(
-                    value,
-                    dataWarehouseStorage.warehouseStorageId
-                  );
-                  disabled = true;
-                  setComponentDisabled(disabled);
-                }}
-              >
-                <Form.Item
-                  label="Warehouse Company"
-                  name="warehouse"
-                  initialValue={dataWarehouseStorage.warehouseName}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  label="Total Input"
-                  name="totalInput"
-                  initialValue={dataWarehouseStorage.totalInput}
-                >
-                  <Input type="number" />
-                </Form.Item>
-                <Form.Item
-                  label="Total Export"
-                  name="totalExport"
-                  initialValue={dataWarehouseStorage.totalExport}
-                >
-                  <Input type="number" />
-                </Form.Item>
-                <Form.Item
-                  label="Input Date"
-                  name="inputDate"
-                  initialValue={
-                    dataWarehouseStorage.inputDate !== undefined
-                      ? moment(dataWarehouseStorage.inputDate)
-                      : null
-                  }
-                >
-                  <DatePicker style={{ width: "70%" }} format={dateFormat} />
-                </Form.Item>
-                <Form.Item
-                  label="Output Date"
-                  name="outputDate"
-                  initialValue={
-                    dataWarehouseStorage?.outputDate !== undefined
-                      ? moment(dataWarehouseStorage.outputDate)
-                      : null
-                  }
-                >
-                  <DatePicker style={{ width: "70%" }} format={dateFormat} />
-                </Form.Item>
-                {componentDisabled ? (
-                  StateComponent(dataWarehouseStorage.state)
-                ) : (
-                  <Form.Item label="Update new State" name="newState">
-                    <Row>
-                      <Button
-                        type="primary"
-                        style={{
-                          marginRight: "24px",
-                          width: "100px",
-                          borderRadius: "6px",
-                        }}
-                        danger
-                        onClick={async () => {
-                          disabled = true;
-                          setComponentDisabled(disabled);
-                          handleUpdateState(
-                            dataWarehouseStorage.warehouseStorageId,
-                            3
-                          );
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        style={{
-                          width: "100px",
-                          background: "#87d068",
-                          borderColor: "#87d068",
-                          color: "white",
-                          borderRadius: "6px",
-                        }}
-                        onClick={async () => {
-                          const check =
-                            checkCanBeCompleted(dataWarehouseStorage);
-                          if (check) {
-                            disabled = true;
-                            setComponentDisabled(disabled);
-                            await handleUpdateState(
-                              dataWarehouseStorage.warehouseStorageId,
-                              2
-                            );
-                          } else {
-                            errorMessage(
-                              "The information in the step must be entered completely!"
-                            );
-                          }
-                        }}
-                      >
-                        Completed
-                      </Button>
-                    </Row>
-                  </Form.Item>
-                )}
-                <div className="layout-btn-save">
-                  <Row>
-                    <Button
-                      className="btn-cancel"
-                      type="primary"
-                      // icon={<FormOutlined />}
-                      onClick={() => {
-                        disabled = true;
-                        setComponentDisabled(disabled);
-                      }}
-                      hidden={disabled}
-                      size={"large"}
-                      style={{ marginRight: "12px" }}
-                      danger
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      className="btn-save"
-                      type="primary"
-                      htmlType="submit"
-                      // icon={<FormOutlined />}
-                      // onClick={() => {
-                      //   disabled = true;
-                      //   setComponentDisabled(disabled);
-                      // }}
-                      hidden={disabled}
-                      size={"large"}
-                    >
-                      Save
-                    </Button>
-                  </Row>
-                </div>
-              </Form>
+            <Breadcrumb className="breadcrumb-style">
+              <Breadcrumb.Item>
+                Warehouse Supervision Management
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                Warehouse Supervision Project Detail
+              </Breadcrumb.Item>
+            </Breadcrumb>
+            <div className="title-header">Warehouse Supervision</div>
+            <div className="sub-title-header">
+              Display warehouse storage project information, status and details
+              of {dataWarehouseStorage?.projectCode}
             </div>
           </Col>
-        ) : (
-          <></>
-        )}
-      </div>
-    </Col>
+        </div>
+        <div>
+          {dataWarehouseStorage ? (
+            <Col>
+              <div className="content-page">
+                <StateCard myProps={{ state: dataWarehouseStorage.state }} />
+                <Row
+                  style={{
+                    display: "flex",
+                    justifyItems: "center",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <p className="text-main-label">
+                    Project:{" "}
+                    <span style={{ color: "#B31312", fontWeight: "700" }}>
+                      {dataWarehouseStorage.projectCode}
+                    </span>
+                  </p>
+                  {dataWarehouseStorage.state ===
+                    CommonProjectState.Completed ||
+                  dataWarehouseStorage.state === CommonProjectState.Canceled ? (
+                    <></>
+                  ) : (
+                    <div>
+                      <Button
+                        type="primary"
+                        icon={<FormOutlined />}
+                        size="large"
+                        style={{ borderRadius: "4px" }}
+                        onClick={() => {
+                          checkHasProject();
+                        }}
+                      >
+                        Update
+                      </Button>
+                    </div>
+                  )}
+                </Row>
+                <div style={{ padding: "8px 0px" }}>
+                  <Row
+                    style={{
+                      display: "flex",
+                      // justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p style={{ width: "50%" }}>
+                      <span className="title-text">Project ID: </span>
+                      <span className="content-text">
+                        {dataWarehouseStorage.projectId}
+                      </span>
+                    </p>
+                    <p style={{ width: "50%" }}>
+                      <span className="title-text">Warehose Storage ID: </span>
+                      <span className="content-text">
+                        {dataWarehouseStorage.warehouseStorageId}
+                      </span>
+                    </p>
+                  </Row>
+                </div>
+                <div className="space-padding" />
+                <Col>
+                  <p className="text-main-label">Warehose Storage Supervisor</p>
+                  <Row style={{ paddingTop: "8px" }}>
+                    <p style={{ width: "50%" }}>
+                      <span className="title-text">Email: </span>
+                      <span className="content-text">
+                        {dataWarehouseStorage.inspector?.email}
+                      </span>
+                    </p>
+                    <p style={{ width: "50%" }}>
+                      <span className="title-text">Full Name: </span>
+                      <span className="content-text">
+                        {dataWarehouseStorage.inspector?.lastName}{" "}
+                        {dataWarehouseStorage.inspector?.firstName}
+                      </span>
+                    </p>
+                  </Row>
+                </Col>
+              </div>
+              <div className="space-padding" />
+              <div className="content-page">
+                <Col>
+                  <p className="text-main-label">
+                    Warehouse Supervision Information
+                  </p>
+                  <div className="space-padding" />
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Total Import (ton)",
+                        content:
+                          dataWarehouseStorage.totalInput ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Input Date",
+                        content:
+                          dataWarehouseStorage.inputDate !== null
+                            ? moment(dataWarehouseStorage.inputDate).format(
+                                dateFormat
+                              )
+                            : "Not update",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Total Export (ton)",
+                        content:
+                          dataWarehouseStorage.totalExport ?? "Not Update",
+                      }}
+                    />
+                    <LabelContentItem
+                      myProps={{
+                        label: "Output Date",
+                        content:
+                          dataWarehouseStorage.outputDate !== null
+                            ? moment(dataWarehouseStorage.outputDate).format(
+                                dateFormat
+                              )
+                            : "Not update",
+                      }}
+                    />
+                  </Row>
+                  <Row>
+                    <LabelContentItem
+                      myProps={{
+                        label: "Warehouse Name",
+                        content:
+                          dataWarehouseStorage.warehouseName ?? "Not Update",
+                        width: "100%",
+                      }}
+                    />
+                  </Row>
+                  <LabelContentItem
+                    myProps={{
+                      label: "Note",
+                      content: dataWarehouseStorage.note ?? "Not update",
+                      width: "100%",
+                    }}
+                  />
+                </Col>
+              </div>
+            </Col>
+          ) : (
+            <>
+              <SpinApp></SpinApp>
+            </>
+          )}
+        </div>
+      </Col>
+    </>
   );
 }
 

@@ -1,7 +1,14 @@
+import FarmManagementService from "@/api/admin_tech/farm_management_services";
 import { GetProjectDetailByID, UpdateProjectInfo } from "@/api/system_admin/project_api";
-import { StateInfoProject } from "@/components/Tag/StateTag";
-import { CheckProjectStatus } from "@/pages/common/CheckProjectStatus";
+import FarmProjectInfoCard from "@/components/Card/FarmProjectInfoCard";
+import HarvestInfoCard from "@/components/Card/HarvestInfoCard";
+import ProduceInfoCard from "@/components/Card/ProduceInfoCard";
+import TransportInfoCard from "@/components/Card/TransportInfoCard";
+import WarehouseStorageInfoCard from "@/components/Card/WarehouseStorageInfoCard";
+import StateCard from "@/components/Tag/StateCard";
+import { FarmInfoModel } from "@/types/farm_model";
 import { ProjectDetailModel } from "@/types/project_model";
+import { greyBlurColor, mainColor } from "@/utils/app_color";
 import { checkCurrentStepProject } from "@/utils/check_current_step";
 import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import {
@@ -9,35 +16,16 @@ import {
   Button,
   Col,
   Empty,
-  Form,
-  Input,
   Row,
   Spin,
-  Steps,
+  Steps
 } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import InfoHarvestModal from "../../../components/Modal/InfoHarvestModal";
-import InfoProductionModal from "../../../components/Modal/InfoProductionModal";
-import InfoTransportModal from "../../../components/Modal/InfoTransportModal";
-import InfoWarehouseModal from "../../../components/Modal/InfoWarehouseModal";
 import "../../common.scss";
 import EditProject from "./EditProject";
 import "./ProjectDetail.scss";
-import StateCard from "@/components/Tag/StateCard";
-import { greyBlurColor, mainColor, seedMainColor } from "@/utils/app_color";
-import { FarmInfoModel, FarmProjectModel } from "@/types/farm_model";
-import { StaffDepartment, UserDetailModel } from "@/types/user";
-import UserServices from "@/api/user_api";
-import FarmManagementService from "@/api/admin_tech/farm_management_services";
-import LabelContentItem from "@/components/Label/LabelContentItem";
-import HarvestInfoCard from "@/components/Card/HarvestInfoCard";
-import TransportInfoCard from "@/components/Card/TransportInfoCard";
-import WarehouseStorageInfoCard from "@/components/Card/WarehouseStorageInfoCard";
-import ProduceInfoCard from "@/components/Card/ProduceInfoCard";
-import FarmProjectInfoCard from "@/components/Card/FarmProjectInfoCard";
-import ModalUpdateInspector from "@/components/Modal/ModalUpdateInspector";
 
 
 const ProjectDetail = () => {
@@ -46,6 +34,7 @@ const ProjectDetail = () => {
   const [dataProject, setDataProject] = useState<ProjectDetailModel>();
 
   const { state: projectId } = useLocation();
+
 
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -185,13 +174,14 @@ const ProjectDetail = () => {
                         <Button
                           type="default"
                           size="large"
+                          
                           icon={
                             <FileSearchOutlined style={{ fontSize: "18px" }} />
                           }
                           onClick={() => {
                             navigate("/project-log");
                           }}
-                          style={{ marginRight: "16px" }}
+                          style={{ marginRight: "16px", borderRadius: '4px' }}
                         >
                           View Log
                         </Button>
@@ -200,6 +190,7 @@ const ProjectDetail = () => {
                         type="primary"
                         icon={<FormOutlined />}
                         size="large"
+                        style={{ borderRadius: '4px' }}
                         onClick={() => {
                           // disabled = false;
                           // setComponentDisabled(disabled);
