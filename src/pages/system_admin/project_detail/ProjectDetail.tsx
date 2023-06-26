@@ -1,65 +1,40 @@
-import {
-  GetProjectDetailByID,
-  UpdateProjectState,
-} from "@/api/system_admin/project_api";
-import { CheckProjectStatus } from "@/pages/common/CheckProjectStatus";
-import { CommonProjectState, ProjectDetailModel } from "@/types/project_model";
+import FarmManagementService from "@/api/admin_tech/farm_management_services";
+import { GetProjectDetailByID, UpdateProjectInfo } from "@/api/system_admin/project_api";
+import FarmProjectInfoCard from "@/components/Card/FarmProjectInfoCard";
+import HarvestInfoCard from "@/components/Card/HarvestInfoCard";
+import ProduceInfoCard from "@/components/Card/ProduceInfoCard";
+import TransportInfoCard from "@/components/Card/TransportInfoCard";
+import WarehouseStorageInfoCard from "@/components/Card/WarehouseStorageInfoCard";
+import StateCard from "@/components/Tag/StateCard";
+import { FarmInfoModel } from "@/types/farm_model";
+import { ProjectDetailModel } from "@/types/project_model";
+import { greyBlurColor, mainColor } from "@/utils/app_color";
+import { checkCurrentStepProject } from "@/utils/check_current_step";
 import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import {
   Breadcrumb,
   Button,
   Col,
-  Form,
-  Input,
-  Modal,
+  Empty,
   Row,
-  Select,
   Spin,
-  Steps,
-  Tooltip,
+  Steps
 } from "antd";
-import React, { useEffect, useState } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../common.scss";
-import InfoHarvestModal from "../../../components/Modal/InfoHarvestModal";
-import InfoProductionModal from "../../../components/Modal/InfoProductionModal";
-import InfoTransportModal from "../../../components/Modal/InfoTransportModal";
-import InfoWarehouseModal from "../../../components/Modal/InfoWarehouseModal";
+import EditProject from "./EditProject";
 import "./ProjectDetail.scss";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import moment from "moment";
-import { StateInfoProject } from "@/components/Tag/StateTag";
-import { checkCurrentStepProject } from "@/utils/check_current_step";
-import { FarmInfoModel, FarmProjectModel } from "@/types/farm_model";
-import FarmManagementService from "@/api/admin_tech/farm_management_services";
-import {
-  modalUpdateContentLayout,
-  tailUpdateContentLayout,
-} from "@/styles/content_layout";
-import FarmServices from "@/api/farm/farm_api";
-import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
-import { UserDetailModel, parseUserDetail } from "@/types/user";
-import StaffServices from "@/api/system_admin/staff_service";
-import {
-  parseColorByCommonState,
-  parseToStringCommonState,
-} from "@/utils/format_state";
 
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
-};
-
-let disabled = true;
 
 const ProjectDetail = () => {
   const navigate = useNavigate();
 
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(disabled);
-
   const [dataProject, setDataProject] = useState<ProjectDetailModel>();
 
   const { state: projectId } = useLocation();
+
 
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -75,28 +50,28 @@ const ProjectDetail = () => {
     });
   }, [projectId]);
 
-  const handleUpdateProjectState = async (projectId: string, state: number) => {
-    const value = { state: state };
+  const [farm, setFarm] = useState<FarmInfoModel>();
 
-    disabled = true;
-    setComponentDisabled(disabled);
+  useEffect(() => {
+    const fetchAPIFarm = async () => {
+      try {
+        if (dataProject !== null && dataProject?.farmProject !== null) {
+          const res: any = await FarmManagementService.getFarmDetailService(
+            dataProject?.farmProject?.farmId ?? ""
+          );
 
-    const res: any = await UpdateProjectState(value, projectId);
+          if (res.status === 200) {
+            console.log("farm model", res.data);
+            setFarm(res.data);
+          }
+        }
+      } catch (err) {
+        return err;
+      }
+    };
 
-    const newInfoProject = res.data.project as ProjectDetailModel;
-
-    if (res.status === 200) {
-      state == 2
-        ? successMessage("Project has been Completed")
-        : successMessage("Project has been Canceled");
-
-      setDataProject(newInfoProject);
-
-      // addTrackingBlock("test", "testProject"); // test
-    } else {
-      errorMessage("Update Failed");
-    }
-  };
+    fetchAPIFarm();
+  }, [dataProject]);
 
   // Steps project
   const stepsProject = [
@@ -117,66 +92,6 @@ const ProjectDetail = () => {
     },
   ];
 
-  // update project
-  const [selectedFarmId, setSelectedFarmId] = useState<string>();
-
-  const [listFarms, setListFarms] = useState<FarmInfoModel[]>([]);
-
-  const handleOnChangeFarm = (newFarmId: string) => {
-    setSelectedFarmId(newFarmId);
-  };
-
-  const [listFarmProjects, setListFarmProjects] = useState<FarmProjectModel[]>(
-    []
-  );
-
-  useEffect(() => {
-    FarmManagementService.getAllFarmService().then((res: any) => {
-      if (res?.status == 200) {
-        res.data.map((element: any) => {
-          const farm = element as FarmInfoModel;
-          setListFarms((prevFarm) => [...prevFarm, farm]);
-        });
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (selectedFarmId !== undefined) {
-      setListFarmProjects([]);
-      FarmServices.getAllFarmProjectsService(selectedFarmId).then(
-        (res: any) => {
-          if (res?.status === 200) {
-            res.data.map((element: any) => {
-              const farm = element as FarmProjectModel;
-              if (farm.projectId === null) {
-                setListFarmProjects((prevFarmProject) => [
-                  ...prevFarmProject,
-                  farm,
-                ]);
-              }
-            });
-          }
-        }
-      );
-    }
-  }, [selectedFarmId]);
-
-  // update status project
-  const [listHavesters, setListHavesters] = useState<UserDetailModel[]>([]);
-
-  const [listWarehouseInspectors, setListWarehouseInspectors] = useState<
-    UserDetailModel[]
-  >([]);
-
-  const [listTransporters, setListTransporters] = useState<UserDetailModel[]>(
-    []
-  );
-
-  const [listProduceInspectors, setListProduceInspectors] = useState<
-    UserDetailModel[]
-  >([]);
-
   const showEditProjectDrawer = () => {
     setOpenModalUpdate(true);
   };
@@ -187,289 +102,35 @@ const ProjectDetail = () => {
 
   const [isOpenModalUpdate, setOpenModalUpdate] = useState(false);
 
-  // get all staff department Harvester
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(2).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const harvester = parseUserDetail(element);
-          setListHavesters((prev) => [...prev, harvester]);
-        });
-      }
-    });
-  }, []);
-
-  // get all staff Transport Inspector
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(3).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const transporter = parseUserDetail(element);
-          setListTransporters((prev) => [...prev, transporter]);
-        });
-      }
-    });
-  }, []);
-
-  // get all staff Warehouse Inspector
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(4).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const warehouse = parseUserDetail(element);
-          setListWarehouseInspectors((prev) => [...prev, warehouse]);
-        });
-      }
-    });
-  }, []);
-
-  // get all staff Produce Inspector
-  useEffect(() => {
-    StaffServices.getAllStaffByDepartment(5).then((res: any) => {
-      if (res?.status === 200) {
-        res.data.map((element: any) => {
-          const produce = parseUserDetail(element);
-          setListProduceInspectors((prev) => [...prev, produce]);
-        });
-      }
-    });
-  }, []);
-
-  const listState = [
-    CommonProjectState.Processing,
-    CommonProjectState.Completed,
-    CommonProjectState.Pending,
-    CommonProjectState.Canceled,
-  ];
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
 
-  const handleOkUpdateSuccess = () => {
-    setIsLoading(false);
+  const onUpdateInfoProject = async (value: any) => {
+    console.log(value);
+
+    const res: any = await UpdateProjectInfo(value, projectId);
+
+    if(res.status === 200) {
+      console.log("res",res);
+
+      setDataProject(res.data.project);
+
+      setOpenModalUpdate(false);
+    }
   }
 
-  const handleUpdateProject = async (value: any) => {
-    setIsLoadingUpdate(true);
-
-    if (dataProject !== undefined) {
-      const result: any = await UpdateProjectState(
-        value,
-        dataProject?.projectId
-      );
-
-      if (result.status === 200) {    
-        setIsLoading(true);
-
-        setOpenModalUpdate(false);
-
-        Modal.success({
-          content: "Update project successfully!",
-          onOk: handleOkUpdateSuccess
-        });
-
-        setDataProject(result.data.project);
-
-        setIsLoadingUpdate(false); 
-      }
-    }
-  };
 
   return (
     <>
       {isOpenModalUpdate && (
-        <ShowDrawerEdit
+        <EditProject
           myProps={{
-            title: "Edit Information of Project",
-            onOpen: showEditProjectDrawer,
-            onClose: closeEditProjectDrawer,
-            content: (
-              <Col>
-                <Form
-                  {...modalUpdateContentLayout}
-                  onFinish={(value) => {
-                    handleUpdateProject(value);
-                  }}
-                >
-                  <Form.Item
-                    label="Project Name"
-                    name="projectName"
-                    initialValue={dataProject?.projectName}
-                  >
-                    <Input />
-                  </Form.Item>
-                  {dataProject?.farmProject === null ? (
-                    <Col>
-                      <Form.Item label="Farm in Charge" name="farmId">
-                        <Select
-                          placeholder="Select farm in charge"
-                          onChange={handleOnChangeFarm}
-                        >
-                          {listFarms.map((farm) => (
-                            <Select.Option
-                              value={farm.farmId}
-                              key={farm.farmId}
-                            >
-                              <Tooltip
-                                placement="right"
-                                title={`${farm.farmName}` ?? "No name"}
-                              >
-                                {" "}
-                                {farm.farmCode}
-                              </Tooltip>
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                      <Form.Item label="Farm Project" name="farmProjectId">
-                        <Select placeholder="Select farm project in charge">
-                          {listFarmProjects.map((farmProject) => (
-                            <Select.Option
-                              value={farmProject.farmProjectId}
-                              key={farmProject.farmProjectId}
-                            >
-                              {farmProject.farmProjectCode}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                  ) : (
-                    <></>
-                  )}
-                  <Form.Item
-                    label="Havestor"
-                    name="havestor"
-                    initialValue={dataProject?.harvest.inspector?.email}
-                  >
-                    <Select placeholder="Select harvestor in Harvest Inspection">
-                      {listHavesters.map((harvester) => (
-                        <Select.Option
-                          value={harvester.userId}
-                          key={harvester.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${harvester.lastName} ${harvester.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {harvester.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    label="Transport Inspector"
-                    name="transportInspector"
-                    initialValue={dataProject?.transport.inspector?.email}
-                  >
-                    <Select placeholder="Select Transport Inspector">
-                      {listTransporters.map((transporter) => (
-                        <Select.Option
-                          value={transporter.userId}
-                          key={transporter.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${transporter.lastName} ${transporter.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {transporter.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    label="Warehouse Inspector"
-                    name="warehouseInspector"
-                    initialValue={dataProject?.warehouseStorage.inspector?.email}
-                  >
-                    <Select placeholder="Select Warehouse Inspector">
-                      {listWarehouseInspectors.map((warehouse) => (
-                        <Select.Option
-                          value={warehouse.userId}
-                          key={warehouse.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${warehouse.lastName} ${warehouse.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {warehouse.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item 
-                    label="Produce Inspector" 
-                    name="produceInspector"
-                    initialValue={dataProject?.produce.inspector?.email}
-                  >
-                    <Select placeholder="Select Produce Inspector">
-                      {listProduceInspectors.map((produce) => (
-                        <Select.Option
-                          value={produce.userId}
-                          key={produce.userId}
-                        >
-                          <Tooltip
-                            placement="right"
-                            title={
-                              `${produce.lastName} ${produce.firstName}` ??
-                              "No name"
-                            }
-                          >
-                            {produce.email}
-                          </Tooltip>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    label="State"
-                    name="state"
-                    initialValue={dataProject?.state}
-                  >
-                    <Select
-                      placeholder="Select new State"
-                      // onChange={onChangeState}
-                    >
-                      {listState.map((state) => (
-                        <Select.Option value={state} key={state}>
-                          <span
-                            style={{
-                              color: `${parseColorByCommonState(state)}`,
-                            }}
-                          >
-                            {parseToStringCommonState(state)}
-                          </span>
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                  <Form.Item wrapperCol={tailUpdateContentLayout}>
-                    <Button
-                      type="primary"
-                      size="large"
-                      htmlType="submit"
-                      style={{ marginRight: "12px" }}
-                      loading={isLoadingUpdate}
-                    >
-                      Update
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Col>
-            ),
+            dataProject: dataProject,
+            showEditProjectDrawer: showEditProjectDrawer,
+            closeEditProjectDrawer: closeEditProjectDrawer,
+            isLoadingUpdate: isLoadingUpdate,
+            handleUpdateInfoProject: onUpdateInfoProject,
           }}
         />
       )}
@@ -487,164 +148,272 @@ const ProjectDetail = () => {
             </div>
           </Col>
         </div>
-        <div className="content-page">
+        <div>
           {dataProject && !isLoading ? (
             <Col>
-              <Row
-                style={{
-                  display: "flex",
-                  justifyItems: "center",
-                  alignItems: "center",
-                }}
-              >
-                <p className="title">
-                  Information of Project - {dataProject.projectName}{" "}
-                </p>
-                <div style={{ marginLeft: "12px" }}>
-                  {StateInfoProject(dataProject.state)}
-                </div>
-              </Row>
-              <div style={{ padding: "24px" }}>
-                <Steps
-                  current={currentStep}
-                  labelPlacement="vertical"
-                  items={stepsProject}
-                ></Steps>
-              </div>
-              <Row className="row-btn-layout">
-                <div>
-                  <Button
-                    type="default"
-                    size="large"
-                    icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
-                    onClick={() => {
-                      navigate("/project-log");
+              <div className="content-page">
+                <Col>
+                  <div style={{ margin: "12px 0px" }}>
+                    <StateCard myProps={{ state: dataProject.state }} />
+                  </div>
+                  <Row
+                    style={{
+                      display: "flex",
+                      justifyItems: "center",
+                      alignItems: "center",
                     }}
-                    style={{ marginRight: "16px" }}
                   >
-                    View Log
-                  </Button>
-                </div>
-                <Button
-                  type="primary"
-                  icon={<FormOutlined />}
-                  size="large"
-                  onClick={() => {
-                    // disabled = false;
-                    // setComponentDisabled(disabled);
-                    setOpenModalUpdate(true);
-                  }}
-                  disabled={!componentDisabled}
-                >
-                  Update
-                </Button>
-              </Row>
-              <div>
-                <Form {...layout}>
-                  <Form.Item
-                    label="Project Id"
-                    name="projectId"
-                    initialValue={dataProject?.projectId}
-                  >
-                    <Input disabled={true} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Project Code"
-                    name="projectCode"
-                    initialValue={dataProject?.projectCode}
-                  >
-                    <Input disabled={true} />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Project Name"
-                    name="projectName"
-                    initialValue={dataProject?.projectName}
-                  >
-                    <Input disabled={true} />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Manager"
-                    name="manager"
-                    initialValue={dataProject?.manager.email}
-                  >
-                    <Input disabled={true} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Farm Project"
-                    name="farmProject"
-                    initialValue={
-                      dataProject.farmProject == null
-                        ? "No farm project yet"
-                        : dataProject.farmProject.farmProjectCode
-                    }
-                  >
-                    <Input disabled={true} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Date Created"
-                    name="dateCreated"
-                    initialValue={moment(dataProject?.dateCreated)}
-                  >
-                    <Input disabled={true} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Date Completed"
-                    name="dateCompleted"
-                    initialValue={
-                      dataProject?.dateCompleted
-                        ? moment(dataProject?.dateCompleted)
-                        : null
-                    }
-                  >
-                    <Input disabled={true} />
-                  </Form.Item>
-
-                  <Form.Item label="Harvest Inspection" name="harvester">
-                    <Row>
-                      {CheckProjectStatus(dataProject?.harvest.state)}
+                    <p className="text-main-label">
+                      Project:{" "}
+                      <span style={{ color: mainColor, fontWeight: "700" }}>
+                        {dataProject.projectName}
+                      </span>
+                    </p>
+                    <Row className="row-btn-layout">
                       <div>
-                        <InfoHarvestModal myProp={dataProject?.harvest} />
+                        <Button
+                          type="default"
+                          size="large"
+                          
+                          icon={
+                            <FileSearchOutlined style={{ fontSize: "18px" }} />
+                          }
+                          onClick={() => {
+                            navigate("/project-log");
+                          }}
+                          style={{ marginRight: "16px", borderRadius: '4px' }}
+                        >
+                          View Log
+                        </Button>
                       </div>
+                      <Button
+                        type="primary"
+                        icon={<FormOutlined />}
+                        size="large"
+                        style={{ borderRadius: '4px' }}
+                        onClick={() => {
+                          // disabled = false;
+                          // setComponentDisabled(disabled);
+                          setOpenModalUpdate(true);
+                        }}
+                        // disabled={!componentDisabled}
+                      >
+                        Update
+                      </Button>
                     </Row>
-                  </Form.Item>
-                  <Form.Item label="Transport Inspection" name="transport">
-                    <Row>
-                      {CheckProjectStatus(dataProject?.transport.state)}
-                      <div>
-                        <InfoTransportModal myProp={dataProject?.transport} />
-                      </div>
+                  </Row>
+                  <div style={{ padding: "24px" }}>
+                    <Steps
+                      current={currentStep}
+                      labelPlacement="vertical"
+                      items={stepsProject}
+                    ></Steps>
+                  </div>
+                  <div>
+                    <p>
+                      <span className="sub-text">Date Created: </span>
+                      <span className="content-sub-text">
+                        {moment(dataProject.dateCreated).format("DD/MM/YYYY")}
+                      </span>
+                    </p>
+                  </div>
+                  <div style={{ marginTop: "24px" }}>
+                    <Row
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Row style={{ display: "flex", alignItems: "center" }}>
+                        <p
+                          className="title-text"
+                          style={{ padding: "0", margin: "0" }}
+                        >
+                          Project ID:
+                        </p>
+                        <div style={{ padding: "4px" }}></div>
+                        <div className="outlined-border-box">
+                          <p>{dataProject.projectId}</p>
+                        </div>
+                      </Row>
+                      <Row style={{ display: "flex", alignItems: "center" }}>
+                        <p
+                          className="title-text"
+                          style={{ padding: "0", margin: "0" }}
+                        >
+                          Project Code:
+                        </p>
+                        <div style={{ padding: "4px" }}></div>
+                        <div className="outlined-border-box">
+                          <p>{dataProject.projectCode}</p>
+                        </div>
+                      </Row>
+                      <Row style={{ display: "flex", alignItems: "center" }}>
+                        <p
+                          className="title-text"
+                          style={{ padding: "0", margin: "0" }}
+                        >
+                          Project Name:
+                        </p>
+                        <div style={{ padding: "4px" }}></div>
+                        <div className="outlined-border-box">
+                          <p>{dataProject.projectName}</p>
+                        </div>
+                      </Row>
                     </Row>
-                  </Form.Item>
-                  <Form.Item
-                    label="Warehouse Inspection"
-                    name="warehouseStorage"
-                  >
-                    <Row>
-                      {CheckProjectStatus(dataProject?.warehouseStorage.state)}
-                      <div>
-                        <InfoWarehouseModal
-                          myProp={dataProject?.warehouseStorage}
-                        />
-                      </div>
-                    </Row>
-                  </Form.Item>
-                  <Form.Item label="Supervising Producer" name="produce">
-                    <Row>
-                      {CheckProjectStatus(dataProject?.produce.state)}
-                      <div>
-                        <InfoProductionModal myProp={dataProject?.produce} />
-                      </div>
-                    </Row>
-                  </Form.Item>
-                </Form>
+                  </div>
+                  <div className="divided" />
+                  {/* Project Manager */}
+                  <div>
+                    <Col>
+                      <p
+                        className="text-main-label"
+                        style={{ fontWeight: 500 }}
+                      >
+                        Project Manager
+                      </p>
+                      <div style={{ padding: "12px" }} />
+                      <Row style={{ display: "flex", paddingBottom: "12px" }}>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "50%",
+                          }}
+                        >
+                          <p className="title-text">ID: </p>
+                          <div style={{ padding: "4px" }}></div>
+                          <p className="content-text">
+                            {dataProject.manager.userId}
+                          </p>
+                        </Row>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "50%",
+                          }}
+                        >
+                          <p className="title-text">Wallet ID: </p>
+                          <div style={{ padding: "4px" }}></div>
+                          <p className="content-text">
+                            {dataProject.manager.walletAddress}
+                          </p>
+                        </Row>
+                      </Row>
+                      <Row style={{ display: "flex", paddingBottom: "12px" }}>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "50%",
+                          }}
+                        >
+                          <p className="title-text">Email: </p>
+                          <div style={{ padding: "4px" }}></div>
+                          <p className="content-text">
+                            {dataProject.manager.email}
+                          </p>
+                        </Row>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "25%",
+                          }}
+                        >
+                          <p className="title-text">First Name: </p>
+                          <div style={{ padding: "4px" }}></div>
+                          <p className="content-text">
+                            {dataProject.manager.firstName}
+                          </p>
+                        </Row>
+                        <Row
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "25%",
+                          }}
+                        >
+                          <p className="title-text">Last Name: </p>
+                          <div style={{ padding: "4px" }}></div>
+                          <p className="content-text">
+                            {dataProject.manager.lastName}
+                          </p>
+                        </Row>
+                      </Row>
+                    </Col>
+                  </div>
+                </Col>
               </div>
+              <div style={{ padding: "12px" }} />
+              <div className="content-page">
+                {dataProject.farmProject !== null ? (
+                  <FarmProjectInfoCard
+                    myProps={{
+                      farm: farm,
+                      dataProject: dataProject,
+                    }}                  
+                  />
+                ) : (
+                  <>
+                    <Col>
+                      <div>
+                        <div className="text-main-label">
+                          <p>
+                            <span>Farm Undertakes: </span>
+                            <span
+                              className="common-border-tag"
+                              style={{ color: greyBlurColor, fontSize: "20px" }}
+                            >
+                              Not Assigned Yet
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <Empty />
+                    </Col>
+                  </>
+                )}
+              </div>
+              <div className="space-padding" />
+              <Row
+                gutter={16}
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Col style={{ display: "flex" }} span={12}>
+                  <HarvestInfoCard
+                    myProps={{ dataHarvest: dataProject.harvest }}
+                  />
+                </Col>
+                <Col style={{ display: "flex" }} span={12}>
+                  <TransportInfoCard
+                    myProps={{ dataTransport: dataProject.transport }}
+                  />
+                </Col>
+              </Row>
+              <div className="space-padding" />
+              <Row
+                gutter={16}
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Col style={{ display: "flex" }} span={12}>
+                  <WarehouseStorageInfoCard
+                    myProps={{ dataWarehouseStorage: dataProject.warehouseStorage }}
+                  />
+                </Col>
+                <Col style={{ display: "flex" }} span={12}>
+                  <ProduceInfoCard
+                    myProps={{ dataProduce: dataProject.produce }}
+                  />
+                </Col>
+              </Row>
             </Col>
           ) : (
             <>
               <Spin tip="Loading" size="large">
-                <div className="content-page" />
+                <div className="content-page" style={{ padding: "64px" }} />
               </Spin>
             </>
           )}

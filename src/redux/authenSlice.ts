@@ -1,8 +1,9 @@
+import UserServices from "@/api/user_api";
 import { createSlice } from "@reduxjs/toolkit";
-import RefreshUserAPI from "../api/user_api";
 
 
-const res = await RefreshUserAPI();
+
+const res = await UserServices.RefreshUserAPI();
 
 const initialState = {
     currentUserInfo: res?.data || {},

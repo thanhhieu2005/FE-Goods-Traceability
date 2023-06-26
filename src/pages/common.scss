@@ -3,6 +3,7 @@
     background-color: white;
     padding: 12px 24px;
     margin-bottom: 36px;
+    border-radius: 4px;
 
     .breadcrumb-style {
         font-size: 16px;
@@ -31,9 +32,10 @@
 
 .content-page {
     background-color: white;
-    padding: 12px 24px;
+    padding: 24px 32px;
     width: 100%;
-    padding-bottom: 64px;
+    // padding-bottom: 64px;
+    border-radius: 4px;
 
     .search-item {
         width: 60%;
@@ -91,6 +93,105 @@
         justify-content: flex-end;
         margin: 24px 0px;
     }
+
+    .text-main-label {
+        font-size: 24px;
+        font-weight: 700;
+        color: #111d2c;
+    }
+
+    p {
+        padding: 0;
+        margin: 0;
+    }
+
+    .divide-width-item-in-row {
+        display: flex;
+        align-items: center;
+        width: "25%";
+    }
 }
+
+.divided {
+    height: 1px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    background-color: #D9DDDC;
+    width: 100%;
+}
+
+.sub-text {
+    font-size: 14px;
+    font-weight: 400;
+    font-style: italic;
+    color: #999DA0;
+}
+
+.content-sub-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111d2c;
+}
+
+.title-text {
+    font-size: 16px;
+    font-weight: 400;
+    color: #111d2c;
+}
+
+.content-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111d2c;
+}
+
+.outlined-border-box {
+
+    p {
+        margin: 0;
+        padding: 0;
+        color: black;
+        font-size: 18px;
+        font-weight: 700;
+    }
+}
+
+.common-border-tag {
+    padding: 4px 16px;
+    background-color: white;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.space-padding {
+    padding: 12px;
+}
+
+.row-space-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title-confirm-modal {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e8b26e;
+}
+
+.common-image {
+    padding: 4px;
+    border-radius: 4px;
+    border: #D9DDDC;
+    background-color: #D9DDDC;
+    margin-right: 8px;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+}
+
 
 

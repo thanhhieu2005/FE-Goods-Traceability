@@ -54,3 +54,27 @@ export const UpdateHarvestAPI = async (value: any, harvestId: string) => {
         return err;
     }
 }
+
+const HarvestServices = {
+    getAllHarvestByID: async(userId: string) => {
+        try {
+            const currentToken = localStorage.getItem('token');
+            
+            const res = await axiosClient.get(
+                "/harvest/all-by-user",
+                {
+                    headers: { Authorization: `Bearer ${currentToken}`},
+                    params: {
+                        userId: userId,
+                    }
+                }
+            );
+
+            return res;
+        } catch(err) {
+            return err;
+        }
+    }
+}
+
+export default HarvestServices;

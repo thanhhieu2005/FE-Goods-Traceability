@@ -7,7 +7,7 @@ export interface FarmInfoModel {
     farmCode: string;
     farmName: string;
     farmAddress?: string;
-    farmOwner?: string;
+    farmOwner?: UserDetailModel;
     farmPhoneNumber?: string;
     farmerList: string[];
     statusFarm: StatusFarm;
@@ -23,12 +23,13 @@ export interface FarmDetailInfoModel {
     statusFarm: StatusFarm;
     farmerList?: UserDetailModel[];
     farmProjectList: [];
-    seedList: [];
-    landList: [];
+    seedList: SeedModel[];
+    landList: LandModel[];
     dateCreated: string;
 }
 
 export interface FarmProjectModel {
+    key: string;
     farmProjectId: string;
     farmId: string;
     farmProjectCode: string;
@@ -42,6 +43,11 @@ export interface FarmProjectModel {
     dateCreated: string;
     farmer: UserDetailModel;
     projectId: ProjectInFarmProjectModel;
+    ripeness: number;
+    totalFertilizers: number;
+    totalSeeds: number;
+    plantDensity: number;
+    pesticide: string;
 }
 
 export interface ProjectInFarmProjectModel {

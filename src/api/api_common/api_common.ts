@@ -17,7 +17,7 @@ const ApiCommonService = {
         } catch (error) {
             return error;
         }
-    }
+    },
 }
 
 export default ApiCommonService;

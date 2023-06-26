@@ -4,7 +4,7 @@ export const ShowDrawerEdit = ({ myProps: props }: any) => {
     return (
       <>
         <Drawer
-          width={640}
+          width={720}
           title={props.title}
           onClose={props.onClose}
           open={props.onOpen}
@@ -13,9 +13,9 @@ export const ShowDrawerEdit = ({ myProps: props }: any) => {
           extra={
             <Space>
               <Button onClick={props.onClose}>Cancel</Button>
-              {/* <Button onClick={props.onSubmit} type="primary">
+              <Button onClick={props.onSubmit} type="primary">
                 {props.nameButtonUpdate ?? 'Update'}
-              </Button> */}
+              </Button>
             </Space>
           }
         >

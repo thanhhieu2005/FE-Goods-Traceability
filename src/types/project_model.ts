@@ -1,5 +1,5 @@
 import { FarmProjectModel } from "./farm_model";
-import { Harvest, Production, Transport, WarehouseStorage } from "./step_tracking";
+import { HarvestModel, ProductionModel, TransportModel, WarehouseStorageModel } from "./step_tracking";
 import { UserDetailModel } from "./user";
 
 
@@ -13,10 +13,10 @@ export interface ProjectDetailModel {
     dateCompleted?: string;
     manager: UserDetailModel; // manager tam thoi de string de lay ten
     farmProject: FarmProjectModel;
-    harvest: Harvest;
-    transport: Transport;
-    warehouseStorage: WarehouseStorage;
-    produce: Production;
+    harvest: HarvestModel;
+    transport: TransportModel;
+    warehouseStorage: WarehouseStorageModel;
+    produce: ProductionModel;
 } 
 export interface ProjectInfoModel {
     key: string;
@@ -31,7 +31,8 @@ export enum CommonProjectState {
   Processing = 1,
   Completed = 2,
   Canceled = 3,
-  Pending = 4,
+  NotYet = 4,
+  Pending = 5,
 }
 
 /// parse model

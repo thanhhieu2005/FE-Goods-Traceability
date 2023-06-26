@@ -1,7 +1,7 @@
 import { CommonProjectState } from "./project_model";
-import { UserDetailModel, UserModel, parseUserDetail } from "./user";
+import { UserDetailModel, parseUserDetail } from "./user";
 
-export interface Harvest {
+export interface HarvestModel {
   key: string;
   projectId: string;
   harvestId: string;
@@ -13,9 +13,10 @@ export interface Harvest {
   inspector?: UserDetailModel;
   temperature?: number;
   projectCode: string;
+  note: string;
 }
 
-export interface Transport {
+export interface TransportModel {
   key: string;
   projectId: string;
   transportId: string;
@@ -28,9 +29,10 @@ export interface Transport {
   state: CommonProjectState;
   inspector?: UserDetailModel;
   projectCode: string;
+  note: string;
 }
 
-export interface WarehouseStorage {
+export interface WarehouseStorageModel {
   key: string;
   projectId: string;
   warehouseStorageId: string;
@@ -42,12 +44,13 @@ export interface WarehouseStorage {
   state: CommonProjectState;
   inspector?: UserDetailModel;
   projectCode: string;
+  note: string;
 }
 
-export interface Production {
+export interface ProductionModel {
   key: string;
   projectId: string;
-  productionId: string;
+  produceSupervisionId: string;
   projectCode: string;
   totalInput?: number;
   factoryName?: string;
@@ -59,35 +62,36 @@ export interface Production {
   inspector?: UserDetailModel;
   productName?: string;
   state: CommonProjectState;
+  note: string;
 }
 
 /// parse model
 export const parseHarvestData = (data: any) => {
-  var harvest = {} as Harvest;
+  var harvest = {} as HarvestModel;
   harvest.key = data._id;
-  harvest.harvestId = data._id;
-  harvest.projectId = data.projectId.projectId;
-  harvest.totalHarvest = data?.totalHarvest;
-  harvest.ripeness = data?.ripeness;
+  harvest.harvestId = data.harvestId ?? data._id;
+  harvest.projectId = data.projectId !== null ? data.projectId.projectId : null;
+  harvest.totalHarvest = data.totalHarvest;
+  harvest.ripeness = data.ripeness;
   harvest.state = data.state;
   harvest.moisture = data?.moisture;
   harvest.dateCompleted = data?.dateCompleted;
-  harvest.inspector = parseUserDetail(data?.inspector);
-  harvest.projectCode = data.projectCode ?? data.productionId.projectCode;
+  harvest.inspector = parseUserDetail(data.inspector);
+  harvest.projectCode = data.projectCode;
   harvest.temperature = data?.temperature;
 
   return harvest;
 };
 
 export const parseTransportData = (data: any) => {
-  var transport = {} as Transport;
+  var transport = {} as TransportModel;
   transport.key = data._id;
   transport.transportId = data._id;
-  transport.projectId = data.projectId.projectId;
+  transport.projectId = data.projectId !== null ? data.projectId.projectId : null;
   transport.totalInput = data?.totalInput;
   transport.transportName = data?.transport;
   transport.inspector = parseUserDetail(data?.inspector);
-  transport.vehicleType = data?.vehicleType;
+  transport.vehicleType = data?.vehicle;
   transport.numberOfVehicle = data?.numberOfVehicle;
   transport.state = data.state;
   transport.projectCode = data.projectCode;
@@ -98,9 +102,9 @@ export const parseTransportData = (data: any) => {
 };
 
 export const parseWarehouseStorageData = (data: any) => {
-  var warehouseStorage = {} as WarehouseStorage;
+  var warehouseStorage = {} as WarehouseStorageModel;
   warehouseStorage.key = data._id;
-  warehouseStorage.projectId = data.projectId._id;
+  warehouseStorage.projectId = data.projectId !== null ? data.projectId.projectId : null;
   warehouseStorage.warehouseStorageId = data._id;
   warehouseStorage.projectCode = data.projectCode;
   warehouseStorage.totalInput = data?.totalInput;
@@ -115,11 +119,11 @@ export const parseWarehouseStorageData = (data: any) => {
 };
 
 export const parseProductionData = (data: any) => {
-  var production = {} as Production;
+  var production = {} as ProductionModel;
 
   production.key = data._id;
-  production.productionId = data._id;
-  production.projectId = data.projectId._id;
+  production.produceSupervisionId = data._id;
+  production.projectId = data.projectId !== null ? data.projectId.projectId : null;
   production.projectCode = data.projectCode;
   production.totalInput = data?.totalInput;
   production.factoryName = data?.factory;
@@ -134,3 +138,11 @@ export const parseProductionData = (data: any) => {
 
   return production;
 };
+
+export const listCommonState = [
+  CommonProjectState.Processing,
+  CommonProjectState.Completed,
+  CommonProjectState.Pending,
+  CommonProjectState.Canceled,
+  CommonProjectState.NotYet,
+];

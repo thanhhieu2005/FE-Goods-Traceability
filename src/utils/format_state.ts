@@ -1,5 +1,6 @@
 import { CommonProjectState } from "@/types/project_model"
 import { StaffDepartment } from "@/types/user";
+import { mainColor } from "./app_color";
 
 export const parseToStringCommonState =(state: CommonProjectState) => {
     switch(state) {
@@ -11,8 +12,10 @@ export const parseToStringCommonState =(state: CommonProjectState) => {
             return 'Pending';
         case CommonProjectState.Canceled:
             return 'Cancel';
+        case CommonProjectState.NotYet:
+            return 'Not Yet'
         default:
-            return '';
+            return 'Not Yet';
     }
 }
 
@@ -23,7 +26,7 @@ export const parseColorByCommonState = (state: CommonProjectState) => {
         case CommonProjectState.Completed:
             return '#52c41a';
         case CommonProjectState.Pending:
-            return '#ffec3d';
+            return mainColor;
         case CommonProjectState.Canceled:
             return '#ff4d4f';
         default:
