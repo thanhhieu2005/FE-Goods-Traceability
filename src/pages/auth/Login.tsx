@@ -5,9 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUserInfo } from "../../redux/authenSlice";
 import { axiosClient } from "../../services/axios";
-// import { addListener } from "process";
-import logo from "../../assets/images/img-logo.png";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import { icLogo, logoFull } from "@/assets";
+import { mainColor } from "@/utils/app_color";
+import { ButtonStyle } from "@/utils/style_common";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -45,12 +46,14 @@ const Login = () => {
   return (
     <div className="authen-page">
       <Row>
-        <Col span={14} className="background"></Col>
+        <Col span={14} className="background" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            {/* <img src={logoFull} width="50%" height="70%" style={{ display: 'flex' }} /> */}
+        </Col>
         <Col span={10}>
           <div className="layout-authen">
             <Col className="content-form">
-              <div className="center-content"><img src={logo} /></div>
-              <div className="text-title center-content">Welcome Back</div>
+              <div className="center-content"><img src={icLogo} height="144px" width="144px" /></div>
+              <div className="text-title center-content" style={{ color: mainColor }}>HK Solution</div>
               <div className="form-authen">
                 <Form 
                 layout="vertical" 
@@ -66,7 +69,6 @@ const Login = () => {
                     ]}
                   >
                     <Input
-                      className="myInput custom"
                       placeholder="Enter your email"
                       size="large"
                       name="email"
@@ -82,7 +84,6 @@ const Login = () => {
                     ]}
                   >
                     <Input.Password
-                      className="myInput custom"
                       placeholder="Enter your password"
                       size="large"
                       name="pwd"
@@ -92,7 +93,7 @@ const Login = () => {
                     to="/forgot-password"
                     className="forgot-password"
                     style={{
-                      color: "#1990ff",
+                      color: mainColor,
                       fontSize: "12px",
                       display: "flex",
                       justifyContent: "flex-end",
@@ -101,10 +102,11 @@ const Login = () => {
                   >
                     Forgot Password?
                   </Link>
+                  <div className="space-padding"/>
                   <Button
                     block
                     // id="common-button"
-                    style={{ marginTop: "16px" }}
+                    style={ButtonStyle()}
                     type="primary"
                     size="large"
                     htmlType="submit"

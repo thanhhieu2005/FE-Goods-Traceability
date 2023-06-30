@@ -34,6 +34,8 @@ import StaffInfoDetail from "@/pages/system_admin/staff_management/StaffInfoDeta
 import CreateStaffForm from "@/pages/system_admin/staff_management/CreateStaffForm";
 import DashBoardSystemAdmin from "@/pages/system_admin/dashboard/DashBoardSystemAdmin";
 import AddProductPage from "@/pages/product/AddProductPage";
+import AboutUs from "@/pages/common/AboutUs";
+import ListProductsOfProject from "@/pages/system_admin/project_detail/list_products/ListProductsOfProject";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -57,10 +59,14 @@ const Routers = () => {
               path="/"
               element={
                 <ProtectedRoute isAllowed={!!currentToken || !!currentToken}>
-                  <LayoutCustom></LayoutCustom>
+                  <LayoutCustom/>
                 </ProtectedRoute>
               }
             >
+              <Route
+                path="/about-us"
+                element={<AboutUs/>}
+              />
               {/* Check Role to render Route */}
               {userName.role === 1 ? ( // Technical Admin Router
                 <>
@@ -87,12 +93,9 @@ const Routers = () => {
                 </>
               ) : userName.role === 2 ? ( // System Admin Router
                 <>
-                  <Route
-                    path="/"
-                    element={<Navigate to="/dashboard"/>}
-                  />
+                  <Route path="/" element={<Navigate to="/dashboard" />} />
                   {/* Project Management Router */}
-                  <Route path="/dashboard" element={<DashBoardSystemAdmin/>}/>
+                  <Route path="/dashboard" element={<DashBoardSystemAdmin />} />
                   <Route
                     path="/project-management"
                     element={<ProjectManagement />}
@@ -110,15 +113,19 @@ const Routers = () => {
                   {/* Staff Management Router */}
                   <Route
                     path="/staff-management"
-                    element={<StaffManagement/>}
+                    element={<StaffManagement />}
                   />
                   <Route
                     path="/staff-management/:userId"
-                    element={<StaffInfoDetail/>}
+                    element={<StaffInfoDetail />}
                   />
                   <Route
                     path="/create-new-staff"
-                    element={<CreateStaffForm/>}
+                    element={<CreateStaffForm />}
+                  />
+                  <Route
+                    path="/project/product/:projectId"
+                    element={<ListProductsOfProject />}
                   />
                 </>
               ) : userName.role === 3 ? ( // Farm Router
@@ -213,10 +220,7 @@ const Routers = () => {
                     path="/produce-management/:productionId"
                     element={<ProduceDetail />}
                   />
-                  <Route
-                    path="/add-product"
-                    element={<AddProductPage/>}
-                  />
+                  <Route path="/add-product" element={<AddProductPage />} />
                 </>
               ) : (
                 <></>

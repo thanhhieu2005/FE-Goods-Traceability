@@ -6,10 +6,11 @@ import { DashboardOutlined, TeamOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { UserRole } from "@/types/user";
 
-import { TbHomeEco, TbColumns3 } from 'react-icons/tb';
-import { FaTasks } from 'react-icons/fa';
-import { RiSeedlingLine } from 'react-icons/ri';
-import { TfiViewListAlt } from 'react-icons/tfi'
+import { TbHomeEco, TbColumns3 } from "react-icons/tb";
+import { FaTasks } from "react-icons/fa";
+import { RiSeedlingLine } from "react-icons/ri";
+import { TfiViewListAlt } from "react-icons/tfi";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -34,7 +35,6 @@ export const MenuApp = () => {
 
   const location = useLocation();
 
-
   // Kiểm tra role set path phù hợp
   useEffect(() => {
     if (userName.role === UserRole.TechnicalAdmin) {
@@ -43,38 +43,38 @@ export const MenuApp = () => {
       }
       if (location.pathname.includes("/techAd-farm-management"))
         setPath("/techAd-farm-management");
-    } else if(userName.role === UserRole.SystemAdmin) {
+    } else if (userName.role === UserRole.SystemAdmin) {
       if (location.pathname.includes("/")) {
         setPath("/project-management");
       }
       if (location.pathname.includes("/staff-management"))
         setPath("/staff-management");
-      if(location.pathname.includes("/dashboard")) setPath("/dashboard");
-    } else if(userName.role === UserRole.Farmer && userName.isOwner === true) {
-      if(location.pathname.includes('/')) {
+      if (location.pathname.includes("/dashboard")) setPath("/dashboard");
+    } else if (userName.role === UserRole.Farmer && userName.isOwner === true) {
+      if (location.pathname.includes("/")) {
         setPath("/farm-info");
       }
-      if ( location.pathname.includes('/farm-project-management')) {
+      if (location.pathname.includes("/farm-project-management")) {
         setPath("/farm-project-management");
-      } else if(location.pathname.includes('/land-management')) {
+      } else if (location.pathname.includes("/land-management")) {
         setPath("/land-management");
-      } else if(location.pathname.includes('/seed-management')) {
+      } else if (location.pathname.includes("/seed-management")) {
         setPath("/seed-management");
       }
     } else if (userName.role === UserRole.Staff && userName.department === 2) {
-      if(location.pathname.includes("/")) {
+      if (location.pathname.includes("/")) {
         setPath("/harvest-management");
       }
     } else if (userName.role === UserRole.Staff && userName.department === 3) {
-      if(location.pathname.includes("/")) {
+      if (location.pathname.includes("/")) {
         setPath("/transport-management");
       }
     } else if (userName.role === UserRole.Staff && userName.department === 4) {
-      if(location.pathname.includes("/")) {
+      if (location.pathname.includes("/")) {
         setPath("/warehouse-management");
       }
     } else if (userName.role === UserRole.Staff && userName.department === 5) {
-      if(location.pathname.includes("/")) {
+      if (location.pathname.includes("/")) {
         setPath("/produce-management");
       }
     }
@@ -100,34 +100,36 @@ export const MenuApp = () => {
   } else if (userName.role == UserRole.SystemAdmin) {
     items = [
       getItem("Dashboard", "/dashboard", <DashboardOutlined />),
-      getItem("Batch/ Project Management", "/project-management", <TfiViewListAlt/>),
-      getItem("Staff Management", '/staff-management', <TeamOutlined />),
+      getItem(
+        "Batch/ Project Management",
+        "/project-management",
+        <TfiViewListAlt />
+      ),
+      getItem("Staff Management", "/staff-management", <TeamOutlined />),
     ];
-  } else if(userName.role == UserRole.Farmer && userName.isOwner === true) {
+  } else if (userName.role == UserRole.Farmer && userName.isOwner === true) {
     items = [
-      getItem("Farm Information", '/farm-info', <TbHomeEco/>),
-      getItem("Farm Project Management", '/farm-project-management', <FaTasks/>),
-      getItem("Land Management", '/land-management', <TbColumns3/>),
-      getItem("Seed Management", '/seed-management', <RiSeedlingLine/>),
+      getItem("Farm Information", "/farm-info", <TbHomeEco />),
+      getItem(
+        "Farm Project Management",
+        "/farm-project-management",
+        <FaTasks />
+      ),
+      getItem("Land Management", "/land-management", <TbColumns3 />),
+      getItem("Seed Management", "/seed-management", <RiSeedlingLine />),
     ];
-  }else if (userName.role === UserRole.Staff && userName.department ===2) {
-    items = [
-      getItem("Harvest Management", "/harvest-management"),
-    ];
+  } else if (userName.role === UserRole.Staff && userName.department === 2) {
+    items = [getItem("Harvest Management", "/harvest-management")];
   } else if (userName.role === UserRole.Staff && userName.department === 3) {
-    items = [
-      getItem("Transport Management", "/transport-management"),
-    ];
+    items = [getItem("Transport Management", "/transport-management")];
   } else if (userName.role == UserRole.Staff && userName.department === 4) {
-    items = [
-      getItem("Warehouse Management", "/warehouse-management"),
-    ];
+    items = [getItem("Warehouse Management", "/warehouse-management")];
   } else if (userName.role == UserRole.Staff && userName.department === 5) {
-    items = [
-      getItem("Pruduction Management", "/produce-management"),
-    ];
+    items = [getItem("Pruduction Management", "/produce-management")];
   }
-  
+
+  // Common pages in app
+  // items.push(getItem("Test", "/test"));
 
   return (
     <Menu
@@ -137,7 +139,7 @@ export const MenuApp = () => {
       selectedKeys={[path]}
       mode="inline"
       items={items}
-      style={{minHeight: "100vh"}}
+      style={{ height: "100vh" }}
       theme="light"
     ></Menu>
   );

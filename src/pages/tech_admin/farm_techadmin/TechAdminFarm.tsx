@@ -117,7 +117,7 @@ export const TechAdminFarm = () => {
         </div>
         <div className="content-page">
           <Col>
-          <Row style={{paddingBottom: '12px', justifyContent: 'space-between'}}>
+          <Row style={{paddingBottom: '12px', justifyContent: 'space-between', alignItems: 'center'}}>
               <Row style={{width:'80%'}}>
                 <div className="label-search">
                   Find farm

@@ -1,4 +1,5 @@
 import ApiCommonService from "@/api/api_common/api_common";
+import { mainColor } from "@/utils/app_color";
 import { Button, Col, Form, Input, Row } from "antd";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +10,7 @@ const ForgotPassword = () => {
 
   const [email, setEmail] = useState<string>();
 
-  const [otpCode, setOtpCode] = useState<string>();
+  const [otpCodeId, setOtpCodeId] = useState<string>();
 
   const onSendEmail =  async(value: any) => {
     setEmail(value.email);
@@ -18,9 +19,9 @@ const ForgotPassword = () => {
     const result : any = await ApiCommonService.resetPassword(value);
 
     if(result.otpCode !== null || result.otpCode !== undefined) {
-      setOtpCode(result.otpCode);
+      setOtpCodeId(result._id);
     }
-    console.log(result.otpCode);
+    console.log(result._id);
   };
 
   const [openOTP, setOpenOTP] = useState(false);
@@ -73,6 +74,8 @@ const ForgotPassword = () => {
                           marginTop: "16px",
                           width: "80px",
                           borderRadius: "4px",
+                          backgroundColor: mainColor,
+                          borderColor: mainColor,
                         }}
                         type="primary"
                         size="large"
@@ -113,6 +116,8 @@ const ForgotPassword = () => {
                           marginTop: "16px",
                           width: "80px",
                           borderRadius: "4px",
+                          backgroundColor: mainColor,
+                          borderColor: mainColor,
                         }}
                         type="primary"
                         size="large"

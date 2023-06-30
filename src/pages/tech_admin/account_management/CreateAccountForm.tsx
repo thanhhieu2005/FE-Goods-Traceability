@@ -1,6 +1,7 @@
 import { Button, Modal, Input, Form, Select } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import { ButtonStyle } from "@/utils/style_common";
 
 const CreateAccountForm: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,7 +22,7 @@ const CreateAccountForm: React.FC = () => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal} icon={<PlusOutlined />}>
+      <Button type="primary" style={ButtonStyle()} onClick={showModal} icon={<PlusOutlined />}>
         Create New
       </Button>
       <Modal

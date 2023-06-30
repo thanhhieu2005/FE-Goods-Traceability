@@ -83,7 +83,7 @@ export const parseListUserInfo = (data: any) => {
     userDetail.walletAddress = data.walletAddress;
     userDetail.role = data.role as UserRole;
     userDetail.department = data.role == 4 ? data.department : null;
-    userDetail.farmList = farmList;
+    // userDetail.farmList = farmList;
     userDetail.phoneNumber = data.phoneNumber;
     userDetail.isOwner = data.isOwner;
     userDetail.address = data.address;

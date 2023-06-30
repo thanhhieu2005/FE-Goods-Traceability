@@ -1,7 +1,8 @@
 import UserManagementService from "@/api/admin_tech/user_management_service";
 import StaffServices from "@/api/system_admin/staff_service";
 import { successMessage } from "@/components/Message/MessageNoti";
-import { contentLayout, tailUpdateContentLayout } from "@/styles/content_layout";
+import SpinApp from "@/components/Spin/SpinApp";
+import { contentLayout } from "@/styles/content_layout";
 import { StaffDepartment, UserDetailModel, parseUserDetail } from "@/types/user";
 import { parseToStringDepartment } from "@/utils/format_state";
 import { UserOutlined } from "@ant-design/icons";
@@ -14,8 +15,7 @@ import {
   Input,
   Modal,
   Row,
-  Select,
-  Spin,
+  Select
 } from "antd";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -95,6 +95,7 @@ const StaffInfoDetail = () => {
           open={isUpdateModalOpen}
           maskClosable={false}
           footer={null}
+          closable={false}
         >
           <Form
             onFinish={(value) => {
@@ -248,9 +249,7 @@ const StaffInfoDetail = () => {
             </Col>
           ) : (
             <div>
-              <Spin tip="Loading" size="large">
-                <div className="content-page" />
-              </Spin>
+              <SpinApp />
             </div>
           )}
         </div>

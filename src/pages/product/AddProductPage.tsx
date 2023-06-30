@@ -1,3 +1,4 @@
+import ApiCommonService from "@/api/api_common/api_common";
 import ProductionSupervisionServices from "@/api/produce_api";
 import { errorMessage } from "@/components/Message/MessageNoti";
 import {
@@ -38,18 +39,12 @@ const AddProductPage = () => {
   const handleSubmitCreateProduct = async (value: any) => {
     setLoadingButton(true);
 
-    const formatFileValue = productImages.map((file: File) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      return formData;
-    });
-
-    console.log(formatFileValue);
+    console.log(linkImages);
 
     const finalValue = {
       ...value,
       projectId: produce.projectId,
-      productImage: formatFileValue[0],
+      productImage: linkImages,
     };
 
     console.log(finalValue);
@@ -83,19 +78,23 @@ const AddProductPage = () => {
     }
   };
 
-  const [productImages, setProductImages] = useState<File[]>([]);
-
   useEffect(() => {
     return () => {
-      productImages.forEach((e: any) => {
-        URL.revokeObjectURL(e.preview);
+      linkImages.forEach((e: any) => {
+        handleDeleteLinkImage(e);
       });
 
-      setProductImages([]);
+      setLinkImages([]);
     };
   }, []);
 
-  const handlePreviewProductImages = (e: any) => {
+  const handleDeleteLinkImage = async (url: string) => {
+    await ApiCommonService.deleteImage(url);
+  };
+
+  const [linkImages, setLinkImages] = useState<any[]>([]);
+
+  const handlePreviewProductImages = async (e: any) => {
     if (e.target.files.length !== 0) {
       const file = e.target.files[0];
 
@@ -103,7 +102,17 @@ const AddProductPage = () => {
         errorMessage("File format is incorrect!");
       } else {
         console.log(file);
-        setProductImages((prev) => [...prev, file]);
+
+        const formData = new FormData();
+        formData.append("images", file);
+
+        const res: any = await ApiCommonService.uploadImage(formData);
+
+        console.log(res);
+
+        if (res.status === 200) {
+          setLinkImages((prev) => [...prev, res.data[0]]);
+        }
       }
     }
   };
@@ -229,20 +238,23 @@ const AddProductPage = () => {
                     <input type="file" onChange={handlePreviewProductImages} />
                   </Row>
                   <Row>
-                    {productImages.length > 0 ? (
-                      productImages.map((file: any, key: number) => (
+                    {linkImages.length > 0 ? (
+                      linkImages.map((link: any, key: number) => (
                         <div key={key} className="common-image">
                           <Col>
-                            <Image
-                              src={URL.createObjectURL(file)}
-                              width="100px"
-                            />
+                            <Image src={link} width="100px" />
                           </Col>
                           <Button
-                            onClick={() => {
-                              setProductImages((prev) =>
-                                prev.filter((file1, key1) => key !== key1)
-                              );
+                            onClick={async () => {
+                              console.log(link);
+                              const res: any =
+                                await ApiCommonService.deleteImage(link);
+
+                              if (res.status == 200) {
+                                setLinkImages((prev) =>
+                                  prev.filter((link1, key1) => key !== key1)
+                                );
+                              }
                             }}
                             style={{
                               width: "100%",

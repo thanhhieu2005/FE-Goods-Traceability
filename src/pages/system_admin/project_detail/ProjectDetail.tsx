@@ -1,5 +1,8 @@
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
-import { GetProjectDetailByID, UpdateProjectInfo } from "@/api/system_admin/project_api";
+import {
+  GetProjectDetailByID,
+  UpdateProjectInfo,
+} from "@/api/system_admin/project_api";
 import FarmProjectInfoCard from "@/components/Card/FarmProjectInfoCard";
 import HarvestInfoCard from "@/components/Card/HarvestInfoCard";
 import ProduceInfoCard from "@/components/Card/ProduceInfoCard";
@@ -10,23 +13,15 @@ import { FarmInfoModel } from "@/types/farm_model";
 import { ProjectDetailModel } from "@/types/project_model";
 import { greyBlurColor, mainColor } from "@/utils/app_color";
 import { checkCurrentStepProject } from "@/utils/check_current_step";
-import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
-import {
-  Breadcrumb,
-  Button,
-  Col,
-  Empty,
-  Row,
-  Spin,
-  Steps
-} from "antd";
+import { FileSearchOutlined, FormOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { Breadcrumb, Button, Col, Empty, Row, Spin, Steps } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../common.scss";
 import EditProject from "./EditProject";
 import "./ProjectDetail.scss";
-
+import SpinApp from "@/components/Spin/SpinApp";
 
 const ProjectDetail = () => {
   const navigate = useNavigate();
@@ -34,7 +29,6 @@ const ProjectDetail = () => {
   const [dataProject, setDataProject] = useState<ProjectDetailModel>();
 
   const { state: projectId } = useLocation();
-
 
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -111,15 +105,14 @@ const ProjectDetail = () => {
 
     const res: any = await UpdateProjectInfo(value, projectId);
 
-    if(res.status === 200) {
-      console.log("res",res);
+    if (res.status === 200) {
+      console.log("res", res);
 
       setDataProject(res.data.project);
 
       setOpenModalUpdate(false);
     }
-  }
-
+  };
 
   return (
     <>
@@ -174,14 +167,28 @@ const ProjectDetail = () => {
                         <Button
                           type="default"
                           size="large"
-                          
+                          icon={
+                            <ShoppingCartOutlined style={{ fontSize: "18px" }} />
+                          }
+                          onClick={() => {
+                            navigate(`/project/product/${dataProject.projectId}`, { state: dataProject.projectId });
+                          }}
+                          style={{ marginRight: "16px", borderRadius: "4px" }}
+                        >
+                          View Products
+                        </Button>
+                      </div>
+                      <div>
+                        <Button
+                          type="default"
+                          size="large"
                           icon={
                             <FileSearchOutlined style={{ fontSize: "18px" }} />
                           }
                           onClick={() => {
                             navigate("/project-log");
                           }}
-                          style={{ marginRight: "16px", borderRadius: '4px' }}
+                          style={{ marginRight: "16px", borderRadius: "4px" }}
                         >
                           View Log
                         </Button>
@@ -190,7 +197,7 @@ const ProjectDetail = () => {
                         type="primary"
                         icon={<FormOutlined />}
                         size="large"
-                        style={{ borderRadius: '4px' }}
+                        style={{ borderRadius: "4px" }}
                         onClick={() => {
                           // disabled = false;
                           // setComponentDisabled(disabled);
@@ -354,7 +361,7 @@ const ProjectDetail = () => {
                     myProps={{
                       farm: farm,
                       dataProject: dataProject,
-                    }}                  
+                    }}
                   />
                 ) : (
                   <>
@@ -400,7 +407,9 @@ const ProjectDetail = () => {
               >
                 <Col style={{ display: "flex" }} span={12}>
                   <WarehouseStorageInfoCard
-                    myProps={{ dataWarehouseStorage: dataProject.warehouseStorage }}
+                    myProps={{
+                      dataWarehouseStorage: dataProject.warehouseStorage,
+                    }}
                   />
                 </Col>
                 <Col style={{ display: "flex" }} span={12}>
@@ -412,9 +421,7 @@ const ProjectDetail = () => {
             </Col>
           ) : (
             <>
-              <Spin tip="Loading" size="large">
-                <div className="content-page" style={{ padding: "64px" }} />
-              </Spin>
+              <SpinApp />
             </>
           )}
         </div>
