@@ -228,6 +228,25 @@ const ProjectServices = {
     } catch(err) {
         return err;
     }
+  },
+  getProductsByProjectId: async(projectId: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.get(
+        '/product/all-by-project',
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+          params: {
+            projectId: projectId,
+          },
+        },
+      );
+
+      return res;
+    } catch(err) {
+      return err;
+    }
   }
 };
 

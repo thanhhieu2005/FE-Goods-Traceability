@@ -2,6 +2,7 @@ import FarmServices from "@/api/farm/farm_api";
 import DrawerUpdateFarmProjectInfo from "@/components/Drawer/Farm/DrawerUpdateFarmProjectInfo";
 import DrawerUpdateFarmPropject from "@/components/Drawer/Farm/DrawerUpdateFarmPropject";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { FarmProjectModel, LandState } from "@/types/farm_model";
 import { CommonProjectState } from "@/types/project_model";
@@ -688,9 +689,7 @@ const FarmProjectDetail = () => {
             </Row>
           </>
         ) : (
-          <Spin tip="Loading" size="large">
-            <div className="content-page" />
-          </Spin>
+          <SpinApp/>
         )}
       </Col>
     </>

@@ -1,5 +1,5 @@
 export const mainColor = "#e8b26e";
-export const backgroundColor ="#111d2c";
+export const backgroundColor ="black";
 export const textMainColor = '#111d2c';
 export const blackColor = 'black';
 export const whiteColor = 'white';

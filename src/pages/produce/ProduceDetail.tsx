@@ -6,11 +6,11 @@ import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
-import { ProductModel } from "@/types/product_model";
+import { ProductImageModel, ProductModel } from "@/types/product_model";
 import { CommonProjectState } from "@/types/project_model";
 import { ProductionModel, parseProductionData } from "@/types/step_tracking";
 import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Col, Empty, Modal, Row } from "antd";
+import { Breadcrumb, Button, Col, Empty, Modal, Row, Image } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -40,8 +40,6 @@ function ProduceDetail() {
         const res: any = await ProductServices.getDetailProduct(
           dataProduction?.projectId
         );
-
-        console.log(res);
 
         if (res.status === 200) {
           setDataProducts(res.data);
@@ -90,8 +88,6 @@ function ProduceDetail() {
       errorMessage("Update Failed!");
     }
   };
-
-  console.log(dataProducts);
 
   return (
     <>
@@ -373,8 +369,35 @@ function ProduceDetail() {
                                   content: product.measureUnit,
                                 }}
                               />
+
+                              <>
+                                {product.productImage.length > 0 ? (
+                                  <Row style={{ paddingTop: "24px" }}>
+                                    <p className="title-text">
+                                      Product Images:
+                                    </p>
+                                    <div style={{ padding: "12px" }} />
+                                    {product.productImage.map(
+                                      (
+                                        image: ProductImageModel,
+                                        key: number
+                                      ) => (
+                                        <div key={key} className="common-image">
+                                          <Image
+                                            src={image.productImageUrl}
+                                            style={{ marginRight: "12px" }}
+                                          />
+                                        </div>
+                                      )
+                                    )}
+                                  </Row>
+                                ) : (
+                                  <></>
+                                )}
+                              </>
+                              <div className="divided" />
                             </Row>
-                            <div className="space-padding"/>
+                            <div className="space-padding" />
                           </div>
                         ))
                       ) : (

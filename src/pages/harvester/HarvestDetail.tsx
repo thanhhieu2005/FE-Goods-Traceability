@@ -14,6 +14,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../common.scss";
+import SpinApp from "@/components/Spin/SpinApp";
 
 const HarvestDetail = () => {
   const [dataHarvest, setDataHarvest] = useState<HarvestModel>();
@@ -238,9 +239,7 @@ const HarvestDetail = () => {
             </Col>
           ) : (
             <>
-              <Spin tip="Loading" size="large">
-                <div className="content-page" style={{ padding: "64px" }} />
-              </Spin>
+              <SpinApp/>
             </>
           )}
         </div>

@@ -24,6 +24,7 @@ import { createContentLayout } from "@/styles/content_layout";
 import { ShowModalCreateNewItem } from "@/components/Modal/ModalCreateItem";
 import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import SpinApp from "@/components/Spin/SpinApp";
 
 const LandManagement = () => {
   const [dataLands, setLands] = useState<LandModel[]>([]);
@@ -380,9 +381,7 @@ const LandManagement = () => {
             </div>
           ) : (
             <>
-              <Spin tip="Loading" size="large">
-                <div className="content-page" />
-              </Spin>
+              <SpinApp />
             </>
           )}
         </Col>

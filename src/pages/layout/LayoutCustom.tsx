@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Layout } from "antd";
+import { Col, Layout, Menu } from "antd";
 import { HeaderCustom } from "@/components/Header/Header";
 import { MenuApp } from "@/components/Menu/MenuApp";
 import { Outlet } from "react-router-dom";
 
 import "./LayoutCustom.scss";
+import CommonMenuApp from "@/components/Menu/CommonMenuApp";
 
 const { Sider } = Layout;
 
@@ -15,28 +16,40 @@ export const LayoutCustom = () => {
       <Layout hasSider>
         <Sider
           width={300}
-          theme = 'light'
+          theme="light"
           breakpoint="lg"
           style={{
-            overflow: "auto",
-            height: "100vh",
+            overflow: "hidden",
+            // height: "100%",
             position: "fixed",
             left: 0,
             top: 0,
             bottom: 0,
-            marginTop: '64px'
+            marginTop: "64px",
           }}
         >
           {/* <div className="logo" /> */}
-          <MenuApp/>
+          <Col
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "column",
+              height: "100%",
+            }}
+          >
+            <MenuApp />
+            {/* <CommonMenuApp /> */}
+          </Col>
         </Sider>
-        <Layout className="site-layout" 
-          style={{ 
-            padding: '48px 24px 24px', 
-            minHeight: '100vh', 
-            marginTop: "40px", 
-            marginLeft: "300px"
-          }}>
+        <Layout
+          className="site-layout"
+          style={{
+            padding: "48px 24px 24px",
+            minHeight: "100vh",
+            marginTop: "40px",
+            marginLeft: "300px",
+          }}
+        >
           <Outlet />
         </Layout>
       </Layout>

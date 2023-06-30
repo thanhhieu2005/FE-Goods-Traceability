@@ -95,7 +95,7 @@ export const parseFarmInfo = (data: any) => {
     farmInfo.farmOwner = data.farmOwner;
     farmInfo.farmName = data.farmName;
     farmInfo.farmAddress = data.farmAddress;
-    farmInfo.farmerList = data.farmers.farmers;
+    farmInfo.farmerList = data.farmerList.farmers;
     farmInfo.farmPhoneNumber = data.farmPhoneNumber;
     farmInfo.statusFarm = data.statusFarm as StatusFarm;
   

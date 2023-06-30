@@ -89,7 +89,6 @@ export const AccountManagement = () => {
   useEffect(() => {
       UserManagementService.getAllUserService().then((res : any) => {
       if(res?.status === 200) {
-        console.log("a", res.data);
         res.data.map((element : any) => {
           const user = parseListUserInfo(element) as ListUserInfo;
           setDataUsers((prevUser) => [...prevUser, user]);
@@ -113,7 +112,7 @@ export const AccountManagement = () => {
         </div>
         <div className="content-page">
           <Col>
-            <Row style={{paddingBottom: '12px', justifyContent: 'space-between'}}>
+            <Row style={{paddingBottom: '12px', justifyContent: 'space-between', alignItems: 'center'}}>
               <Row style={{width:'80%'}}>
                 <div className="label-search">
                   Find account

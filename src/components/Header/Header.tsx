@@ -1,3 +1,4 @@
+import { icLogo } from "@/assets";
 import { logout } from "@/redux/authenSlice";
 import { useAppDispatch } from "@/redux/hook";
 import { backgroundColor } from "@/utils/app_color";
@@ -8,7 +9,6 @@ import { Avatar, Col, Dropdown, Layout, Row, message } from "antd";
 import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/images/img-logo.png";
 import { connect } from "../../features/connectWalletAPI";
 import "./Header.scss";
 
@@ -34,7 +34,7 @@ export const HeaderCustom: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const role = checkRole(userName.role);
+  const role = checkRole(userName.role, userName.department);
 
   const fetch = useCallback(() => {
     dispatch(connect());
@@ -67,7 +67,8 @@ export const HeaderCustom: React.FC = () => {
     if(e.key === '2') {
       onLogout();
     } else if(e.key === "1") {
-      message.info("Feature is delevoping!");
+      // message.info("Feature is delevoping!");
+      navigate('/about-us');
     }
   }
 
@@ -110,7 +111,7 @@ export const HeaderCustom: React.FC = () => {
           >
             <img
               style={{ width: "48px", margin: "0 12px", cursor: "pointer" }}
-              src={logo}
+              src={icLogo}
             />
             <div className="app-name">HK Solution</div>
           </Row>
@@ -121,8 +122,8 @@ export const HeaderCustom: React.FC = () => {
             gap: 12,
           }}
         >
-          <span className="item-header item-role"> {role} </span>
-          <span className="item-header">Hi, {userName.firstName}</span>
+          <span className="item-header item-role" style={{ color: "#e8b26e"}}> {role} </span>
+          <span className="item-header" style={{ color: "#e8b26e"}}>Hi, {userName.firstName}</span>
           <Dropdown 
             menu={{
               items,

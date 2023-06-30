@@ -1,6 +1,7 @@
 import FarmServices from "@/api/farm/farm_api";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import { ShowModalCreateNewItem } from "@/components/Modal/ModalCreateItem";
+import SpinApp from "@/components/Spin/SpinApp";
 import { createContentLayout } from "@/styles/content_layout";
 import { SeedModel } from "@/types/farm_model";
 import { EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
@@ -395,9 +396,7 @@ const SeedManagement = () => {
             </div>
           ) : (
             <div>
-              <Spin tip="Loading" size="large">
-                <div className="content-page" />
-              </Spin>
+              <SpinApp/>
             </div>
           )}
         </Col>

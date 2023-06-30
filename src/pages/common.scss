@@ -193,5 +193,94 @@
     justify-items: center;
 }
 
+// input
+.ant-input-affix-wrapper.ant-input-password:hover {
+    border-color: #e8b26e !important;
+}
 
+.ant-input-affix-wrapper-focused {
+    border-color: #e8b26e !important;
+    box-shadow: 0 0 0 2px rgba(232, 178, 110, 0.2) !important;
+}
 
+.ant-input:focus {
+    border-color: #e8b26e !important; 
+    box-shadow: 0 0 0 2px rgba(232, 178, 110, 0.2) !important;
+}
+
+.ant-input:hover {
+    border-color: #e8b26e !important;
+}
+
+// table 
+.ant-btn.ant-btn-primary.ant-input-search-button {
+    background-color: #e8b26e;
+    color: white;
+    border-color: #e8b26e;
+}
+
+.ant-pagination-item-active {
+    border-color: #e8b26e !important;
+}
+
+.ant-pagination-item-active a {
+    color: #e8b26e !important;
+}
+
+.ant-pagination-item a:hover {
+    color: #e8b26e !important;
+}
+
+.ant-pagination-item:hover {
+    border-color: #e8b26e !important;
+}
+
+.ant-pagination-next {
+    border-color: #e8b26e !important;
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-color: #e8b26e !important;
+    box-shadow: 0 0 0 2px rgba(232, 178, 110, 0.2) !important;
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector:hover{
+    border-color: #e8b26e !important;
+}
+
+.ant-pagination-item-link:hover {
+    border-color: #e8b26e !important;
+}
+
+.ant-pagination-item-link .anticon .anticon-right:hover {
+    color: #e8b26e !important;
+}
+
+// menu item
+.ant-menu-item-selected {
+    color: #e8b26e !important;
+}
+
+.ant-menu-inline .ant-menu-item:after{
+    border-right: 3px solid #e8b26e !important;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    background-color: rgba(232, 178, 110, 0.1) !important;
+}
+
+.ant-menu-item-active {
+    color: #e8b26e !important;
+}
+
+// button
+.ant-btn-primary {
+    background-color: #e8b26e !important;
+    border-color: #e8b26e !important;
+    border-radius: '4px' !important;
+}
+
+// spin
+.ant-spin-dot-item {
+    background-color: #e8b26e !important;
+}

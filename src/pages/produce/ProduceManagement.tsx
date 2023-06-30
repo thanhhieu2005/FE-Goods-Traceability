@@ -118,7 +118,7 @@ function ProduceManagement() {
       <Col>
         <div className="header-content">
           <Col>
-            <div className="title-header">Your Harvest Projects</div>
+            <div className="title-header">Your Production Projects</div>
             <div className="sub-title-header">
               List of projects that you are managing and assigned to perform
             </div>

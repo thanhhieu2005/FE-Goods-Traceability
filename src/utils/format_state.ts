@@ -1,5 +1,5 @@
 import { CommonProjectState } from "@/types/project_model"
-import { StaffDepartment } from "@/types/user";
+import { StaffDepartment, UserRole } from "@/types/user";
 import { mainColor } from "./app_color";
 
 export const parseToStringCommonState =(state: CommonProjectState) => {
@@ -46,6 +46,22 @@ export const parseToStringDepartment = (department: StaffDepartment) => {
             return 'Warehouse Supervision';
         case StaffDepartment.SupervisingProducer:
             return 'Supervising Producer';
+        default:
+            return '';
+    }
+}
+
+export const parseToStringRole = (role: UserRole) => {
+    switch(role) {
+        case UserRole.TechnicalAdmin:
+            return 'Technical Admin';
+        case UserRole.SystemAdmin:
+            return 'System Admin';
+        case UserRole.Staff:
+            return 'Staff';
+        case UserRole.Farmer:
+            return 'Farmer';
+       
         default:
             return '';
     }
