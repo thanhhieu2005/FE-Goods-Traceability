@@ -27,7 +27,7 @@ import FarmProjectDetail from "@/pages/farm/farm_project/FarmProjectDetail";
 import LandManagement from "@/pages/farm/land/LandManagement";
 import SeedManagement from "@/pages/farm/seed/SeedManagement";
 import CreateFarmProject from "@/pages/farm/farm_project/CreateFarmProject";
-import ProjectLog from "../pages/system_admin/project_detail/project_log/Project_Log";
+import ProjectLog from "../pages/system_admin/project_detail/project_log/ProjectLog";
 import CreateNewProject from "@/pages/system_admin/project_management/CreateNewProject";
 import StaffManagement from "@/pages/system_admin/staff_management/StaffManagement";
 import StaffInfoDetail from "@/pages/system_admin/staff_management/StaffInfoDetail";
@@ -105,7 +105,7 @@ const Routers = () => {
                     element={<ProjectDetail />}
                   />
 
-                  <Route path="/project-log" element={<ProjectLog />} />
+                  <Route path="/project-log/:id" element={<ProjectLog />} />
                   <Route
                     path="/create-new-project"
                     element={<CreateNewProject />}

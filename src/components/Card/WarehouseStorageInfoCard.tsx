@@ -2,17 +2,21 @@ import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
 import { WarehouseStorageModel } from "@/types/step_tracking";
-import { FormOutlined } from "@ant-design/icons";
+import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import LabelContentItem from "../Label/LabelContentItem";
 import moment from "moment";
 import ProjectServices from "@/api/system_admin/project_api";
 import { errorMessage, successMessage } from "../Message/MessageNoti";
 import ModalUpdateInspector from "../Modal/ModalUpdateInspector";
 import { StaffDepartment } from "@/types/user";
+import { useNavigate } from "react-router-dom";
+import { LogEnum } from "@/types/project_log_model";
 
 const WarehouseStorageInfoCard = ({ myProps: props }: any) => {
   const [dataWarehouseStorage, setDataWarehouseStorage] =
     useState<WarehouseStorageModel>(props.dataWarehouseStorage);
+
+  const navigate = useNavigate();
 
   const [isModalUpdate, setIsModalUpdate] = useState(false);
 
@@ -89,17 +93,35 @@ const WarehouseStorageInfoCard = ({ myProps: props }: any) => {
             >
               Warehouse Storage Supervision
             </p>
-            <Button
-              type="primary"
-              icon={<FormOutlined />}
-              size="middle"
-              style={{ borderRadius: "4px" }}
-              onClick={() => {
-                handleOnClickUpdateInspector();
-              }}
-            >
-              Edit Inspector
-            </Button>
+            <Row>
+              <Button
+                  type="default"
+                  size="middle"
+                  icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                  onClick={() => {
+                    navigate(`/project-log/${dataWarehouseStorage.warehouseStorageId}`, {
+                      state: {
+                        "listLog": props.warehouseStorageLogList,
+                        "type": LogEnum.Warehouse,
+                      }
+                    })
+                  }}
+                >
+                  View log
+                </Button>
+                <div style={{padding: '4px'}}/>
+              <Button
+                type="primary"
+                icon={<FormOutlined />}
+                size="middle"
+                style={{ borderRadius: "4px" }}
+                onClick={() => {
+                  handleOnClickUpdateInspector();
+                }}
+              >
+                Edit Inspector
+              </Button>
+            </Row>
           </Row>
           <div className="space-padding" />
           <LabelContentItem

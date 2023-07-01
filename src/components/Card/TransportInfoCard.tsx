@@ -2,18 +2,22 @@ import { TransportModel } from "@/types/step_tracking";
 import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
-import { FormOutlined } from "@ant-design/icons";
+import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import LabelContentItem from "../Label/LabelContentItem";
 import moment from "moment";
 import { errorMessage, successMessage } from "../Message/MessageNoti";
 import ProjectServices from "@/api/system_admin/project_api";
 import ModalUpdateInspector from "../Modal/ModalUpdateInspector";
 import { StaffDepartment } from "@/types/user";
+import { useNavigate } from "react-router-dom";
+import { LogEnum } from "@/types/project_log_model";
 
 const TransportInfoCard = ({ myProps: props }: any) => {
   const [dataTransport, setDatTransport] = useState<TransportModel>(
     props.dataTransport
   );
+
+  const navigate = useNavigate();
 
   const [
     isModalUpdateTransportSupervision,
@@ -89,17 +93,35 @@ const TransportInfoCard = ({ myProps: props }: any) => {
             >
               Transport Supervision
             </p>
-            <Button
-              type="primary"
-              icon={<FormOutlined />}
-              size="middle"
-              style={{ borderRadius: "4px" }}
-              onClick={() => {
-                hanleOnClickUpdateInspector();
-              }}
-            >
-              Edit Inspector
-            </Button>
+            <Row>
+              <Button
+                  type="default"
+                  size="middle"
+                  icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                  onClick={() => {
+                    navigate(`/project-log/${dataTransport.transportId}`, {
+                      state: {
+                        "listLog": props.transportLogList,
+                        "type": LogEnum.Transport,
+                      }
+                    })
+                  }}
+                >
+                  View log
+                </Button>
+                <div style={{padding: '4px'}}/>
+              <Button
+                type="primary"
+                icon={<FormOutlined />}
+                size="middle"
+                style={{ borderRadius: "4px" }}
+                onClick={() => {
+                  hanleOnClickUpdateInspector();
+                }}
+              >
+                Edit Inspector
+              </Button>
+            </Row>
           </Row>
           <div className="space-padding" />
           <LabelContentItem

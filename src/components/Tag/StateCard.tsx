@@ -47,7 +47,7 @@ const StateCard = ({ myProps: props }: any) => {
               borderRadius: "4px",
             }}
           >
-            COMPLETE
+            CANCELED
           </Tag>
         </div>
       );
@@ -62,7 +62,7 @@ const StateCard = ({ myProps: props }: any) => {
               borderRadius: "4px",
             }}
           >
-            COMPLETE
+            PENDING
           </Tag>
         </div>
       );

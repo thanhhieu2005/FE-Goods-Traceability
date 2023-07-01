@@ -193,6 +193,19 @@
     justify-items: center;
 }
 
+// Tag card border common
+.card-border-title {
+    background-color: rgba(232, 178, 110, 0.5);
+    color: black;
+    border-radius: 4px;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-left: 8px;
+    display: inline-flex;
+    border: 1px solid #999DA0;
+}
+
 // input
 .ant-input-affix-wrapper.ant-input-password:hover {
     border-color: #e8b26e !important;
