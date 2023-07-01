@@ -2,16 +2,22 @@ import { HarvestModel } from "@/types/step_tracking";
 import { Button, Col, Row } from "antd";
 import React, { useState } from "react";
 import StateCard from "../Tag/StateCard";
-import { FormOutlined } from "@ant-design/icons";
+import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import LabelContentItem from "../Label/LabelContentItem";
 import moment from "moment";
 import ModalUpdateInspector from "../Modal/ModalUpdateInspector";
 import { StaffDepartment } from "@/types/user";
 import ProjectServices from "@/api/system_admin/project_api";
 import { errorMessage, successMessage } from "../Message/MessageNoti";
+import { useNavigate } from "react-router-dom";
+import { LogEnum } from "@/types/project_log_model";
 
 const HarvestInfoCard = ({ myProps: props }: any) => {
-  const [dataHarvest, setDataHarvest] = useState<HarvestModel>(props.dataHarvest);
+  const [dataHarvest, setDataHarvest] = useState<HarvestModel>(
+    props.dataHarvest
+  );
+
+  const navigate = useNavigate();
 
   // update inspector in step
   const [isModalUpdateHarvestor, setIsModalUpdateHarvestor] = useState(false);
@@ -27,9 +33,12 @@ const HarvestInfoCard = ({ myProps: props }: any) => {
   const onHandleAssignInspector = async (value: any) => {
     console.log(value.emailInspector, dataHarvest.harvestId);
 
-    const res: any = await ProjectServices.addHarvestorIntoProject(value.harvestor, dataHarvest.harvestId);
+    const res: any = await ProjectServices.addHarvestorIntoProject(
+      value.harvestor,
+      dataHarvest.harvestId
+    );
 
-    if(res.status === 200) {
+    if (res.status === 200) {
       setDataHarvest(res.data);
       successMessage("Assing inspector success!");
     } else {
@@ -38,12 +47,14 @@ const HarvestInfoCard = ({ myProps: props }: any) => {
     }
 
     setIsModalUpdateHarvestor(false);
-  }
+  };
 
   const onHandleRemoveHarvestor = async () => {
-    const res: any = await ProjectServices.removeHarvestorInProject(dataHarvest.harvestId);
+    const res: any = await ProjectServices.removeHarvestorInProject(
+      dataHarvest.harvestId
+    );
 
-    if(res.status === 200) {
+    if (res.status === 200) {
       setDataHarvest(res.data);
       successMessage("Remove Harvestor Successfully!");
     } else {
@@ -51,7 +62,7 @@ const HarvestInfoCard = ({ myProps: props }: any) => {
     }
 
     setIsModalUpdateHarvestor(false);
-  }
+  };
 
   return (
     <>
@@ -84,17 +95,35 @@ const HarvestInfoCard = ({ myProps: props }: any) => {
             >
               Harvest Inspection
             </p>
-            <Button
-              type="primary"
-              icon={<FormOutlined />}
-              size="middle"
-              style={{ borderRadius: "4px" }}
-              onClick={() => {
-                handleOnClickUpdateHarvestor();
-              }}
-            >
-              Edit Inspector
-            </Button>
+            <Row>
+              <Button
+                type="default"
+                size="middle"
+                icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                onClick={() => {
+                  navigate(`/project-log/${dataHarvest.harvestId}`, {
+                    state: {
+                      "listLog": props.harvestLogList,
+                      "type": LogEnum.Harvest,
+                    }
+                  })
+                }}
+              >
+                View log
+              </Button>
+              <div style={{padding: '4px'}}/>
+              <Button
+                type="primary"
+                icon={<FormOutlined />}
+                size="middle"
+                style={{ borderRadius: "4px" }}
+                onClick={() => {
+                  handleOnClickUpdateHarvestor();
+                }}
+              >
+                Edit Inspector
+              </Button>
+            </Row>
           </Row>
           <div className="space-padding" />
           <LabelContentItem

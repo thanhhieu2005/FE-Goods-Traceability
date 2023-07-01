@@ -1,5 +1,5 @@
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
-import {
+import ProjectServices, {
   GetProjectDetailByID,
   UpdateProjectInfo,
 } from "@/api/system_admin/project_api";
@@ -13,7 +13,11 @@ import { FarmInfoModel } from "@/types/farm_model";
 import { ProjectDetailModel } from "@/types/project_model";
 import { greyBlurColor, mainColor } from "@/utils/app_color";
 import { checkCurrentStepProject } from "@/utils/check_current_step";
-import { FileSearchOutlined, FormOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  FileSearchOutlined,
+  FormOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import { Breadcrumb, Button, Col, Empty, Row, Spin, Steps } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -22,6 +26,7 @@ import "../../common.scss";
 import EditProject from "./EditProject";
 import "./ProjectDetail.scss";
 import SpinApp from "@/components/Spin/SpinApp";
+import { LogEnum, LogModel } from "@/types/project_log_model";
 
 const ProjectDetail = () => {
   const navigate = useNavigate();
@@ -31,6 +36,20 @@ const ProjectDetail = () => {
   const { state: projectId } = useLocation();
 
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Logs of Project
+
+  const [projectLogList, setProjectLogList] = useState<LogModel[]>([]);
+
+  const [harvestLogList, setHarvestLogList] = useState<LogModel[]>([]);
+
+  const [transportLogList, setTransportLogList] = useState<LogModel[]>([]);
+
+  const [warehouseStorageLogList, setWarehouseStorageLogList] = useState<
+    LogModel[]
+  >([]);
+
+  const [produceLogList, setProduceLogList] = useState<LogModel[]>([]);
 
   useEffect(() => {
     GetProjectDetailByID(projectId).then((res: any) => {
@@ -42,6 +61,40 @@ const ProjectDetail = () => {
 
       setCurrentStep(currentStep);
     });
+
+    const getProjectLogsById = async () => {
+      const res: any = await ProjectServices.getProjectLogList(projectId);
+
+      // setProjectLogList(res.data.projectLogList);
+      if (res.status === 200) {
+        res.data.projectLogList.map((element: any) => {
+          const logModel = element.projectLog as LogModel;
+          setProjectLogList((prev) => [...prev, logModel]);
+        });
+
+        res.data.harvestLogList.map((element: any) => {
+          const harvestLogModel = element.log as LogModel;
+          setHarvestLogList((prev) => [...prev, harvestLogModel]);
+        });
+
+        res.data.transportLogList.map((element: any) => {
+          const transportLogList = element.log as LogModel;
+          setTransportLogList((prev) => [...prev, transportLogList]);
+        });
+
+        res.data.warehouseStorageLogList.map((element: any) => {
+          const warehouseLogList = element.log as LogModel;
+          setWarehouseStorageLogList((prev) => [...prev, warehouseLogList]);
+        });
+
+        res.data.produceLogList.map((element: any) => {
+          const produceLog = element.log as LogModel;
+          setProduceLogList((prev) => [...prev, produceLog]);
+        });
+      }
+    };
+
+    getProjectLogsById();
   }, [projectId]);
 
   const [farm, setFarm] = useState<FarmInfoModel>();
@@ -55,7 +108,6 @@ const ProjectDetail = () => {
           );
 
           if (res.status === 200) {
-            console.log("farm model", res.data);
             setFarm(res.data);
           }
         }
@@ -83,6 +135,9 @@ const ProjectDetail = () => {
     },
     {
       title: "Production",
+    },
+    {
+      title: "Complete Project",
     },
   ];
 
@@ -168,10 +223,15 @@ const ProjectDetail = () => {
                           type="default"
                           size="large"
                           icon={
-                            <ShoppingCartOutlined style={{ fontSize: "18px" }} />
+                            <ShoppingCartOutlined
+                              style={{ fontSize: "18px" }}
+                            />
                           }
                           onClick={() => {
-                            navigate(`/project/product/${dataProject.projectId}`, { state: dataProject.projectId });
+                            navigate(
+                              `/project/product/${dataProject.projectId}`,
+                              { state: dataProject.projectId }
+                            );
                           }}
                           style={{ marginRight: "16px", borderRadius: "4px" }}
                         >
@@ -186,7 +246,12 @@ const ProjectDetail = () => {
                             <FileSearchOutlined style={{ fontSize: "18px" }} />
                           }
                           onClick={() => {
-                            navigate("/project-log");
+                            navigate(`/project-log/${projectId}`, {
+                              state: {
+                                listLog: projectLogList,
+                                type: LogEnum.Project,
+                              },
+                            });
                           }}
                           style={{ marginRight: "16px", borderRadius: "4px" }}
                         >
@@ -391,12 +456,18 @@ const ProjectDetail = () => {
               >
                 <Col style={{ display: "flex" }} span={12}>
                   <HarvestInfoCard
-                    myProps={{ dataHarvest: dataProject.harvest }}
+                    myProps={{
+                      dataHarvest: dataProject.harvest,
+                      harvestLogList: harvestLogList,
+                    }}
                   />
                 </Col>
                 <Col style={{ display: "flex" }} span={12}>
                   <TransportInfoCard
-                    myProps={{ dataTransport: dataProject.transport }}
+                    myProps={{
+                      dataTransport: dataProject.transport,
+                      transportLogList: transportLogList,
+                    }}
                   />
                 </Col>
               </Row>
@@ -409,12 +480,16 @@ const ProjectDetail = () => {
                   <WarehouseStorageInfoCard
                     myProps={{
                       dataWarehouseStorage: dataProject.warehouseStorage,
+                      warehouseStorageLogList: warehouseStorageLogList,
                     }}
                   />
                 </Col>
                 <Col style={{ display: "flex" }} span={12}>
                   <ProduceInfoCard
-                    myProps={{ dataProduce: dataProject.produce }}
+                    myProps={{
+                      dataProduce: dataProject.produce,
+                      produceLogList: produceLogList,
+                    }}
                   />
                 </Col>
               </Row>

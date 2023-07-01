@@ -90,7 +90,7 @@ const ListProductsOfProject = () => {
                               borderColor: completedColor,
                             }}
                           >
-                            Approach
+                            Approve
                           </Button>
                         </Row>
                       </Row>

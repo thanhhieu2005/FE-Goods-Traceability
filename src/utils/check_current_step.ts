@@ -5,7 +5,7 @@ export const checkCurrentStepProject = (project: ProjectDetailModel) => {
     return 0;
   } else {
     if (project?.produce.state === CommonProjectState.Completed) {
-      return 4;
+      return 5;
     } else if (
       project?.warehouseStorage.state === CommonProjectState.Completed
     ) {
