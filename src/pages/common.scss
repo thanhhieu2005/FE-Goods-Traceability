@@ -206,6 +206,10 @@
     border: 1px solid #999DA0;
 }
 
+.container-hover:hover{
+    cursor: pointer;
+}
+
 // input
 .ant-input-affix-wrapper.ant-input-password:hover {
     border-color: #e8b26e !important;

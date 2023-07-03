@@ -36,6 +36,7 @@ import DashBoardSystemAdmin from "@/pages/system_admin/dashboard/DashBoardSystem
 import AddProductPage from "@/pages/product/AddProductPage";
 import AboutUs from "@/pages/common/AboutUs";
 import ListProductsOfProject from "@/pages/system_admin/project_detail/list_products/ListProductsOfProject";
+import UserProfile from "@/pages/user/UserProfile";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -66,6 +67,10 @@ const Routers = () => {
               <Route
                 path="/about-us"
                 element={<AboutUs/>}
+              />
+              <Route
+                path="/user-profile"
+                element={<UserProfile/>}
               />
               {/* Check Role to render Route */}
               {userName.role === 1 ? ( // Technical Admin Router

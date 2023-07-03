@@ -29,7 +29,7 @@ export interface UserDetailModel {
     lastName?: string;
     avatar?: string;
     role: UserRole;
-    department?: StaffDepartment;
+    department: StaffDepartment;
     walletAddress?: string;
     farmList?: Array<FarmInfoModel>;
     phoneNumber: string;

@@ -32,6 +32,23 @@ const UserServices = {
             return err;
         }
     },
+    updateProfile: async (userId: string, value: any) => {
+        try {
+            const currentToken = localStorage.getItem('token');
+
+            const res = await axiosClient.patch(
+                '/users/' + userId,
+                value,
+                {
+                    headers: { Authorization: `Bearer ${currentToken}` },
+                }
+            );
+            
+            return res;
+        } catch (err) {
+            return err;
+        }
+    }
 };
 
 export default UserServices;
