@@ -2,14 +2,15 @@ import UserServices from "@/api/user_api";
 import { logoMetaMask } from "@/assets";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import { StaffDepartment, UserDetailModel } from "@/types/user";
+import { UserDetailModel } from "@/types/user";
 import { canceledColor, completedColor, mainColor } from "@/utils/app_color";
 import { checkRole } from "@/utils/checkRole";
-import { checkMatchWalletAddress } from "@/utils/validation/check_wallet_address";
-import { BoldOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
+import { EditOutlined, KeyOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Col, Modal, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import UpdatePassword from "./UpdatePassword";
+import UpdateProfileUser from "./UpdateProfileUser";
 
 const UserProfile = () => {
   const localUserInfo: UserDetailModel = useSelector(
@@ -39,6 +40,10 @@ const UserProfile = () => {
 
     setIsConnectWallet(isConnectWallet);
   }, [currentUserInfo]);
+
+  const [isUpdateProfile, setUpdateProfile] = useState(false);
+
+  const [isChangePassword, setChangePassword] = useState(false);
 
   const onClickLinkWallet = () => {
     Modal.confirm({
@@ -96,6 +101,17 @@ const UserProfile = () => {
     }
   };
 
+  const scrollToElement = () => {
+    const targetElement = document.getElementById("targetElement");
+    if (targetElement) {
+      const { top } = targetElement.getBoundingClientRect();
+      window.scroll({
+        top: window.pageYOffset + top,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <>
       <div>
@@ -132,8 +148,19 @@ const UserProfile = () => {
                     {currentUserInfo.lastName} {currentUserInfo.firstName}
                   </div>
                   <div style={{ padding: "4px" }} />
-                  <div className="container-hover" style={{ height: '32px', display: 'flex', alignItems: 'flex-end' }}>
-                    <EditOutlined style={{ fontSize: '100%'}}/>
+                  <div
+                    className="container-hover"
+                    style={{
+                      height: "32px",
+                      display: "flex",
+                      alignItems: "flex-end",
+                    }}
+                    onClick={() => {
+                      setUpdateProfile(true);
+                      setTimeout(scrollToElement, 500);
+                    }}
+                  >
+                    <EditOutlined style={{ fontSize: "100%" }} />
                   </div>
                 </Row>
                 <div
@@ -207,6 +234,16 @@ const UserProfile = () => {
                 </Col>
                 <Row style={{ width: "30%", justifyContent: "flex-end" }}>
                   <Button
+                    type="primary"
+                    icon={<KeyOutlined />}
+                    onClick={() => {
+                      setChangePassword(true)
+                    }}
+                  >
+                    Change Password
+                  </Button>
+                  <div style={{ padding: "4px" }} />
+                  <Button
                     type="default"
                     size="middle"
                     style={{
@@ -224,7 +261,7 @@ const UserProfile = () => {
                           paddingLeft: "4px",
                         }}
                       >
-                        Link Wallet Address
+                        Link Wallet
                       </p>
                     </Row>
                   </Button>
@@ -232,6 +269,30 @@ const UserProfile = () => {
               </div>
             </Row>
           </div>
+          <div className="space-padding" />
+          {isChangePassword ? (
+            <UpdatePassword
+              myProps={{
+                onClose: setChangePassword,
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          <div className="space-padding" />
+          {isUpdateProfile ? (
+            <div id="targetElement">
+              <UpdateProfileUser
+                myProps={{
+                  onClose: setUpdateProfile,
+                  currentUserInfo: currentUserInfo,
+                  updateSucces: setCurrentUserInfo
+                }}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
         </Col>
       </div>
     </>
