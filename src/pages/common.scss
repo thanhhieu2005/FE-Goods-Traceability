@@ -11,7 +11,7 @@
         padding-bottom: 16px;
     }
     .title-header {
-        font-weight: 600;
+        font-weight: 700;
         font-size: 32px;
         color: #111d2c;
         padding-bottom: 8px;
@@ -204,6 +204,10 @@
     padding-left: 8px;
     display: inline-flex;
     border: 1px solid #999DA0;
+}
+
+.container-hover:hover{
+    cursor: pointer;
 }
 
 // input

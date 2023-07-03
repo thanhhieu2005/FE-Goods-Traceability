@@ -68,7 +68,7 @@ export const HeaderCustom: React.FC = () => {
       onLogout();
     } else if(e.key === "1") {
       // message.info("Feature is delevoping!");
-      navigate('/about-us');
+      navigate('/user-profile');
     }
   }
 
