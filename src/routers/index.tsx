@@ -37,6 +37,7 @@ import AddProductPage from "@/pages/product/AddProductPage";
 import AboutUs from "@/pages/common/AboutUs";
 import ListProductsOfProject from "@/pages/system_admin/project_detail/list_products/ListProductsOfProject";
 import UserProfile from "@/pages/user/UserProfile";
+import SystemSettings from "@/pages/user/SystemSettings";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -67,6 +68,10 @@ const Routers = () => {
               <Route
                 path="/about-us"
                 element={<AboutUs/>}
+              />
+              <Route
+                path="/settings"
+                element={<SystemSettings/>}
               />
               <Route
                 path="/user-profile"

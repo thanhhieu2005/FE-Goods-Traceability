@@ -39,6 +39,12 @@ export const LayoutCustom = () => {
           >
             <MenuApp />
             {/* <CommonMenuApp /> */}
+            {/* <div className="blockchain-setting">
+              <p>
+                <span>Blockchain Mode: </span>
+                <span></span>
+              </p>
+            </div> */}
           </Col>
         </Sider>
         <Layout

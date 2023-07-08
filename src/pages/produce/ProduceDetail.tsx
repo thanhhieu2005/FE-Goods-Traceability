@@ -52,6 +52,7 @@ function ProduceDetail() {
     getDetailProduct();
   }, [dataProduction]);
 
+
   const handleShowDrawerUpdate = () => {
     setIsOpenModalUpdate(true);
   };

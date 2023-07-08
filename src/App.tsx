@@ -5,7 +5,8 @@ import { axiosClient } from './services/axios';
 import { useDispatch } from 'react-redux';
 import { logout, updateCurrentUserInfo } from './redux/authenSlice';
 import { useEffect } from 'react';
-import { AxiosError } from 'axios';
+import UserServices from './api/user_api';
+import { updateBlockchainMode } from './redux/modeSlide';
 
 
 function App() {
@@ -22,6 +23,10 @@ function App() {
           const refreshUserInfo = await axiosClient.get('/users/me', {
             headers: { Authorization: `Bearer ${currentToken}` },
           });
+
+          const currentMode: any = await UserServices.getCurrentMode();
+
+          dispatch(updateBlockchainMode(currentMode.data.result));
   
           dispatch(updateCurrentUserInfo(refreshUserInfo.data));
         } catch (err) {

@@ -1,6 +1,6 @@
 import { HarvestModel } from "@/types/step_tracking";
 import { Button, Col, Row } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StateCard from "../Tag/StateCard";
 import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import LabelContentItem from "../Label/LabelContentItem";
@@ -11,11 +11,18 @@ import ProjectServices from "@/api/system_admin/project_api";
 import { errorMessage, successMessage } from "../Message/MessageNoti";
 import { useNavigate } from "react-router-dom";
 import { LogEnum } from "@/types/project_log_model";
+import { logoVerify } from "@/assets";
+import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
+import { CommonProjectState } from "@/types/project_model";
 
 const HarvestInfoCard = ({ myProps: props }: any) => {
   const [dataHarvest, setDataHarvest] = useState<HarvestModel>(
     props.dataHarvest
   );
+
+  useEffect(() => {
+    setDataHarvest(props.dataHarvest);
+  }, [props.dataHarvest, props.harvestLogList]);
 
   const navigate = useNavigate();
 
@@ -103,15 +110,15 @@ const HarvestInfoCard = ({ myProps: props }: any) => {
                 onClick={() => {
                   navigate(`/project-log/${dataHarvest.harvestId}`, {
                     state: {
-                      "listLog": props.harvestLogList,
-                      "type": LogEnum.Harvest,
-                    }
-                  })
+                      listLog: props.harvestLogList,
+                      type: LogEnum.Harvest,
+                    },
+                  });
                 }}
               >
                 View log
               </Button>
-              <div style={{padding: '4px'}}/>
+              <div style={{ padding: "4px" }} />
               <Button
                 type="primary"
                 icon={<FormOutlined />}
@@ -126,63 +133,80 @@ const HarvestInfoCard = ({ myProps: props }: any) => {
             </Row>
           </Row>
           <div className="space-padding" />
-          <LabelContentItem
-            myProps={{
-              label: "Harvest ID",
-              content: dataHarvest.harvestId,
-              width: "100%",
+          <Row
+            style={{
+              margin: "12px 0px",
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
             }}
-          />
-          <div className="space-padding" />
-          <LabelContentItem
-            myProps={{
-              label: "Harvestor",
-              content:
-                dataHarvest.inspector !== null
-                  ? dataHarvest.inspector?.email
-                  : "Not assigned yet",
-              width: "100%",
-            }}
-          />
-          <div className="space-padding" />
-          <LabelContentItem
-            myProps={{
-              label: "Date Completed",
-              content:
-                dataHarvest.dateCompleted !== null
-                  ? moment(dataHarvest.dateCompleted).format("DD/MM/YYYY")
-                  : "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Total Harvest (ton)",
-              content: dataHarvest.totalHarvest ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Ripeness (%)",
-              content: dataHarvest.ripeness ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Moisture",
-              content: dataHarvest.moisture ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Temperature (°C)",
-              content: dataHarvest.temperature ?? "Not update",
-              width: "100%",
-            }}
-          />
+          >
+            <div>
+              <LabelContentItem
+                myProps={{
+                  label: "Harvest ID",
+                  content: dataHarvest.harvestId,
+                  width: "100%",
+                }}
+              />
+              <div className="space-padding" />
+              <LabelContentItem
+                myProps={{
+                  label: "Harvestor",
+                  content:
+                    dataHarvest.inspector !== null
+                      ? dataHarvest.inspector?.email
+                      : "Not assigned yet",
+                  width: "100%",
+                }}
+              />
+              <div className="space-padding" />
+              <LabelContentItem
+                myProps={{
+                  label: "Date Completed",
+                  content:
+                    dataHarvest.dateCompleted !== null
+                      ? moment(dataHarvest.dateCompleted).format("DD/MM/YYYY")
+                      : "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Total Harvest (ton)",
+                  content: dataHarvest.totalHarvest ?? "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Ripeness (%)",
+                  content: dataHarvest.ripeness ?? "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Moisture",
+                  content: dataHarvest.moisture ?? "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Temperature (°C)",
+                  content: dataHarvest.temperature ?? "Not update",
+                  width: "100%",
+                }}
+              />
+            </div>
+            {props.isDone === true &&
+            dataHarvest.state === CommonProjectState.Completed ? (
+              <img src={logoVerify} height={144} />
+            ) : (
+              <></>
+            )}
+          </Row>
         </Col>
       </div>
     </>

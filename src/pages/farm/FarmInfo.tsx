@@ -12,16 +12,19 @@ import FarmerManagement from "./FarmerManagement";
 const FarmInfo = () => {
   const userName = useSelector((state: any) => state.authen.currentUserInfo);
 
+  console.log(userName);
+
   const [dataFarmInfo, setDataFarmInfo] = useState<FarmDetailInfoModel>();
 
   useEffect(() => {
     FarmServices.getFarmDetailService(userName.farmId).then((res: any) => {
+      console.log(res);
       if (res.status === 200) {
         const farmInfo = parseFarmDetail(res.data);
         setDataFarmInfo(farmInfo);
       }
     });
-  }, []);
+  }, [userName.farmId]);
 
   const farmCardProps = {
     title: "Famers",
@@ -228,7 +231,11 @@ const FarmInfo = () => {
           </Tabs>
         </div>
       ) : (
-        <></>
+        <>
+          <div className="content-page">
+
+          </div>
+        </>
       )}
     </Col>
   );

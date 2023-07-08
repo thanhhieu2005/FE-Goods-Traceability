@@ -21,4 +21,5 @@ export interface ProductModel {
     typeOfProduct: string;
     measureUnit: string;
     productImage: ProductImageModel[];
+    state: number;
 }

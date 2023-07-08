@@ -1,5 +1,5 @@
 import { Button, Col, Row } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StateCard from "../Tag/StateCard";
 import { WarehouseStorageModel } from "@/types/step_tracking";
 import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
@@ -11,10 +11,16 @@ import ModalUpdateInspector from "../Modal/ModalUpdateInspector";
 import { StaffDepartment } from "@/types/user";
 import { useNavigate } from "react-router-dom";
 import { LogEnum } from "@/types/project_log_model";
+import { logoVerify } from "@/assets";
+import { CommonProjectState } from "@/types/project_model";
 
 const WarehouseStorageInfoCard = ({ myProps: props }: any) => {
   const [dataWarehouseStorage, setDataWarehouseStorage] =
     useState<WarehouseStorageModel>(props.dataWarehouseStorage);
+
+  useEffect(() => {
+    setDataWarehouseStorage(props.dataWarehouseStorage);
+  }, [props.dataWarehouseStorage]);
 
   const navigate = useNavigate();
 
@@ -95,21 +101,24 @@ const WarehouseStorageInfoCard = ({ myProps: props }: any) => {
             </p>
             <Row>
               <Button
-                  type="default"
-                  size="middle"
-                  icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
-                  onClick={() => {
-                    navigate(`/project-log/${dataWarehouseStorage.warehouseStorageId}`, {
+                type="default"
+                size="middle"
+                icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                onClick={() => {
+                  navigate(
+                    `/project-log/${dataWarehouseStorage.warehouseStorageId}`,
+                    {
                       state: {
-                        "listLog": props.warehouseStorageLogList,
-                        "type": LogEnum.Warehouse,
-                      }
-                    })
-                  }}
-                >
-                  View log
-                </Button>
-                <div style={{padding: '4px'}}/>
+                        listLog: props.warehouseStorageLogList,
+                        type: LogEnum.Warehouse,
+                      },
+                    }
+                  );
+                }}
+              >
+                View log
+              </Button>
+              <div style={{ padding: "4px" }} />
               <Button
                 type="primary"
                 icon={<FormOutlined />}
@@ -124,66 +133,87 @@ const WarehouseStorageInfoCard = ({ myProps: props }: any) => {
             </Row>
           </Row>
           <div className="space-padding" />
-          <LabelContentItem
-            myProps={{
-              label: "Warehouse Storage ID",
-              content: dataWarehouseStorage.warehouseStorageId,
-              width: "100%",
+          <Row
+            style={{
+              margin: "12px 0px",
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
             }}
-          />
-          <div className="space-padding" />
-          <LabelContentItem
-            myProps={{
-              label: "Warehosue Inspector",
-              content:
-                dataWarehouseStorage.inspector !== null
-                  ? dataWarehouseStorage.inspector?.email
-                  : "Not assigned yet",
-              width: "100%",
-            }}
-          />
-          <div className="space-padding" />
-          <LabelContentItem
-            myProps={{
-              label: "Date Imported",
-              content:
-                dataWarehouseStorage.inputDate !== null
-                  ? moment(dataWarehouseStorage.inputDate).format("DD/MM/YYYY")
-                  : "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Date Exported",
-              content:
-                dataWarehouseStorage.outputDate !== null
-                  ? moment(dataWarehouseStorage.outputDate).format("DD/MM/YYYY")
-                  : "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Warehouse Name",
-              content: dataWarehouseStorage.warehouseName ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Total Import",
-              content: dataWarehouseStorage.totalInput ?? "Not update",
-              width: "100%",
-            }}
-          />
-          <LabelContentItem
-            myProps={{
-              label: "Total Export",
-              content: dataWarehouseStorage.totalExport ?? "Not update",
-              width: "100%",
-            }}
-          />
+          >
+            <div>
+              <LabelContentItem
+                myProps={{
+                  label: "Warehouse Storage ID",
+                  content: dataWarehouseStorage.warehouseStorageId,
+                  width: "100%",
+                }}
+              />
+              <div className="space-padding" />
+              <LabelContentItem
+                myProps={{
+                  label: "Warehosue Inspector",
+                  content:
+                    dataWarehouseStorage.inspector !== null
+                      ? dataWarehouseStorage.inspector?.email
+                      : "Not assigned yet",
+                  width: "100%",
+                }}
+              />
+              <div className="space-padding" />
+              <LabelContentItem
+                myProps={{
+                  label: "Date Imported",
+                  content:
+                    dataWarehouseStorage.inputDate !== null
+                      ? moment(dataWarehouseStorage.inputDate).format(
+                          "DD/MM/YYYY"
+                        )
+                      : "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Date Exported",
+                  content:
+                    dataWarehouseStorage.outputDate !== null
+                      ? moment(dataWarehouseStorage.outputDate).format(
+                          "DD/MM/YYYY"
+                        )
+                      : "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Warehouse Name",
+                  content: dataWarehouseStorage.warehouseName ?? "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Total Import",
+                  content: dataWarehouseStorage.totalInput ?? "Not update",
+                  width: "100%",
+                }}
+              />
+              <LabelContentItem
+                myProps={{
+                  label: "Total Export",
+                  content: dataWarehouseStorage.totalExport ?? "Not update",
+                  width: "100%",
+                }}
+              />
+            </div>
+            {props.isDone === true &&
+            dataWarehouseStorage.state === CommonProjectState.Completed ? (
+              <img src={logoVerify} height={144} />
+            ) : (
+              <></>
+            )}
+          </Row>
         </Col>
       </div>
     </>
