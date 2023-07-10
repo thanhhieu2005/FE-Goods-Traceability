@@ -1,6 +1,6 @@
-import { WarehouseStorageModel, listCommonState } from "@/types/step_tracking";
+import { WarehouseStorageModel, listCommonState, parseWarehouseStorageData } from "@/types/step_tracking";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { ShowDrawerEdit } from "./DrawerEditItem";
 import { modalUpdateContentLayout } from "@/styles/content_layout";
 import moment from "moment";
@@ -10,6 +10,8 @@ import {
   parseToStringCommonState,
 } from "@/utils/format_state";
 import { CommonProjectState } from "@/types/project_model";
+import { UpdateWarehouseDetailByIdAPI } from "@/api/warehouse_api";
+import { errorMessage, successMessage } from "../Message/MessageNoti";
 
 const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
   const dataWarehouseStorage: WarehouseStorageModel =
@@ -54,7 +56,7 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
               <span>you will not be able to change the information</span>
             </p>
           ),
-          onOk: () => props.onUpdate(value),
+          onOk: () => onUpdateWarehouseStorageSupervision(value),
         });
       }
     } else if (value.state === CommonProjectState.Canceled) {
@@ -70,10 +72,39 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
             </span>
           </p>
         ),
-        onOk: () => props.onUpdate(value),
+        onOk: () => onUpdateWarehouseStorageSupervision(value),
       });
     } else {
-      props.onUpdate(value);
+      onUpdateWarehouseStorageSupervision(value);
+    }
+  };
+
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
+  const onUpdateWarehouseStorageSupervision = async (value: any) => {
+    setIsLoadingUpdate(true);
+
+    const res: any = await UpdateWarehouseDetailByIdAPI(
+      value,
+      dataWarehouseStorage.warehouseStorageId
+    );
+
+    if (res.status === 200) {
+      const newUpdate = parseWarehouseStorageData(res.data.warehouse);
+
+      props.setDataWarehouseStorage(newUpdate);
+
+      props.setIsOpenModalUpdate(false);
+
+      setIsLoadingUpdate(false);
+      successMessage("Update Successfully!");
+    } else if (res.response.status === 400) {
+      errorMessage(res.response.data.message);
+      setIsLoadingUpdate(false);
+    } else {
+      console.log(res);
+      errorMessage("Update Failed!");
+      setIsLoadingUpdate(false);
     }
   };
 
@@ -85,6 +116,7 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
           onOpen: props.showUpdate,
           onClose: props.cancelCloseUpdate,
           onSubmit: form.submit,
+          loading: isLoadingUpdate,
           content: (
             <div>
               <Form

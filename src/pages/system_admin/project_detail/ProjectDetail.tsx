@@ -54,11 +54,11 @@ const ProjectDetail = () => {
 
   const [produceLogList, setProduceLogList] = useState<LogModel[]>([]);
 
+  const [isCallGetLog, setCallGetLog] = useState(false);
+
   useEffect(() => {
     GetProjectDetailByID(projectId).then((res: any) => {
       const projectDetail = res.data as ProjectDetailModel;
-
-      console.log(res.data);
 
       setDataProject(projectDetail);
 
@@ -67,10 +67,17 @@ const ProjectDetail = () => {
       setCurrentStep(currentStep);
     });
 
+    setProjectLogList([]);
+    setHarvestLogList([]);
+    setWarehouseStorageLogList([]);
+    setTransportLogList([]);
+    setProduceLogList([]);
+
     const getProjectLogsById = async () => {
       const res: any = await ProjectServices.getProjectLogList(projectId);
-
       // setProjectLogList(res.data.projectLogList);
+
+      console.log(res);
       if (res.status === 200) {
         res.data.projectLogList.map((element: any) => {
           const logModel = element.projectLog as LogModel;
@@ -100,11 +107,10 @@ const ProjectDetail = () => {
     };
 
     getProjectLogsById();
-  }, [projectId]);
+  }, [projectId, isCallGetLog]);
 
   const [farm, setFarm] = useState<FarmInfoModel>();
 
-  console.log(harvestLogList);
 
   useEffect(() => {
     const fetchAPIFarm = async () => {
@@ -160,25 +166,6 @@ const ProjectDetail = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
-
-  const onUpdateInfoProject = async (value: any) => {
-    console.log(value);
-
-    const res: any = await UpdateProjectInfo(value, projectId);
-
-    if (res.status === 200) {
-
-      setDataProject(res.data.project);
-
-      setOpenModalUpdate(false);
-
-      successMessage("Update Successfully!");
-    } else {
-      errorMessage("Update Failed!");
-    }
-  };
-
   return (
     <>
       {isOpenModalUpdate && (
@@ -187,8 +174,9 @@ const ProjectDetail = () => {
             dataProject: dataProject,
             showEditProjectDrawer: showEditProjectDrawer,
             closeEditProjectDrawer: closeEditProjectDrawer,
-            isLoadingUpdate: isLoadingUpdate,
-            handleUpdateInfoProject: onUpdateInfoProject,
+            setDataProject: setDataProject,
+            setOpenModalUpdate: setOpenModalUpdate,
+            setCallGetLog: setCallGetLog,
           }}
         />
       )}
@@ -211,7 +199,13 @@ const ProjectDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  <Row style={{ margin: "12px 0px", display: 'flex', alignItems: 'center' }}>
+                  <Row
+                    style={{
+                      margin: "12px 0px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
                     <StateCard myProps={{ state: dataProject.state }} />
                     {checkVerifyBlockchainLog(projectLogList) === true &&
                     dataProject.state === CommonProjectState.Completed ? (

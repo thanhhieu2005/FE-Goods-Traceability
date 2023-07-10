@@ -38,27 +38,6 @@ const HarvestDetail = () => {
     setIsOpenModalUpdate(false);
   };
 
-  const onUpdateHarvestProject = async (value: any) => {
-
-    const res: any = await UpdateHarvestAPI(value, harvestId);
-
-    if (res.status == 200) {
-      console.log(res);
-      const newHarvest = parseHarvestData(res.data.harvest);
-
-      setDataHarvest(newHarvest);
-
-      setIsOpenModalUpdate(false);
-
-      successMessage("Update Successfully!");
-    } else if(res.response.status === 400) {
-      errorMessage(res.response.data.message);
-    } 
-    else {
-      errorMessage("Update Failed!");
-    }
-  };
-
   const checkHasProject = () => {
     if(dataHarvest?.projectId !== null) {
       setIsOpenModalUpdate(true);
@@ -77,7 +56,8 @@ const HarvestDetail = () => {
             dataHarvest: dataHarvest,
             showUpdate: handleShowDrawerUpdate,
             cancelCloseUpdate: handleCancelDrawerUpdate,
-            submitUpdate: onUpdateHarvestProject,
+            setDataHarvest: setDataHarvest,
+            setIsOpenModalUpdate: setIsOpenModalUpdate,
           }}
         />
       )}
@@ -195,7 +175,7 @@ const HarvestDetail = () => {
                     <LabelContentItem
                       myProps={{
                         label: "Temperature (°C)",
-                        content: dataHarvest.totalHarvest ?? "Not Updat",
+                        content: dataHarvest.temperature ?? "Not Updat",
                       }}
                     />
                   </Row>

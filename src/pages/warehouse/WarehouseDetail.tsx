@@ -54,28 +54,7 @@ function WarehouseDetail() {
     }
   };
 
-  const onUpdateWarehouseStorageSupervision = async (value: any) => {
-    console.log(value);
-
-    const res: any = await UpdateWarehouseDetailByIdAPI(
-      value,
-      warehouseStorageId
-    );
-
-    if (res.status === 200) {
-      const newUpdate = parseWarehouseStorageData(res.data.warehouse);
-
-      setDataWarehouseStorage(newUpdate);
-
-      setIsOpenModalUpdate(false);
-      successMessage("Update Successfully!");
-    } else if (res.response.status === 400) {
-      errorMessage(res.response.data.message);
-    } else {
-      console.log(res);
-      errorMessage("Update Failed!");
-    }
-  };
+  
 
   return (
     <>
@@ -85,7 +64,8 @@ function WarehouseDetail() {
             dataWarehouseStorage: dataWarehouseStorage,
             showUpdate: handleShowDrawerUpdate,
             cancelCloseUpdate: handleCancelDrawerUpdate,
-            onUpdate: onUpdateWarehouseStorageSupervision,
+            setDataWarehouseStorage: setDataWarehouseStorage,
+            setIsOpenModalUpdate: setIsOpenModalUpdate,
           }}
         />
       )}

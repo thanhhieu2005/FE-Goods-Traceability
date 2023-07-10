@@ -108,51 +108,6 @@ const FarmProjectDetail = () => {
     setIsUpdateFarmProjectProgress(true);
   };
 
-  const handleUpdateFarmProjectProgress = async (value: any) => {
-    console.log(value);
-
-    if (value.state === CommonProjectState.Completed) {
-      Modal.confirm({
-        content: `When you confirm "Completed", you will not be able to change the project information!`,
-        onOk: () => {
-          updateFarmProjectProgress(value);
-        },
-      });
-    } else if (value.state === CommonProjectState.Canceled) {
-      Modal.confirm({
-        content: `When you confirm "Canceled", you will not be able to change the project information!`,
-        onOk: () => {
-          updateFarmProjectProgress(value);
-        },
-      });
-    } else {
-      updateFarmProjectProgress(value);
-    }
-  };
-
-  const updateFarmProjectProgress = async (value: any) => {
-    console.log(value);
-
-    const res: any = await FarmServices.updateFarmProject(
-      dataFarmProject.farmProjectId,
-      value
-    );
-
-    if (res.status === 200) {
-      setIsLoading(true);
-      console.log(res);
-      successMessage("Update successfully!");
-      setDataFarmProject(res.data);
-
-      setIsUpdateFarmProjectProgress(false);
-      setIsLoading(false);
-    } else {
-      console.log(res);
-      errorMessage(res.response.data.message);
-      setIsLoading(false);
-    }
-  };
-
   const checkPermissionToUpdateProject = () => {
     if(dataFarmProject.farmer !== null) {
       if(dataFarmProject.farmer.userId === currentUser.userId) {
@@ -178,7 +133,9 @@ const FarmProjectDetail = () => {
             dataFarmProject: dataFarmProject,
             showProgressUpdate: showUpdateFarmProjectProgress,
             cancelCloseProgressUpdate: cancelUpdateFarmProjectProgress,
-            submitUpdateFarmProject: handleUpdateFarmProjectProgress,
+            setIsLoading: setIsLoading,
+            setDataFarmProject: setDataFarmProject,
+            setIsUpdateFarmProjectProgress: setIsUpdateFarmProjectProgress,
           }}
         />
       )}

@@ -16,10 +16,11 @@ export interface ProductModel {
     description: DescriptionProductModel[];
     exp: string;
     mfg: string;
-    bussinessLicenseRegistrationNumber: string;
+    businessLicenseRegistrationNumber: string;
     certificateOfFoodHygieneAndSafety: string;
     typeOfProduct: string;
     measureUnit: string;
     productImage: ProductImageModel[];
     state: number;
+    productQRCodeUri: string;
 }

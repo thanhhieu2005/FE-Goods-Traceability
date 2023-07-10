@@ -166,7 +166,7 @@ const ProductCheckInfoCard = ({ myProps: props }: any) => {
         <LabelContentItem
           myProps={{
             label: "Bussiness License Registration Number",
-            content: dataProduct.bussinessLicenseRegistrationNumber,
+            content: dataProduct.businessLicenseRegistrationNumber,
             width: "100%",
           }}
         />

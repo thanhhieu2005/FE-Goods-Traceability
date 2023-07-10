@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { ShowDrawerEdit } from "../DrawerEditItem";
-import { Form, Input, Select } from "antd";
+import { Form, Input, Modal, Select } from "antd";
 import { modalUpdateContentLayout } from "@/styles/content_layout";
 import { FarmProjectModel } from "@/types/farm_model";
 import { listCommonState } from "@/types/step_tracking";
@@ -8,6 +8,9 @@ import {
   parseColorByCommonState,
   parseToStringCommonState,
 } from "@/utils/format_state";
+import { CommonProjectState } from "@/types/project_model";
+import FarmServices from "@/api/farm/farm_api";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 
 const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
   const [form] = Form.useForm();
@@ -20,6 +23,56 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
 
   const { TextArea } = Input;
 
+  const handleUpdateFarmProjectProgress = async (value: any) => {
+    console.log(value);
+
+    if (value.state === CommonProjectState.Completed) {
+      Modal.confirm({
+        content: `When you confirm "Completed", you will not be able to change the project information!`,
+        onOk: () => {
+          updateFarmProjectProgress(value);
+        },
+      });
+    } else if (value.state === CommonProjectState.Canceled) {
+      Modal.confirm({
+        content: `When you confirm "Canceled", you will not be able to change the project information!`,
+        onOk: () => {
+          updateFarmProjectProgress(value);
+        },
+      });
+    } else {
+      updateFarmProjectProgress(value);
+    }
+  };
+
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
+  const updateFarmProjectProgress = async (value: any) => {
+    setIsLoadingUpdate(true);
+
+    const res: any = await FarmServices.updateFarmProject(
+      dataFarmProject.farmProjectId,
+      value
+    );
+
+    if (res.status === 200) {
+      props.setIsLoading(true);
+      successMessage("Update successfully!");
+      props.setDataFarmProject(res.data);
+
+      props.setIsUpdateFarmProjectProgress(false);
+      props.setIsLoading(false);
+
+      setIsLoadingUpdate(false);
+    } else {
+      console.log(res);
+      errorMessage(res.response.data.message);
+      props.setIsLoading(false);
+
+      setIsLoadingUpdate(false);
+    }
+  };
+
   return (
     <>
       <ShowDrawerEdit
@@ -28,13 +81,14 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
           onOpen: props.showProgressUpdate,
           onClose: props.cancelCloseProgressUpdate,
           onSubmit: form.submit,
+          loading: isLoadingUpdate,
           content: (
             <div>
               <Form
                 {...modalUpdateContentLayout}
                 form={form}
                 onFinish={(value) => {
-                  props.submitUpdateFarmProject(value);
+                  handleUpdateFarmProjectProgress(value);
                 }}
               >
                 <Form.Item

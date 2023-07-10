@@ -1,6 +1,6 @@
-import { ProductionModel, listCommonState } from "@/types/step_tracking";
+import { ProductionModel, listCommonState, parseProductionData } from "@/types/step_tracking";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { ShowDrawerEdit } from "./DrawerEditItem";
 import { modalUpdateContentLayout } from "@/styles/content_layout";
 import moment from "moment";
@@ -10,6 +10,8 @@ import {
   parseToStringCommonState,
 } from "@/utils/format_state";
 import { CommonProjectState } from "@/types/project_model";
+import { UpdateProduceAPI } from "@/api/produce_api";
+import { errorMessage, successMessage } from "../Message/MessageNoti";
 
 const DrawerEditProduction = ({ myProps: props }: any) => {
   const dataProduction: ProductionModel = props.dataProduction;
@@ -49,7 +51,7 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
               <span>you will not be able to change the information</span>
             </p>
           ),
-          onOk: () => props.onUpdate(value),
+          onOk: () => onUpdateProductionSupervision(value),
         });
       }
     } else if (value.state === CommonProjectState.Canceled) {
@@ -65,10 +67,36 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
             </span>
           </p>
         ),
-        onOk: () => props.onUpdate(value),
+        onOk: () => onUpdateProductionSupervision(value),
       });
     } else {
-      props.onUpdate(value);
+      onUpdateProductionSupervision(value);
+    }
+  };
+
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
+  const onUpdateProductionSupervision = async (value: any) => {
+    setIsLoadingUpdate(true);
+
+    const res: any = await UpdateProduceAPI(value, dataProduction.produceSupervisionId);
+
+    if (res.status === 200) {
+      const newUpdate = parseProductionData(res.data.produce);
+
+      props.setDataProduction(newUpdate);
+
+      props.setIsOpenModalUpdate(false);
+
+      setIsLoadingUpdate(false);
+      successMessage("Update Successfully!");
+    } else if (res.response.status === 400) {
+      errorMessage(res.response.data.message);
+      setIsLoadingUpdate(false);
+    } else {
+      console.log(res);
+      errorMessage("Update Failed!");
+      setIsLoadingUpdate(false);
     }
   };
 
@@ -80,6 +108,7 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
           onOpen: props.showUpdate,
           onClose: props.cancelCloseUpdate,
           onSubmit: form.submit,
+          loading: isLoadingUpdate,
           content: (
             <div>
               <Form

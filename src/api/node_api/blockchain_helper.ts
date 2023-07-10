@@ -3,7 +3,7 @@ import Web3 from "web3";
 let selectedAccount;
 
 // let nftContract;
-let erc20Contract;
+let erc20Contract : any;
 
 let isInitialized = false;
 
@@ -13,16 +13,16 @@ export const init = async () => {
   if (typeof provider !== "undefined") {
     provider
       .request({ method: "eth_requestAccounts" })
-      .then((accounts) => {
+      .then((accounts: any) => {
         selectedAccount = accounts[0];
         console.log(`Selected account is ${selectedAccount}`);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
         return;
       });
 
-    window.ethereum.on("accountsChanged", function (accounts) {
+    window.ethereum.on("accountsChanged", function (accounts: any) {
       selectedAccount = accounts[0];
       console.log(`Selected account changed to ${selectedAccount}`);
     });
@@ -30,7 +30,7 @@ export const init = async () => {
 
   const web3 = new Web3(provider);
 
-  const erc20Abi = [
+  const erc20Abi: any = [
     { inputs: [], stateMutability: "nonpayable", type: "constructor" },
     {
       inputs: [
@@ -107,18 +107,18 @@ export const getTrackingBlock = async () => {
   }
   const provider = window.ethereum;
 
-  const account = await provider.request({ method: "eth_requestAccounts" });
+  const account: any = await provider.request({ method: "eth_requestAccounts" });
 
   erc20Contract.methods
     .getTrackingBlock("ReactContractID")
     .call()
-    .then((result) => {
+    .then((result: any) => {
       console.log(result);
       return result;
     });
 };
 
-export const addTrackingBlock = async (contractId, contractContent) => {
+export const addTrackingBlock = async (transactionId: any, contentTransaction: any) => {
   if (!isInitialized) {
     await init();
   }
@@ -127,7 +127,7 @@ export const addTrackingBlock = async (contractId, contractContent) => {
   const account = await provider.request({ method: "eth_requestAccounts" });
 
   const tx = await erc20Contract.methods
-    .addTrackingBlock(contractId, contractContent, account[0])
+    .addTrackingBlock(transactionId, contentTransaction, account[0])
     .send({ from: account[0] });
 
   console.log(tx);

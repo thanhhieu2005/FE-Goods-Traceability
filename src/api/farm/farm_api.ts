@@ -190,6 +190,23 @@ const FarmServices = {
     } catch(err) {
       return err;
     }
+  },
+  createNewFarmProject: async(value: any) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+      
+      const res = await axiosClient.post(
+        "/farm-project/",
+        value,
+        {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        }
+      );
+
+      return res;
+    } catch (err) {
+      return err;
+    }
   }
 };
 

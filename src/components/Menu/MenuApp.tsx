@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   DashboardOutlined,
+  ShopOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -55,6 +56,7 @@ export const MenuApp = () => {
       // if (location.pathname.includes("/settings")) {
       //   setPath("/settings");
       // }
+      if (location.pathname.includes("/released-product-management")) setPath("/released-product-management")
     } else if (userName.role === UserRole.Farmer && userName.isOwner === true) {
       if (location.pathname.includes("/")) {
         setPath("/farm-info");
@@ -110,6 +112,7 @@ export const MenuApp = () => {
         "/project-management",
         <TfiViewListAlt />
       ),
+      getItem("Released Product Management", "/released-product-management", <ShopOutlined />),
       getItem("Staff Management", "/staff-management", <TeamOutlined />),
       // getItem("Settings", "/settings", <SettingOutlined />),
     ];
