@@ -1,6 +1,7 @@
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
 import FarmServices from "@/api/farm/farm_api";
 import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
+import StepLogServices from "@/api/steplog_api";
 import { UpdateProjectInfo } from "@/api/system_admin/project_api";
 import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
@@ -89,6 +90,53 @@ const EditProject = ({ myProps: props }: any) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  // Handle for Public Blockchain
+  const handlePublicBlockchain = async (value: any) => {
+    setIsUpdateLoading(true);
+
+    const saveValue = {
+      ...value,
+      manager: dataProject.manager.userId,
+    };
+
+    const res: any = await addTrackingBlock(
+      dataProject.projectCode,
+      JSON.stringify(saveValue)
+    );
+
+    if (res.code === 4001) {
+      errorMessage(res.message);
+      setIsUpdateLoading(false);
+    } else {
+      console.log(res);
+
+      const updateProject: any = await UpdateProjectInfo(
+        value,
+        dataProject.projectId
+      );
+
+      if (updateProject.status === 200) {
+        //
+        const updateSteplog: any =
+          await StepLogServices.updateTransactionStepLog(
+            updateProject.data.project.logId,
+            res.transactionHash
+          );
+        if (updateSteplog.status === 200) {
+          props.setDataProject(updateProject.data.project);
+          successMessage("Update Successfully!");
+          props.setOpenModalUpdate(false);
+          setIsUpdateLoading(false);
+        } else {
+          errorMessage("Update Info Failed!");
+        }
+      } else {
+        errorMessage("Update Project Failed!");
+        setIsUpdateLoading(false);
+      }
+    }
+  };
+
   const confirmBeforeUpdate = (value: any) => {
     setIsLoading(true);
     if (value.state === CommonProjectState.Completed) {
@@ -98,9 +146,11 @@ const EditProject = ({ myProps: props }: any) => {
           "If you confirm, this project will be update state completed and you will not be updated.",
         onOk: () => {
           if (currentMode === "Current Blockchain Mode is Public Mode") {
+            // Xử lý cho phần public blockchain
+            handlePublicBlockchain(value);
+          } else {
             handleUpdateProject(value);
           }
-          handleUpdateProject(value);
         },
       });
     } else if (value.state === CommonProjectState.Canceled) {
@@ -155,7 +205,6 @@ const EditProject = ({ myProps: props }: any) => {
                 {...modalUpdateContentLayout}
                 form={formUpdate}
                 onFinish={(value) => {
-                  console.log("Select", value);
                   // var finalValue = formatValue(value);
                   if (checkCanUpdateProjectState(value) === false) {
                     Modal.warning({

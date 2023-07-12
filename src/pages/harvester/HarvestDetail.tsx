@@ -1,20 +1,18 @@
 import {
-  GetHarvestDetailByIdAPI,
-  UpdateHarvestAPI,
+  GetHarvestDetailByIdAPI
 } from "@/api/harvest/harvest_api";
 import DrawerEditHarvestor from "@/components/Drawer/DrawerEditHarvestor";
 import LabelContentItem from "@/components/Label/LabelContentItem";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { CommonProjectState } from "@/types/project_model";
 import { HarvestModel, parseHarvestData } from "@/types/step_tracking";
 import { FormOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Col, Modal, Row, Spin } from "antd";
+import { Breadcrumb, Button, Col, Modal, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../common.scss";
-import SpinApp from "@/components/Spin/SpinApp";
 
 const HarvestDetail = () => {
   const [dataHarvest, setDataHarvest] = useState<HarvestModel>();

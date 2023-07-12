@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { Col, Layout, Menu } from "antd";
 import { HeaderCustom } from "@/components/Header/Header";
 import { MenuApp } from "@/components/Menu/MenuApp";
+import { Col, Layout } from "antd";
 import { Outlet } from "react-router-dom";
 
 import "./LayoutCustom.scss";
-import CommonMenuApp from "@/components/Menu/CommonMenuApp";
 
 const { Sider } = Layout;
 
