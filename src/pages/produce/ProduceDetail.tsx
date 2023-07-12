@@ -1,5 +1,6 @@
 import { GetProduceDetailByIdAPI } from "@/api/produce_api";
 import ProductServices from "@/api/product_api";
+import { logoVerify } from "@/assets";
 import DrawerEditProduction from "@/components/Drawer/DrawerEditProduction";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import SpinApp from "@/components/Spin/SpinApp";
@@ -50,7 +51,6 @@ function ProduceDetail() {
     getDetailProduct();
   }, [dataProduction]);
 
-
   const handleShowDrawerUpdate = () => {
     setIsOpenModalUpdate(true);
   };
@@ -69,8 +69,6 @@ function ProduceDetail() {
       });
     }
   };
-
-  
 
   return (
     <>
@@ -108,9 +106,21 @@ function ProduceDetail() {
             <Col>
               <div className="content-page">
                 <Col>
-                  <div style={{ margin: "12px 0px" }}>
+                  <Row
+                    style={{
+                      margin: "12px 0px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <StateCard myProps={{ state: dataProduction.state }} />
-                  </div>
+                    {dataProduction.state === CommonProjectState.Completed ? (
+                      <img src={logoVerify} height={144} />
+                    ) : (
+                      <></>
+                    )}
+                  </Row>
                   <Row
                     style={{
                       display: "flex",

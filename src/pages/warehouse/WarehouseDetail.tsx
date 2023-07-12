@@ -2,6 +2,7 @@ import {
   GetWarehouseDetailByIdAPI,
   UpdateWarehouseDetailByIdAPI,
 } from "@/api/warehouse_api";
+import { logoVerify } from "@/assets";
 import DrawerEditWarehouseStorage from "@/components/Drawer/DrawerEditWarehouseStorage";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
@@ -54,8 +55,6 @@ function WarehouseDetail() {
     }
   };
 
-  
-
   return (
     <>
       {isOpenModalUpdate && (
@@ -91,7 +90,22 @@ function WarehouseDetail() {
           {dataWarehouseStorage ? (
             <Col>
               <div className="content-page">
-                <StateCard myProps={{ state: dataWarehouseStorage.state }} />
+                <Row
+                  style={{
+                    margin: "12px 0px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <StateCard myProps={{ state: dataWarehouseStorage.state }} />
+                  {dataWarehouseStorage.state ===
+                  CommonProjectState.Completed ? (
+                    <img src={logoVerify} height={144} />
+                  ) : (
+                    <></>
+                  )}
+                </Row>
                 <Row
                   style={{
                     display: "flex",

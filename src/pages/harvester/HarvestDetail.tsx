@@ -1,6 +1,4 @@
-import {
-  GetHarvestDetailByIdAPI
-} from "@/api/harvest/harvest_api";
+import { GetHarvestDetailByIdAPI } from "@/api/harvest/harvest_api";
 import DrawerEditHarvestor from "@/components/Drawer/DrawerEditHarvestor";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import SpinApp from "@/components/Spin/SpinApp";
@@ -13,6 +11,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../common.scss";
+import { logoVerify } from "@/assets";
 
 const HarvestDetail = () => {
   const [dataHarvest, setDataHarvest] = useState<HarvestModel>();
@@ -37,14 +36,15 @@ const HarvestDetail = () => {
   };
 
   const checkHasProject = () => {
-    if(dataHarvest?.projectId !== null) {
+    if (dataHarvest?.projectId !== null) {
       setIsOpenModalUpdate(true);
     } else {
       Modal.warning({
-        content: "You can't update this step because the project has not assigned yet."
+        content:
+          "You can't update this step because the project has not assigned yet.",
       });
     }
-  }
+  };
 
   return (
     <>
@@ -78,9 +78,21 @@ const HarvestDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  <div style={{ margin: "12px 0px" }}>
-                    <StateCard myProps={{ state: dataHarvest?.state }} />
-                  </div>
+                  <Row
+                    style={{
+                      margin: "12px 0px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <StateCard myProps={{ state: dataHarvest.state }} />
+                    {dataHarvest.state === CommonProjectState.Completed ? (
+                      <img src={logoVerify} height={144} />
+                    ) : (
+                      <></>
+                    )}
+                  </Row>
                   <Row
                     style={{
                       display: "flex",
@@ -217,7 +229,7 @@ const HarvestDetail = () => {
             </Col>
           ) : (
             <>
-              <SpinApp/>
+              <SpinApp />
             </>
           )}
         </div>

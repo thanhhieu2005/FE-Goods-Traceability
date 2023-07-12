@@ -1,4 +1,5 @@
 import { GetTransportDetailByIdAPI, UpdateTransportAPI } from "@/api/transport_api";
+import { logoVerify } from "@/assets";
 import DrawerEditTransport from "@/components/Drawer/DrawerEditTransport";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
@@ -82,9 +83,21 @@ const TransportDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  <div style={{ margin: "12px 0px" }}>
+                <Row
+                    style={{
+                      margin: "12px 0px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <StateCard myProps={{ state: dataTransport.state }} />
-                  </div>
+                    {dataTransport.state === CommonProjectState.Completed ? (
+                      <img src={logoVerify} height={144} />
+                    ) : (
+                      <></>
+                    )}
+                  </Row>
                   <Row
                     style={{
                       display: "flex",

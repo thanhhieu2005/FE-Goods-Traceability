@@ -128,7 +128,7 @@ const FarmProjectManagement = () => {
         </div>
         <div className="content-page">
           <Row
-            style={{ paddingBottom: "12px", justifyContent: "space-between" }}
+            style={{ paddingBottom: "12px", justifyContent: "space-between", alignItems: 'center' }}
           >
             <Row style={{ width: "80%" }}>
               <div className="label-search">Find farm project</div>
