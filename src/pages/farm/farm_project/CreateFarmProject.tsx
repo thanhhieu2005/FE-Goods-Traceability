@@ -1,4 +1,5 @@
 import FarmServices from "@/api/farm/farm_api";
+import { errorMessage } from "@/components/Message/MessageNoti";
 import {
   contentLayout,
   createContentLayout,
@@ -12,17 +13,21 @@ import {
   Col,
   Form,
   Input,
+  Modal,
   Row,
   Select,
   Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CreateFarmProject = () => {
   const farmId = useSelector(
     (state: any) => state.authen.currentUserInfo.farmId
   );
+
+  const navigate = useNavigate();
 
   const [form] = Form.useForm();
 
@@ -55,9 +60,11 @@ const CreateFarmProject = () => {
     FarmServices.getAllFarmerInFarmService(farmId).then((res: any) => {
       if (res?.status === 200) {
         res.data.map((element: any) => {
-          const farmer = parseUserDetail(element.farmer);
+          if (element.farmer !== null) {
+            const farmer = parseUserDetail(element.farmer);
 
-          setDataFarmers((prevFarmer) => [...prevFarmer, farmer]);
+            setDataFarmers((prevFarmer) => [...prevFarmer, farmer]);
+          }
         });
       }
     });
@@ -68,8 +75,36 @@ const CreateFarmProject = () => {
     form.resetFields();
   };
 
-  const onSubmit = (values: any) => {
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  const onSubmit = async (values: any) => {
     console.log(values);
+
+    const finalValue = {
+      ...values,
+      farmId: farmId,
+    };
+
+    const res: any = await FarmServices.createNewFarmProject(finalValue);
+
+    if (res.status === 200) {
+      Modal.success({
+        content: "Create new project successfully!",
+        onOk: () => {
+          navigate(`/farm-project-management`);
+        },
+      });
+    } else {
+      if (res.response.status === 400) {
+        console.log(res.response.data.message);
+        errorMessage(res.response.data.message);
+
+        setLoadingButton(false);
+      } else {
+        errorMessage("Have another Error");
+        setLoadingButton(false);
+      }
+    }
   };
 
   return (
@@ -107,6 +142,19 @@ const CreateFarmProject = () => {
                       {
                         required: true,
                         message: "Farm Project Code doesn't empty",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Farm Project Name"
+                    name="farmProjectName"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Farm Project Name doesn't empty",
                       },
                     ]}
                   >
@@ -169,7 +217,11 @@ const CreateFarmProject = () => {
                   </Form.Item>
                   <Form.Item {...tailLayout}>
                     <Row>
-                      <Button type="primary" htmlType="submit">
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={loadingButton}
+                      >
                         SUBMIT
                       </Button>
                       <div style={{ margin: "0 12px" }}></div>

@@ -1,7 +1,9 @@
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
 import FarmServices from "@/api/farm/farm_api";
+import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
+import { UpdateProjectInfo } from "@/api/system_admin/project_api";
 import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
-import { errorMessage } from "@/components/Message/MessageNoti";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import { modalUpdateContentLayout } from "@/styles/content_layout";
 import { FarmInfoModel, FarmProjectModel } from "@/types/farm_model";
 import { CommonProjectState, ProjectDetailModel } from "@/types/project_model";
@@ -12,8 +14,13 @@ import {
 } from "@/utils/format_state";
 import { Col, Form, Input, Modal, Select, Tooltip } from "antd";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const EditProject = ({ myProps: props }: any) => {
+  const currentMode: string = useSelector(
+    (state: any) => state.mode.currentMode
+  );
+
   const dataProject: ProjectDetailModel = props.dataProject;
 
   console.log(dataProject);
@@ -66,16 +73,71 @@ const EditProject = ({ myProps: props }: any) => {
     }
   }, [selectedFarmId]);
 
-  const checkCanUpdateProjectState = () => {
-    if (
-      dataProject.harvest.state !== CommonProjectState.Completed &&
-      dataProject.transport.state !== CommonProjectState.Canceled &&
-      dataProject.warehouseStorage.state !== CommonProjectState.Completed &&
-      dataProject.produce.state !== CommonProjectState.Completed
-    ) {
-      return false;
+  const checkCanUpdateProjectState = (value: any) => {
+    if (value.state === CommonProjectState.Completed) {
+      if (
+        dataProject.harvest.state !== CommonProjectState.Completed &&
+        dataProject.transport.state !== CommonProjectState.Canceled &&
+        dataProject.warehouseStorage.state !== CommonProjectState.Completed &&
+        dataProject.produce.state !== CommonProjectState.Completed
+      ) {
+        return false;
+      } else return true;
     }
     return true;
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const confirmBeforeUpdate = (value: any) => {
+    setIsLoading(true);
+    if (value.state === CommonProjectState.Completed) {
+      Modal.confirm({
+        title: "Complete this project",
+        content:
+          "If you confirm, this project will be update state completed and you will not be updated.",
+        onOk: () => {
+          if (currentMode === "Current Blockchain Mode is Public Mode") {
+            handleUpdateProject(value);
+          }
+          handleUpdateProject(value);
+        },
+      });
+    } else if (value.state === CommonProjectState.Canceled) {
+      Modal.confirm({
+        title: "Cancel this project?",
+        content:
+          "If you confirm cancel this project, steps in project will be Canceled",
+        onOk: () => {
+          handleUpdateProject(value);
+        },
+      });
+    } else {
+      handleUpdateProject(value);
+    }
+  };
+
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+
+  const handleUpdateProject = async (value: any) => {
+    setIsUpdateLoading(true);
+    const projectId = dataProject.projectId;
+
+    const res: any = await UpdateProjectInfo(value, projectId);
+
+    if (res.status === 200) {
+      props.setDataProject(res.data.project);
+
+      setIsUpdateLoading(false);
+
+      props.setOpenModalUpdate(false);
+      props.setCallGetLog(true);
+
+      successMessage("Update Successfully!");
+    } else {
+      setIsUpdateLoading(false);
+      errorMessage("Update Failed!");
+    }
   };
 
   return (
@@ -86,6 +148,7 @@ const EditProject = ({ myProps: props }: any) => {
           onOpen: props.showEditProjectDrawer,
           onClose: props.closeEditProjectDrawer,
           onSubmit: formUpdate.submit,
+          loading: isUpdateLoading,
           content: (
             <Col>
               <Form
@@ -94,15 +157,15 @@ const EditProject = ({ myProps: props }: any) => {
                 onFinish={(value) => {
                   console.log("Select", value);
                   // var finalValue = formatValue(value);
-                  if(checkCanUpdateProjectState() === false) {
+                  if (checkCanUpdateProjectState(value) === false) {
                     Modal.warning({
-                      title: 'Can not update!',
-                      content: 'Steps in project have not been Completed yet! Please, complete the steps.',
+                      title: "Can not update!",
+                      content:
+                        "Steps in project have not been Completed yet! Please, complete the steps.",
                     });
                   } else {
-                    props.handleUpdateInfoProject(value);
+                    confirmBeforeUpdate(value);
                   }
-                  
                 }}
               >
                 <Form.Item
@@ -153,9 +216,7 @@ const EditProject = ({ myProps: props }: any) => {
                   name="state"
                   initialValue={dataProject?.state}
                 >
-                  <Select
-                    placeholder="Select new State"
-                  >
+                  <Select placeholder="Select new State">
                     {listCommonState.map((state) => (
                       <Select.Option value={state} key={state}>
                         <span

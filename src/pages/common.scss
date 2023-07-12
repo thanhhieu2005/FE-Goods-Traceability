@@ -193,6 +193,19 @@
     justify-items: center;
 }
 
+.blockchain-setting {
+    padding: 16px 12px;
+    font-size: 16px;
+    margin-bottom: 12px;
+    background-color: #e8b26e;
+    font-weight: 600;
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+}
+
 // Tag card border common
 .card-border-title {
     background-color: rgba(232, 178, 110, 0.5);

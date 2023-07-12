@@ -37,6 +37,9 @@ import AddProductPage from "@/pages/product/AddProductPage";
 import AboutUs from "@/pages/common/AboutUs";
 import ListProductsOfProject from "@/pages/system_admin/project_detail/list_products/ListProductsOfProject";
 import UserProfile from "@/pages/user/UserProfile";
+import SystemSettings from "@/pages/user/SystemSettings";
+import ProductReleasedManagement from "@/pages/product/ProductReleasedManagement";
+import ProductReleasedDetail from "@/pages/product/ProductReleasedDetail";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -67,6 +70,10 @@ const Routers = () => {
               <Route
                 path="/about-us"
                 element={<AboutUs/>}
+              />
+              <Route
+                path="/settings"
+                element={<SystemSettings/>}
               />
               <Route
                 path="/user-profile"
@@ -131,6 +138,14 @@ const Routers = () => {
                   <Route
                     path="/project/product/:projectId"
                     element={<ListProductsOfProject />}
+                  />
+                  <Route
+                    path="/released-product-management"
+                    element={<ProductReleasedManagement />}
+                  />
+                  <Route
+                    path="/released-product-management/:productId"
+                    element={<ProductReleasedDetail/>}
                   />
                 </>
               ) : userName.role === 3 ? ( // Farm Router

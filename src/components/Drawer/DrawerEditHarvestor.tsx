@@ -1,5 +1,5 @@
 import { modalUpdateContentLayout } from "@/styles/content_layout";
-import { HarvestModel, listCommonState } from "@/types/step_tracking";
+import { HarvestModel, listCommonState, parseHarvestData } from "@/types/step_tracking";
 import {
   parseColorByCommonState,
   parseToStringCommonState,
@@ -7,6 +7,9 @@ import {
 import { Form, Input, Modal, Select } from "antd";
 import { ShowDrawerEdit } from "./DrawerEditItem";
 import { CommonProjectState } from "@/types/project_model";
+import { UpdateHarvestAPI } from "@/api/harvest/harvest_api";
+import { errorMessage, successMessage } from "../Message/MessageNoti";
+import { useState } from "react";
 
 const DrawerEditHarvestor = ({ myProps: props }: any) => {
   const dataHarvest: HarvestModel = props.dataHarvest;
@@ -40,7 +43,7 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
               <span>you will not be able to change the information</span>
             </p>
           ),
-          onOk: () => props.submitUpdate(value),
+          onOk: () => onUpdateHarvestProject(value),
         });
       }
     } else if (value.state === CommonProjectState.Canceled) {
@@ -56,10 +59,37 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
             </span>
           </p>
         ),
-        onOk: () => props.submitUpdate(value),
+        onOk: () => onUpdateHarvestProject(value),
       });
     } else {
-      props.submitUpdate(value);
+      onUpdateHarvestProject(value);
+    }
+  };
+
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
+  const onUpdateHarvestProject = async (value: any) => {
+    setIsLoadingUpdate(true);
+    const res: any = await UpdateHarvestAPI(value, dataHarvest.harvestId);
+
+    if (res.status == 200) {
+      console.log(res);
+      const newHarvest = parseHarvestData(res.data.harvest);
+
+      props.setDataHarvest(newHarvest);
+
+      props.setIsOpenModalUpdate(false);
+
+      setIsLoadingUpdate(false);
+
+      successMessage("Update Successfully!");
+    } else if(res.response.status === 400) {
+      errorMessage(res.response.data.message);
+      setIsLoadingUpdate(false);
+    } 
+    else {
+      errorMessage("Update Failed!");
+      setIsLoadingUpdate(false);
     }
   };
 
@@ -71,6 +101,7 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
           onOpen: props.showUpdate,
           onClose: props.cancelCloseUpdate,
           onSubmit: form.submit,
+          loading: isLoadingUpdate,
           content: (
             <div>
               <Form

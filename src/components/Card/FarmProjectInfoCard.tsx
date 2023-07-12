@@ -1,10 +1,9 @@
-import { Col, Row } from "antd";
-import React from "react";
-import LabelContentItem from "../Label/LabelContentItem";
-import { greyBlurColor, mainColor, seedMainColor } from "@/utils/app_color";
-import moment from "moment";
-import { ProjectDetailModel } from "@/types/project_model";
 import { FarmInfoModel } from "@/types/farm_model";
+import { ProjectDetailModel } from "@/types/project_model";
+import { greyBlurColor, mainColor, seedMainColor } from "@/utils/app_color";
+import { Col, Row } from "antd";
+import moment from "moment";
+import LabelContentItem from "../Label/LabelContentItem";
 import StateCard from "../Tag/StateCard";
 
 const FarmProjectInfoCard = ({ myProps: props }: any) => {

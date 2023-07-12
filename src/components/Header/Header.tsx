@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { connect } from "../../features/connectWalletAPI";
 import "./Header.scss";
+import { clearBlockchainMode } from "@/redux/modeSlide";
 
 const { Header } = Layout;
 
@@ -55,6 +56,7 @@ export const HeaderCustom: React.FC = () => {
     localStorage.clear();
 
     dispatch(logout());
+    dispatch(clearBlockchainMode());
 
     navigate("/login", { replace: true });
   };

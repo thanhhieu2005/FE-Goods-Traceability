@@ -8,6 +8,10 @@ export interface LogModel {
     modelAfterChanged: any;
     createdAt: string;
     updatedAt: string;
+    transactionHash: string;
+    transactionAddress: string;
+    transactionUrl: string;
+    transactionQRCodeUri: string;
 }
 
 

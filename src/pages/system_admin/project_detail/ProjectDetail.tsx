@@ -8,9 +8,12 @@ import HarvestInfoCard from "@/components/Card/HarvestInfoCard";
 import ProduceInfoCard from "@/components/Card/ProduceInfoCard";
 import TransportInfoCard from "@/components/Card/TransportInfoCard";
 import WarehouseStorageInfoCard from "@/components/Card/WarehouseStorageInfoCard";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { FarmInfoModel } from "@/types/farm_model";
-import { ProjectDetailModel } from "@/types/project_model";
+import { LogEnum, LogModel } from "@/types/project_log_model";
+import { CommonProjectState, ProjectDetailModel } from "@/types/project_model";
 import { greyBlurColor, mainColor } from "@/utils/app_color";
 import { checkCurrentStepProject } from "@/utils/check_current_step";
 import {
@@ -18,15 +21,15 @@ import {
   FormOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Button, Col, Empty, Row, Spin, Steps } from "antd";
+import { Breadcrumb, Button, Col, Empty, Row, Steps } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../common.scss";
 import EditProject from "./EditProject";
 import "./ProjectDetail.scss";
-import SpinApp from "@/components/Spin/SpinApp";
-import { LogEnum, LogModel } from "@/types/project_log_model";
+import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
+import { logoVerify } from "@/assets";
 
 const ProjectDetail = () => {
   const navigate = useNavigate();
@@ -51,6 +54,8 @@ const ProjectDetail = () => {
 
   const [produceLogList, setProduceLogList] = useState<LogModel[]>([]);
 
+  const [isCallGetLog, setCallGetLog] = useState(false);
+
   useEffect(() => {
     GetProjectDetailByID(projectId).then((res: any) => {
       const projectDetail = res.data as ProjectDetailModel;
@@ -62,10 +67,17 @@ const ProjectDetail = () => {
       setCurrentStep(currentStep);
     });
 
+    setProjectLogList([]);
+    setHarvestLogList([]);
+    setWarehouseStorageLogList([]);
+    setTransportLogList([]);
+    setProduceLogList([]);
+
     const getProjectLogsById = async () => {
       const res: any = await ProjectServices.getProjectLogList(projectId);
-
       // setProjectLogList(res.data.projectLogList);
+
+      console.log(res);
       if (res.status === 200) {
         res.data.projectLogList.map((element: any) => {
           const logModel = element.projectLog as LogModel;
@@ -95,9 +107,10 @@ const ProjectDetail = () => {
     };
 
     getProjectLogsById();
-  }, [projectId]);
+  }, [projectId, isCallGetLog]);
 
   const [farm, setFarm] = useState<FarmInfoModel>();
+
 
   useEffect(() => {
     const fetchAPIFarm = async () => {
@@ -153,22 +166,6 @@ const ProjectDetail = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
-
-  const onUpdateInfoProject = async (value: any) => {
-    console.log(value);
-
-    const res: any = await UpdateProjectInfo(value, projectId);
-
-    if (res.status === 200) {
-      console.log("res", res);
-
-      setDataProject(res.data.project);
-
-      setOpenModalUpdate(false);
-    }
-  };
-
   return (
     <>
       {isOpenModalUpdate && (
@@ -177,8 +174,9 @@ const ProjectDetail = () => {
             dataProject: dataProject,
             showEditProjectDrawer: showEditProjectDrawer,
             closeEditProjectDrawer: closeEditProjectDrawer,
-            isLoadingUpdate: isLoadingUpdate,
-            handleUpdateInfoProject: onUpdateInfoProject,
+            setDataProject: setDataProject,
+            setOpenModalUpdate: setOpenModalUpdate,
+            setCallGetLog: setCallGetLog,
           }}
         />
       )}
@@ -201,9 +199,21 @@ const ProjectDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  <div style={{ margin: "12px 0px" }}>
+                  <Row
+                    style={{
+                      margin: "12px 0px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
                     <StateCard myProps={{ state: dataProject.state }} />
-                  </div>
+                    {checkVerifyBlockchainLog(projectLogList) === true &&
+                    dataProject.state === CommonProjectState.Completed ? (
+                      <img src={logoVerify} height={144} />
+                    ) : (
+                      <></>
+                    )}
+                  </Row>
                   <Row
                     style={{
                       display: "flex",
@@ -258,20 +268,25 @@ const ProjectDetail = () => {
                           View Log
                         </Button>
                       </div>
-                      <Button
-                        type="primary"
-                        icon={<FormOutlined />}
-                        size="large"
-                        style={{ borderRadius: "4px" }}
-                        onClick={() => {
-                          // disabled = false;
-                          // setComponentDisabled(disabled);
-                          setOpenModalUpdate(true);
-                        }}
-                        // disabled={!componentDisabled}
-                      >
-                        Update
-                      </Button>
+                      {dataProject.state === CommonProjectState.Completed ||
+                      dataProject.state === CommonProjectState.Canceled ? (
+                        <></>
+                      ) : (
+                        <Button
+                          type="primary"
+                          icon={<FormOutlined />}
+                          size="large"
+                          style={{ borderRadius: "4px" }}
+                          onClick={() => {
+                            // disabled = false;
+                            // setComponentDisabled(disabled);
+                            setOpenModalUpdate(true);
+                          }}
+                          // disabled={!componentDisabled}
+                        >
+                          Update
+                        </Button>
+                      )}
                     </Row>
                   </Row>
                   <div style={{ padding: "24px" }}>
@@ -459,6 +474,7 @@ const ProjectDetail = () => {
                     myProps={{
                       dataHarvest: dataProject.harvest,
                       harvestLogList: harvestLogList,
+                      isDone: checkVerifyBlockchainLog(harvestLogList),
                     }}
                   />
                 </Col>
@@ -467,6 +483,7 @@ const ProjectDetail = () => {
                     myProps={{
                       dataTransport: dataProject.transport,
                       transportLogList: transportLogList,
+                      isDone: checkVerifyBlockchainLog(transportLogList),
                     }}
                   />
                 </Col>
@@ -481,6 +498,7 @@ const ProjectDetail = () => {
                     myProps={{
                       dataWarehouseStorage: dataProject.warehouseStorage,
                       warehouseStorageLogList: warehouseStorageLogList,
+                      isDone: checkVerifyBlockchainLog(warehouseStorageLogList),
                     }}
                   />
                 </Col>
@@ -489,6 +507,7 @@ const ProjectDetail = () => {
                     myProps={{
                       dataProduce: dataProject.produce,
                       produceLogList: produceLogList,
+                      isDone: checkVerifyBlockchainLog(produceLogList),
                     }}
                   />
                 </Col>

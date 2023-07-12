@@ -1,8 +1,8 @@
 import { DatePicker, Form, Input, Modal, Select } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { ShowDrawerEdit } from "./DrawerEditItem";
 import { modalUpdateContentLayout } from "@/styles/content_layout";
-import { TransportModel, listCommonState } from "@/types/step_tracking";
+import { TransportModel, listCommonState, parseTransportData } from "@/types/step_tracking";
 import moment from "moment";
 import { dateFormat } from "@/utils/formatDateTime";
 import {
@@ -10,6 +10,8 @@ import {
   parseToStringCommonState,
 } from "@/utils/format_state";
 import { CommonProjectState } from "@/types/project_model";
+import { UpdateTransportAPI } from "@/api/transport_api";
+import { errorMessage, successMessage } from "../Message/MessageNoti";
 
 const DrawerEditTransport = ({ myProps: props }: any) => {
   const dataTransport: TransportModel = props.dataTransport;
@@ -34,7 +36,7 @@ const DrawerEditTransport = ({ myProps: props }: any) => {
             <span>you will not be able to change the information</span>
           </p>
         ),
-        onOk: () => props.onUpdate(finalValue),
+        onOk: () => onUpdateTransportSupervision(finalValue),
       });
     } else if (value.state === CommonProjectState.Canceled) {
       Modal.confirm({
@@ -49,12 +51,38 @@ const DrawerEditTransport = ({ myProps: props }: any) => {
             </span>
           </p>
         ),
-        onOk: () => props.onUpdate(value),
+        onOk: () => onUpdateTransportSupervision(value),
       });
     } else {
-      props.onUpdate(value);
+      onUpdateTransportSupervision(value);
     }
   };
+
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
+  const onUpdateTransportSupervision = async(value: any) => {
+    setIsLoadingUpdate(true);
+
+    const res: any = await UpdateTransportAPI(value, dataTransport.transportId);
+
+    if(res.status == 200) {
+      const newTransportSupervision = parseTransportData(res.data);
+
+      props.setDataTransport(newTransportSupervision);
+
+      props.setIsOpenModalUpdate(false);
+      setIsLoadingUpdate(false);
+      successMessage("Update Successfully!");
+    } else if(res.response.status === 400) {
+      errorMessage(res.response.data.message);
+      setIsLoadingUpdate(false);
+    }
+     else {
+      console.log(res);
+      setIsLoadingUpdate(false);
+      errorMessage("Update Failed!");
+    }
+  }
 
   const formatDateExpected = moment(dataTransport.dateExpected).format("DD/MM/YYYY");
 
@@ -66,6 +94,7 @@ const DrawerEditTransport = ({ myProps: props }: any) => {
           onOpen: props.showUpdate,
           onClose: props.cancelCloseUpdate,
           onSubmit: form.submit,
+          loading: isLoadingUpdate,
           content: (
             <div>
               <Form

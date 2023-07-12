@@ -69,14 +69,14 @@ export const parseListUserInfo = (data: any) => {
   
   export const parseUserDetail = (data: any) => {
     var userDetail = {} as UserDetailModel;
-    var farmList = [] as Array<FarmInfoModel>;
-    if(data.farmList != null) {
-      data.farmList.map((element: any) => {
-        const farm = parseFarmInfo(element.farm);
-        farmList.push(farm);
-      })
-    }
-    userDetail.userId = data._id;
+    // var farmList = [] as Array<FarmInfoModel>;
+    // if(data.farmList != null) {
+    //   data.farmList.map((element: any) => {
+    //     const farm = parseFarmInfo(element.farm);
+    //     farmList.push(farm);
+    //   })
+    // }
+    userDetail.userId = data.userId;
     userDetail.email = data.email;
     userDetail.firstName = data.firstName;
     userDetail.lastName = data.lastName;

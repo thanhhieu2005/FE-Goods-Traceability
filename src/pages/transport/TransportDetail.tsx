@@ -46,27 +46,6 @@ const TransportDetail = () => {
     }
   };
 
-  const onUpdateTransportSupervision = async(value: any) => {
-    console.log(value);
-
-    const res: any = await UpdateTransportAPI(value, transportId);
-
-    if(res.status == 200) {
-      const newTransportSupervision = parseTransportData(res.data);
-
-      setDataTransport(newTransportSupervision);
-
-      setIsOpenModalUpdate(false);
-      successMessage("Update Successfully!");
-    } else if(res.response.status === 400) {
-      errorMessage(res.response.data.message);
-    }
-     else {
-      console.log(res);
-      errorMessage("Update Failed!");
-    }
-  }
-
   return (
     <>
       {isOpenModalUpdate && (
@@ -75,7 +54,8 @@ const TransportDetail = () => {
             dataTransport: dataTransport,
             showUpdate: handleShowDrawerUpdate,
             cancelCloseUpdate: handleCancelDrawerUpdate,
-            onUpdate: onUpdateTransportSupervision,
+            setDataTransport: setDataTransport,
+            setIsOpenModalUpdate: setIsOpenModalUpdate,
           }}
         />
       )}

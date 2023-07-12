@@ -52,6 +52,7 @@ function ProduceDetail() {
     getDetailProduct();
   }, [dataProduction]);
 
+
   const handleShowDrawerUpdate = () => {
     setIsOpenModalUpdate(true);
   };
@@ -71,23 +72,7 @@ function ProduceDetail() {
     }
   };
 
-  const onUpdateProductionSupervision = async (value: any) => {
-    const res: any = await UpdateProduceAPI(value, productionId);
-
-    if (res.status === 200) {
-      const newUpdate = parseProductionData(res.data.produce);
-
-      setDataProduction(newUpdate);
-
-      setIsOpenModalUpdate(false);
-      successMessage("Update Successfully!");
-    } else if (res.response.status === 400) {
-      errorMessage(res.response.data.message);
-    } else {
-      console.log(res);
-      errorMessage("Update Failed!");
-    }
-  };
+  
 
   return (
     <>
@@ -97,7 +82,8 @@ function ProduceDetail() {
             dataProduction: dataProduction,
             showUpdate: handleShowDrawerUpdate,
             cancelCloseUpdate: handleCancelDrawerUpdate,
-            onUpdate: onUpdateProductionSupervision,
+            setDataProduction: setDataProduction,
+            setIsOpenModalUpdate: setIsOpenModalUpdate,
           }}
         />
       )}
@@ -352,7 +338,7 @@ function ProduceDetail() {
                               myProps={{
                                 label: "Bussiness License Registration Number",
                                 content:
-                                  product.bussinessLicenseRegistrationNumber,
+                                  product.businessLicenseRegistrationNumber,
                                 width: "100%",
                               }}
                             />

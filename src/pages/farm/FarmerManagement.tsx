@@ -95,6 +95,7 @@ const FarmerManagement = ({ myProp: props }: any) => {
     // need to handle this 
     if(result.status === 200) {
       successMessage("Add Farmer Successfully!");
+      setIsModalAddOpen(false);
     } else if(result.response.status === 400) {
       errorMessage(result.response.data.errorMessage)
     } else {

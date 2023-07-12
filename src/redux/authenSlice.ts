@@ -2,8 +2,11 @@ import UserServices from "@/api/user_api";
 import { createSlice } from "@reduxjs/toolkit";
 
 
+let res: any;
 
-const res = await UserServices.RefreshUserAPI();
+if(localStorage.getItem('token') !== null) {
+    res = await UserServices.RefreshUserAPI();
+}
 
 const initialState = {
     currentUserInfo: res?.data || {},

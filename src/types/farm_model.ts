@@ -105,12 +105,12 @@ export const parseFarmInfo = (data: any) => {
 export const parseFarmDetail = (data: any) => {
     var farmDetailInfo = {} as FarmDetailInfoModel;
     var farmerList = [] as Array<UserDetailModel>;
-    if(data.farmerList != null) {
-        data.farmerList.map((element: any) => {
-      const farmer = parseUserDetail(element.farmer);
-      farmerList.push(farmer);
-        })
-    }
+    // if(data.farmerList != null) {
+    //     data.farmerList.map((element: any) => {
+    //   const farmer = parseUserDetail(element.farmer);
+    //   farmerList.push(farmer);
+    //     })
+    // }
 
     farmDetailInfo.farmId = data.farmId;
     farmDetailInfo.farmCode = data.farmCode;

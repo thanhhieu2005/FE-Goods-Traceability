@@ -180,14 +180,14 @@ const AddProductPage = () => {
                 <Input placeholder="Enter date" />
               </Form.Item>
               <Form.Item
-                label="Bussiness License Registration Number"
-                name="bussinessLicenseRegistrationNumber"
+                label="Business License Registration Number"
+                name="businessLicenseRegistrationNumber"
                 required
                 rules={[
                   {
                     required: true,
                     message:
-                      "Please enter Bussiness License Registration Number",
+                      "Please enter Business License Registration Number",
                   },
                 ]}
               >

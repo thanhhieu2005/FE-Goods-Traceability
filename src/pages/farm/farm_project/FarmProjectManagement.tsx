@@ -105,7 +105,7 @@ const FarmProjectManagement = () => {
             };
           });
 
-          setDataFarmProjects(formattedData);
+          setDataFarmProjects(formattedData.reverse());
         }
       } catch (error) {
         // handle error

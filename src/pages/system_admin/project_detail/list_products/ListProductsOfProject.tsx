@@ -1,11 +1,11 @@
+import ProductServices from "@/api/product_api";
 import ProjectServices from "@/api/system_admin/project_api";
-import LabelContentItem from "@/components/Label/LabelContentItem";
+import ProductCheckInfoCard from "@/components/Card/ProductCheckInfoCard";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import SpinApp from "@/components/Spin/SpinApp";
-import { ProductImageModel, ProductModel } from "@/types/product_model";
-import { completedColor, mainColor, whiteColor } from "@/utils/app_color";
-import { CheckCircleOutlined, FormOutlined } from "@ant-design/icons/lib/icons";
-import { Breadcrumb, Col, Empty, Row, Image, Button } from "antd";
-import React, { useEffect, useState } from "react";
+import { ProductModel } from "@/types/product_model";
+import { Breadcrumb, Col, Empty, Modal } from "antd";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const ListProductsOfProject = () => {
@@ -30,6 +30,34 @@ const ListProductsOfProject = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const onHandleDeleteProduct = async(product: ProductModel) => {
+    setIsLoading(true);
+    const res: any = await ProductServices.deleteProduct(product.productId);
+
+    if(res.status === 200) {
+      const indexProduct = dataProducts.indexOf(product);
+      if(indexProduct !== -1) {
+        dataProducts.splice(indexProduct, 1);
+        successMessage("Delete Successfully!");
+      }
+      else {
+        errorMessage("Delete Failed!");
+      }
+      setDataProducts(dataProducts);
+      setIsLoading(false);
+    }
+  }
+
+  const onConfirmDelete = async (product: ProductModel) => {
+    Modal.confirm({
+      title: "Delete Project",
+      content: "You will delete this Product from Project ?",
+      onOk: () => {
+        onHandleDeleteProduct(product);
+      }
+    });
+  }
+
   return (
     <>
       {!isLoading ? (
@@ -52,127 +80,14 @@ const ListProductsOfProject = () => {
               <div className="content-page">
                 {dataProducts.length !== 0 ? (
                   dataProducts.map((product: ProductModel, index: number) => (
-                    <div key={index}>
-                      <Row
-                        style={{
-                          display: "flex",
-                          width: "100%",
-                          justifyContent: "space-between",
-                          paddingBottom: "12px",
-                          alignItems: "center",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "20px",
-                            fontWeight: "600",
-                            color: mainColor,
-                          }}
-                        >
-                          Product Information
-                        </p>
-                        <Row>
-                          <Button
-                            type="default"
-                            icon={<FormOutlined />}
-                            size="middle"
-                          >
-                            Update
-                          </Button>
-                          <div style={{ padding: "4px" }} />
-                          <Button
-                            type="default"
-                            icon={<CheckCircleOutlined />}
-                            size="middle"
-                            style={{
-                              backgroundColor: completedColor,
-                              color: whiteColor,
-                              borderColor: completedColor,
-                            }}
-                          >
-                            Approve
-                          </Button>
-                        </Row>
-                      </Row>
-                      <Row>
-                        <LabelContentItem
-                          myProps={{
-                            label: "Product ID",
-                            content: product.productId,
-                          }}
-                        />
-                        <LabelContentItem
-                          myProps={{
-                            label: "Product Name",
-                            content: product.productName,
-                          }}
-                        />
-                      </Row>
-                      <Row>
-                        <LabelContentItem
-                          myProps={{
-                            label: "Product EXP",
-                            content: product.exp,
-                          }}
-                        />
-                        <LabelContentItem
-                          myProps={{
-                            label: "Product MFG",
-                            content: product.mfg,
-                          }}
-                        />
-                      </Row>
-                      <LabelContentItem
-                        myProps={{
-                          label: "Certificate of Food Hygiene and Safety",
-                          content: product.certificateOfFoodHygieneAndSafety,
-                          width: "100%",
-                        }}
-                      />
-                      <LabelContentItem
-                        myProps={{
-                          label: "Bussiness License Registration Number",
-                          content: product.bussinessLicenseRegistrationNumber,
-                          width: "100%",
-                        }}
-                      />
-                      <Row>
-                        <LabelContentItem
-                          myProps={{
-                            label: "Type of Product",
-                            content: product.typeOfProduct,
-                          }}
-                        />
-                        <LabelContentItem
-                          myProps={{
-                            label: "Measure Unit",
-                            content: product.measureUnit,
-                          }}
-                        />
-
-                        <>
-                          {product.productImage.length > 0 ? (
-                            <Row style={{ paddingTop: "24px" }}>
-                              <p className="title-text">Product Images:</p>
-                              <div style={{ padding: "12px" }} />
-                              {product.productImage.map(
-                                (image: ProductImageModel, key: number) => (
-                                  <div key={key} className="common-image">
-                                    <Image
-                                      src={image.productImageUrl}
-                                      style={{ marginRight: "12px" }}
-                                    />
-                                  </div>
-                                )
-                              )}
-                            </Row>
-                          ) : (
-                            <></>
-                          )}
-                        </>
-                        <div className="divided" />
-                      </Row>
-                    </div>
+                    <ProductCheckInfoCard
+                      key={index}
+                      myProps={{
+                        dataProduct: product,
+                        onDeleteProduct: onConfirmDelete,
+                        propjectId: projectId,
+                      }}
+                    />
                   ))
                 ) : (
                   <div>
