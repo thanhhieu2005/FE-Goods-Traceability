@@ -1,16 +1,16 @@
 import ProductionSupervisionServices from "@/api/produce_api";
-import { BadgeByState, TagStateCommonProject } from "@/components/Tag/StateTag";
+import { TagStateCommonProject } from "@/components/Tag/StateTag";
+import { CommonProjectState } from "@/types/project_model";
 import { ProductionModel, parseProductionData } from "@/types/step_tracking";
 import { UserDetailModel } from "@/types/user";
 import { Col, Row, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
+import Search from "antd/lib/input/Search";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "../common.scss";
-import moment from "moment";
-import { CommonProjectState } from "@/types/project_model";
-import Search from "antd/lib/input/Search";
 
 function ProduceManagement() {
   const navigate = useNavigate();

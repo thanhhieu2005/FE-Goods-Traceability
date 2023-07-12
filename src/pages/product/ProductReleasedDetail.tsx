@@ -1,8 +1,8 @@
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import { ProductImageModel, ProductModel } from "@/types/product_model";
-import { greyBlurColor, landMainColor, mainColor } from "@/utils/app_color";
-import { Breadcrumb, Col, Row, Image } from "antd";
-import React, { useState } from "react";
+import { mainColor } from "@/utils/app_color";
+import { Breadcrumb, Col, Image, Row } from "antd";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const ProductReleasedDetail = () => {

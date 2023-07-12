@@ -2,8 +2,7 @@ import FarmServices from "@/api/farm/farm_api";
 import { errorMessage } from "@/components/Message/MessageNoti";
 import {
   contentLayout,
-  createContentLayout,
-  tailLayout,
+  tailLayout
 } from "@/styles/content_layout";
 import { LandModel, LandState, SeedModel } from "@/types/farm_model";
 import { UserDetailModel, parseUserDetail } from "@/types/user";
@@ -18,7 +17,7 @@ import {
   Select,
   Tooltip,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

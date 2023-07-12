@@ -1,7 +1,7 @@
 import FarmServices from "@/api/farm/farm_api";
+import { logoVerify } from "@/assets";
 import DrawerUpdateFarmProjectInfo from "@/components/Drawer/Farm/DrawerUpdateFarmProjectInfo";
 import DrawerUpdateFarmPropject from "@/components/Drawer/Farm/DrawerUpdateFarmPropject";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { FarmProjectModel, LandState } from "@/types/farm_model";
@@ -9,7 +9,7 @@ import { CommonProjectState } from "@/types/project_model";
 import { UserDetailModel } from "@/types/user";
 import { mainColor, whiteColor } from "@/utils/app_color";
 import { EditOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Col, Modal, Progress, Row, Spin } from "antd";
+import { Breadcrumb, Button, Col, Modal, Progress, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,7 +24,9 @@ const FarmProjectDetail = () => {
     (state: any) => state.authen.currentUserInfo.isOwner
   );
 
-  const currentUser : UserDetailModel = useSelector((state: any) => state.authen.currentUserInfo);
+  const currentUser: UserDetailModel = useSelector(
+    (state: any) => state.authen.currentUserInfo
+  );
 
   useEffect(() => {
     const getFarmProjectDetail = async () => {
@@ -109,21 +111,23 @@ const FarmProjectDetail = () => {
   };
 
   const checkPermissionToUpdateProject = () => {
-    if(dataFarmProject.farmer !== null) {
-      if(dataFarmProject.farmer.userId === currentUser.userId) {
+    if (dataFarmProject.farmer !== null) {
+      if (dataFarmProject.farmer.userId === currentUser.userId) {
         setIsUpdateFarmProjectProgress(true);
       } else {
         Modal.warning({
-          content: 'You are not a farmer in this project!',
-        })
+          content: "You are not a farmer in this project!",
+        });
       }
     } else {
       Modal.warning({
         content: "Farm Project has not been implemented by farmer yet!",
-        onOk: () => {setIsDrawerEditFarmProject(true)},
-      })
+        onOk: () => {
+          setIsDrawerEditFarmProject(true);
+        },
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -173,6 +177,7 @@ const FarmProjectDetail = () => {
                       paddingBottom: "12px",
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: 'space-between',
                     }}
                   >
                     <StateCard
@@ -180,6 +185,11 @@ const FarmProjectDetail = () => {
                         state: dataFarmProject.state,
                       }}
                     />
+                    {dataFarmProject.state === CommonProjectState.Completed ? (
+                      <img src={logoVerify} height={144} />
+                    ) : (
+                      <></>
+                    )}
                   </Row>
                   <Row
                     style={{ display: "flex", justifyContent: "space-between" }}
@@ -477,7 +487,7 @@ const FarmProjectDetail = () => {
                         >
                           <p className="title-text">Note:</p>
                           <div style={{ padding: "4px" }}></div>
-                          <p className="content-text">{ dataFarmProject.note }</p>
+                          <p className="content-text">{dataFarmProject.note}</p>
                         </Row>
                       </Col>
                     </div>
@@ -646,7 +656,7 @@ const FarmProjectDetail = () => {
             </Row>
           </>
         ) : (
-          <SpinApp/>
+          <SpinApp />
         )}
       </Col>
     </>

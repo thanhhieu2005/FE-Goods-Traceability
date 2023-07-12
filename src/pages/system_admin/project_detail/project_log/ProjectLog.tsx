@@ -1,18 +1,17 @@
-import { Breadcrumb, Button, Card, Col, Empty, Form, Input, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import { Breadcrumb, Col, Empty, Row } from "antd";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import "./log.scss";
-import { LogEnum, LogModel } from "@/types/project_log_model";
-import LabelContentItem from "@/components/Label/LabelContentItem";
-import { canceledColor, completedColor, mainColor } from "@/utils/app_color";
-import moment from "moment";
-import ProjectLogInfoCard from "@/components/Card/LogInfo/ProjectLogInfoCard";
-import SpinApp from "@/components/Spin/SpinApp";
 import HarvestLogInfoCard from "@/components/Card/LogInfo/HarvestLogInfoCard";
+import ProduceLogInfoCard from "@/components/Card/LogInfo/ProduceLogInfoCard";
+import ProjectLogInfoCard from "@/components/Card/LogInfo/ProjectLogInfoCard";
 import TransportLogInfoCard from "@/components/Card/LogInfo/TransportLogInfoCard";
 import WarehouseLogInfoCard from "@/components/Card/LogInfo/WarehouseLogInfoCard";
-import ProduceLogInfoCard from "@/components/Card/LogInfo/ProduceLogInfoCard";
+import LabelContentItem from "@/components/Label/LabelContentItem";
+import SpinApp from "@/components/Spin/SpinApp";
+import { LogEnum } from "@/types/project_log_model";
+import moment from "moment";
+import "./log.scss";
 
 const ProjectLog = () => {
   const { state: modelLog } = useLocation();

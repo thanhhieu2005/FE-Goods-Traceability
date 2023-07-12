@@ -128,7 +128,9 @@ export const addTrackingBlock = async (transactionId: any, contentTransaction: a
 
   const tx = await erc20Contract.methods
     .addTrackingBlock(transactionId, contentTransaction, account[0])
-    .send({ from: account[0] });
+    .send({ from: account[0] }).catch((e: any) => {
+      return e;
+    });
 
   console.log(tx);
 

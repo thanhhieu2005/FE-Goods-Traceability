@@ -1,16 +1,14 @@
-import { GetProduceDetailByIdAPI, UpdateProduceAPI } from "@/api/produce_api";
+import { GetProduceDetailByIdAPI } from "@/api/produce_api";
 import ProductServices from "@/api/product_api";
-import ProductInfoCard from "@/components/Card/ProductInfoCard";
 import DrawerEditProduction from "@/components/Drawer/DrawerEditProduction";
 import LabelContentItem from "@/components/Label/LabelContentItem";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { ProductImageModel, ProductModel } from "@/types/product_model";
 import { CommonProjectState } from "@/types/project_model";
 import { ProductionModel, parseProductionData } from "@/types/step_tracking";
 import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Breadcrumb, Button, Col, Empty, Modal, Row, Image } from "antd";
+import { Breadcrumb, Button, Col, Empty, Image, Modal, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

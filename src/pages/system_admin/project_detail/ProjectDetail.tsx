@@ -1,14 +1,13 @@
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
 import ProjectServices, {
-  GetProjectDetailByID,
-  UpdateProjectInfo,
+  GetProjectDetailByID
 } from "@/api/system_admin/project_api";
+import { logoVerify } from "@/assets";
 import FarmProjectInfoCard from "@/components/Card/FarmProjectInfoCard";
 import HarvestInfoCard from "@/components/Card/HarvestInfoCard";
 import ProduceInfoCard from "@/components/Card/ProduceInfoCard";
 import TransportInfoCard from "@/components/Card/TransportInfoCard";
 import WarehouseStorageInfoCard from "@/components/Card/WarehouseStorageInfoCard";
-import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { FarmInfoModel } from "@/types/farm_model";
@@ -16,6 +15,7 @@ import { LogEnum, LogModel } from "@/types/project_log_model";
 import { CommonProjectState, ProjectDetailModel } from "@/types/project_model";
 import { greyBlurColor, mainColor } from "@/utils/app_color";
 import { checkCurrentStepProject } from "@/utils/check_current_step";
+import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
 import {
   FileSearchOutlined,
   FormOutlined,
@@ -28,8 +28,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../../common.scss";
 import EditProject from "./EditProject";
 import "./ProjectDetail.scss";
-import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
-import { logoVerify } from "@/assets";
 
 const ProjectDetail = () => {
   const navigate = useNavigate();
@@ -204,6 +202,7 @@ const ProjectDetail = () => {
                       margin: "12px 0px",
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: 'space-between',
                     }}
                   >
                     <StateCard myProps={{ state: dataProject.state }} />

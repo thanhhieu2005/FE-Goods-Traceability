@@ -10,21 +10,20 @@ import {
   List,
   Modal,
   Row,
-  Select,
-  Spin,
+  Select
 } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { TfiTrash } from "react-icons/tfi";
-import { EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { icLand } from "@/assets";
-import { TagLandState } from "@/components/Tag/StateTag";
-import { createContentLayout } from "@/styles/content_layout";
-import { ShowModalCreateNewItem } from "@/components/Modal/ModalCreateItem";
 import { ShowDrawerEdit } from "@/components/Drawer/DrawerEditItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
+import { ShowModalCreateNewItem } from "@/components/Modal/ModalCreateItem";
 import SpinApp from "@/components/Spin/SpinApp";
+import { TagLandState } from "@/components/Tag/StateTag";
+import { createContentLayout } from "@/styles/content_layout";
+import { EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { TfiTrash } from "react-icons/tfi";
 
 const LandManagement = () => {
   const [dataLands, setLands] = useState<LandModel[]>([]);
