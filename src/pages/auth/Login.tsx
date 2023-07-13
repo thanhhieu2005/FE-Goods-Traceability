@@ -27,8 +27,6 @@ const Login = () => {
     try {
       const res = await axiosClient.post("/users/login", value);
 
-      console.log("Res", res);
-
       localStorage.setItem("token", res.data.token);
 
       dispatch(setCurrentUserInfo(res.data));

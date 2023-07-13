@@ -4,58 +4,41 @@ import { Col, Layout } from "antd";
 import { Outlet } from "react-router-dom";
 
 import "./LayoutCustom.scss";
+import { useState } from "react";
 
-const { Sider } = Layout;
+const { Sider, Content } = Layout;
 
 export const LayoutCustom = () => {
+  const [collapsed, setCollapsed] = useState(false);
   return (
-    <Layout className="my-layout">
+    <Layout className="my-layout" style={{ minHeight: "100vh" }}>
       <HeaderCustom />
-      <Layout hasSider>
-        <Sider
-          width={300}
-          theme="light"
-          breakpoint="lg"
-          style={{
-            overflow: "hidden",
-            // height: "100%",
-            position: "fixed",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            marginTop: "64px",
-          }}
-        >
-          {/* <div className="logo" /> */}
-          <Col
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexDirection: "column",
-              height: "100%",
-            }}
-          >
-            <MenuApp />
-            {/* <CommonMenuApp /> */}
-            {/* <div className="blockchain-setting">
-              <p>
-                <span>Blockchain Mode: </span>
-                <span></span>
-              </p>
-            </div> */}
-          </Col>
-        </Sider>
-        <Layout
-          className="site-layout"
-          style={{
-            padding: "48px 24px 24px",
-            minHeight: "100vh",
-            marginTop: "40px",
-            marginLeft: "300px",
-          }}
-        >
-          <Outlet />
-        </Layout>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+        width={300}
+        theme="light"
+        breakpoint="lg"
+        style={{
+          // overflow: "hidden",
+          // // height: "100%",
+          // position: "fixed",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          marginTop: "64px",
+        }}
+      >
+        <MenuApp />
+      </Sider>
+      <Layout
+        className="site-layout"
+        style={{ padding: 24, minHeight: 360 }}
+      >
+        <Content style={{ margin: '64px 16px' }}>
+        <Outlet />
+        </Content>
       </Layout>
     </Layout>
   );

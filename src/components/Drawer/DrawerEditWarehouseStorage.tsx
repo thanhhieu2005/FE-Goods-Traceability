@@ -1,4 +1,8 @@
-import { WarehouseStorageModel, listCommonState, parseWarehouseStorageData } from "@/types/step_tracking";
+import {
+  WarehouseStorageModel,
+  listCommonState,
+  parseWarehouseStorageData,
+} from "@/types/step_tracking";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
 import React, { useState } from "react";
 import { ShowDrawerEdit } from "./DrawerEditItem";
@@ -12,10 +16,17 @@ import {
 import { CommonProjectState } from "@/types/project_model";
 import { UpdateWarehouseDetailByIdAPI } from "@/api/warehouse_api";
 import { errorMessage, successMessage } from "../Message/MessageNoti";
+import { useSelector } from "react-redux";
+import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
+import StepLogServices from "@/api/steplog_api";
 
 const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
   const dataWarehouseStorage: WarehouseStorageModel =
     props.dataWarehouseStorage;
+
+  const currentMode: string = useSelector(
+    (state: any) => state.mode.currentMode
+  );
 
   const [form] = Form.useForm();
 
@@ -56,7 +67,13 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
               <span>you will not be able to change the information</span>
             </p>
           ),
-          onOk: () => onUpdateWarehouseStorageSupervision(value),
+          onOk: () => {
+            if (currentMode === "Current Blockchain Mode is Public Mode") {
+              handlePublicBlockchain(value);
+            } else {
+              onUpdateWarehouseStorageSupervision(value);
+            }
+          },
         });
       }
     } else if (value.state === CommonProjectState.Canceled) {
@@ -97,6 +114,7 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
       props.setIsOpenModalUpdate(false);
 
       setIsLoadingUpdate(false);
+      props.setCallGetLog(true);
       successMessage("Update Successfully!");
     } else if (res.response.status === 400) {
       errorMessage(res.response.data.message);
@@ -105,6 +123,54 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
       console.log(res);
       errorMessage("Update Failed!");
       setIsLoadingUpdate(false);
+    }
+  };
+
+  const handlePublicBlockchain = async (value: any) => {
+    setIsLoadingUpdate(true);
+
+    const saveBlockchainValue = {
+      ...value,
+      inspector: dataWarehouseStorage.inspector?.userId,
+    };
+
+    const addBlockchain: any = await addTrackingBlock(
+      dataWarehouseStorage.projectCode,
+      JSON.stringify(saveBlockchainValue)
+    );
+
+    if (addBlockchain.code === 4001) {
+      errorMessage(addBlockchain.message);
+      setIsLoadingUpdate(false);
+    } else {
+      const updateWarhouseProject: any = await UpdateWarehouseDetailByIdAPI(
+        value,
+        dataWarehouseStorage.warehouseStorageId
+      );
+
+      if (updateWarhouseProject.status === 200) {
+        const updateSteplog: any =
+          await StepLogServices.updateTransactionStepLog(
+            updateWarhouseProject.data.warehouse.logId,
+            addBlockchain.transactionHash
+          );
+
+        if (updateSteplog.status === 200) {
+          const newWarehouse = parseWarehouseStorageData(
+            updateWarhouseProject.data.warehouse
+          );
+          props.setDataWarehouseStorage(newWarehouse);
+          props.setIsOpenModalUpdate(false);
+          setIsLoadingUpdate(false);
+          props.setCallGetLog(true);
+          successMessage("Update Successfully!");
+        } else {
+          errorMessage("Update Info Failed!");
+        }
+      } else {
+        errorMessage("Update Project Failed!");
+        setIsLoadingUpdate(false);
+      }
     }
   };
 
@@ -126,8 +192,7 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
                   if (value.totalExport > value.totalInput) {
                     Modal.warning({
                       title: "Wrong Information!",
-                      content:
-                        "Total Export can not more than Total Import",
+                      content: "Total Export can not more than Total Import",
                     });
                   } else {
                     onSubmitForm(value);

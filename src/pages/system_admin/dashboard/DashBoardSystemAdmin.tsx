@@ -78,7 +78,7 @@ const DashBoardSystemAdmin = () => {
             }}
           />
         </Row>
-        <div style={{ padding: '12px'}}>
+        <div style={{ padding: '12px 0px'}}>
           <Row style={{ paddingTop: "24px", justifyContent: 'space-between' }}>
             <div style={{ width: "60%"}}>
               <LineChartProject 

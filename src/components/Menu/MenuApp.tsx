@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import {
   DashboardOutlined,
   ShopOutlined,
+  SolutionOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -101,8 +102,8 @@ export const MenuApp = () => {
 
   if (userName.role == UserRole.TechnicalAdmin) {
     items = [
-      getItem("Account Management", "/techAd-account-management"),
-      getItem("Farm Management", "/techAd-farm-management"),
+      getItem("Account Management", "/techAd-account-management", <TeamOutlined />),
+      getItem("Farm Management", "/techAd-farm-management", <TbHomeEco />),
     ];
   } else if (userName.role == UserRole.SystemAdmin) {
     items = [
@@ -137,22 +138,22 @@ export const MenuApp = () => {
     }
   } else if (userName.role === UserRole.Staff && userName.department === 2) {
     items = [
-      getItem("Harvest Management", "/harvest-management"),
+      getItem("Harvest Management", "/harvest-management", <SolutionOutlined />),
       // getItem("Settings", "/settings", <SettingOutlined />),
     ];
   } else if (userName.role === UserRole.Staff && userName.department === 3) {
     items = [
-      getItem("Transport Management", "/transport-management"),
+      getItem("Transport Management", "/transport-management", <SolutionOutlined />),
       // getItem("Settings", "/settings", <SettingOutlined />),
     ];
   } else if (userName.role == UserRole.Staff && userName.department === 4) {
     items = [
-      getItem("Warehouse Management", "/warehouse-management"),
+      getItem("Warehouse Management", "/warehouse-management", <SolutionOutlined />),
       // getItem("Settings", "/settings", <SettingOutlined />),
     ];
   } else if (userName.role == UserRole.Staff && userName.department === 5) {
     items = [
-      getItem("Pruduction Management", "/produce-management"),
+      getItem("Pruduction Management", "/produce-management", <SolutionOutlined />),
       // getItem("Settings", "/settings", <SettingOutlined />),
     ];
   }

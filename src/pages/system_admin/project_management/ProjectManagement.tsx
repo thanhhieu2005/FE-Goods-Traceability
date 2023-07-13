@@ -91,6 +91,10 @@ export const ProjectManagement = () => {
     },
   ];
 
+  const onSearch = (value: string) => {
+    console.log(value);
+  }
+
   return (
     <div>
       <Col>
@@ -110,7 +114,7 @@ export const ProjectManagement = () => {
             <Row style={{ width: "80%" }}>
               <div className="label-search">Find project</div>
               <div className="search-item">
-                <Search placeholder="Enter your project" enterButton />
+                <Search placeholder="Enter your project" enterButton onSearch={onSearch}/>
               </div>
             </Row>
             <div className="action-layout-btn">

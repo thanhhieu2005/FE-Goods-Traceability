@@ -11,6 +11,8 @@ const FarmProjectInfoCard = ({ myProps: props }: any) => {
 
   const farm: FarmInfoModel = props.farm;
 
+  console.log(dataProject);
+
   return (
     <>
       <Col>

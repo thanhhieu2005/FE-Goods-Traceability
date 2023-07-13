@@ -3,9 +3,9 @@ import { axiosClient } from "@/services/axios";
 const ApiCommonService = {
   resetPassword: async (email: string) => {
     try {
-      const currentToken = localStorage.getItem("token");
+      // const currentToken = localStorage.getItem("token");
       const res = await axiosClient.get("/users/reset-password", {
-        headers: { Authorization: `Bearer ${currentToken}` },
+        // headers: { Authorization: `Bearer ${currentToken}` },
         params: {
           email: email,
         },
@@ -13,6 +13,37 @@ const ApiCommonService = {
       return res;
     } catch (error) {
       return error;
+    }
+  },
+  confirmOTP: async (otpId: string, otpCode: string) => {
+    try {
+      const res = await axiosClient.get("/users/confirm-otp", {
+        params: {
+          otpId: otpId,
+          otpCode: otpCode,
+        },
+      });
+      return res;
+    } catch (err) {
+      return err;
+    }
+  },
+  updateNewPassword: async (email: string, newPassword: string) => {
+    try {
+      const res = await axiosClient.patch(
+        "/users/update-user",
+        {
+          password: newPassword,
+        },
+        {
+          params: {
+            email: email,
+          },
+        }
+      );
+      return res;
+    } catch (err) {
+      return err;
     }
   },
   uploadImage: async (formData: any) => {

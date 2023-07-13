@@ -152,6 +152,7 @@ const Routers = () => {
                 <>
                   <Route path="/" element={<Navigate to="/farm-info" />} />
                   <Route path="/farm-info" element={<FarmInfo />} />
+                  <Route path="/project-log/:id" element={<ProjectLog />} />
                   {userName.isOwner ? (
                     <Route>
                       <Route
@@ -195,6 +196,7 @@ const Routers = () => {
                     path="/harvest-management/:harvestId"
                     element={<HarvestDetail />}
                   />
+                  <Route path="/project-log/:id" element={<ProjectLog />} />
                 </>
               ) : userName.role === 4 && userName.department === 3 ? (
                 <>
@@ -210,6 +212,7 @@ const Routers = () => {
                     path="/transport-management/:transportId"
                     element={<TransportDetail />}
                   />
+                  <Route path="/project-log/:id" element={<ProjectLog />} />
                 </>
               ) : userName.role === 4 && userName.department === 4 ? (
                 <>
@@ -225,6 +228,7 @@ const Routers = () => {
                     path="/warehouse-management/:warehouseStorageId"
                     element={<WarehouseDetail />}
                   />
+                  <Route path="/project-log/:id" element={<ProjectLog />} />
                 </>
               ) : userName.role === 4 && userName.department === 5 ? (
                 <>
@@ -241,6 +245,7 @@ const Routers = () => {
                     element={<ProduceDetail />}
                   />
                   <Route path="/add-product" element={<AddProductPage />} />
+                  <Route path="/project-log/:id" element={<ProjectLog />} />
                 </>
               ) : (
                 <></>

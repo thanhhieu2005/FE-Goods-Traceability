@@ -1,29 +1,34 @@
-import {
+import WarehouseStorageServices, {
   GetWarehouseDetailByIdAPI,
   UpdateWarehouseDetailByIdAPI,
 } from "@/api/warehouse_api";
+import { logoVerify } from "@/assets";
 import DrawerEditWarehouseStorage from "@/components/Drawer/DrawerEditWarehouseStorage";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
+import { LogEnum, LogModel } from "@/types/project_log_model";
 import { CommonProjectState } from "@/types/project_model";
 import {
   WarehouseStorageModel,
   parseWarehouseStorageData,
 } from "@/types/step_tracking";
+import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
 import { dateFormat } from "@/utils/formatDateTime";
-import { FormOutlined } from "@ant-design/icons";
+import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Col, Modal, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function WarehouseDetail() {
   const [dataWarehouseStorage, setDataWarehouseStorage] =
     useState<WarehouseStorageModel>();
 
   const { state: warehouseStorageId } = useLocation();
+
+  const navigate = useNavigate();
 
   const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
 
@@ -33,7 +38,7 @@ function WarehouseDetail() {
 
       setDataWarehouseStorage(warehouseStorage);
     });
-  }, []);
+  }, [warehouseStorageId]);
 
   const handleShowDrawerUpdate = () => {
     setIsOpenModalUpdate(true);
@@ -54,7 +59,29 @@ function WarehouseDetail() {
     }
   };
 
-  
+  // handle for log list
+  const [warehouseLogList, setWarehouseLogList] = useState<LogModel[]>([]);
+
+  const [isCallGetLog, setCallGetLog] = useState(false);
+
+  useEffect(() => {
+    setWarehouseLogList([]);
+
+    const getHarvestLogList = async () => {
+      const res: any = await WarehouseStorageServices.getWarehouseLogListById(
+        warehouseStorageId
+      );
+
+      if (res.status === 200) {
+        res.data.map((element: any) => {
+          const logModel = element.log as LogModel;
+          setWarehouseLogList((prev) => [...prev, logModel]);
+        });
+      }
+    };
+
+    getHarvestLogList();
+  }, [warehouseStorageId, isCallGetLog]);
 
   return (
     <>
@@ -66,6 +93,7 @@ function WarehouseDetail() {
             cancelCloseUpdate: handleCancelDrawerUpdate,
             setDataWarehouseStorage: setDataWarehouseStorage,
             setIsOpenModalUpdate: setIsOpenModalUpdate,
+            setCallGetLog: setCallGetLog,
           }}
         />
       )}
@@ -91,7 +119,21 @@ function WarehouseDetail() {
           {dataWarehouseStorage ? (
             <Col>
               <div className="content-page">
-                <StateCard myProps={{ state: dataWarehouseStorage.state }} />
+                {checkVerifyBlockchainLog(warehouseLogList) === true && dataWarehouseStorage.state === CommonProjectState.Completed ? (
+                  <img src={logoVerify} height={144} />
+                ) : (
+                  <></>
+                )}
+                <Row
+                  style={{
+                    margin: "12px 0px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <StateCard myProps={{ state: dataWarehouseStorage.state }} />
+                </Row>
                 <Row
                   style={{
                     display: "flex",
@@ -106,6 +148,22 @@ function WarehouseDetail() {
                       {dataWarehouseStorage.projectCode}
                     </span>
                   </p>
+                  <Button
+                      type="default"
+                      size="middle"
+                      icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                      onClick={() => {
+                        navigate(`/project-log/${warehouseStorageId}`, {
+                          state: {
+                            listLog: warehouseLogList,
+                            type: LogEnum.Warehouse,
+                          },
+                        });
+                      }}
+                      style={{ borderRadius: "4px", marginRight: "12px" }}
+                    >
+                      View Log
+                    </Button>
                   {dataWarehouseStorage.state ===
                     CommonProjectState.Completed ||
                   dataWarehouseStorage.state === CommonProjectState.Canceled ? (

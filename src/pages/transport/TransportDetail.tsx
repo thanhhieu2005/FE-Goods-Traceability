@@ -1,21 +1,29 @@
-import { GetTransportDetailByIdAPI, UpdateTransportAPI } from "@/api/transport_api";
+import TransportServices, {
+  GetTransportDetailByIdAPI,
+  UpdateTransportAPI,
+} from "@/api/transport_api";
+import { logoVerify } from "@/assets";
 import DrawerEditTransport from "@/components/Drawer/DrawerEditTransport";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
+import { LogEnum, LogModel } from "@/types/project_log_model";
 import { CommonProjectState } from "@/types/project_model";
 import { TransportModel, parseTransportData } from "@/types/step_tracking";
-import { FormOutlined } from "@ant-design/icons";
+import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
+import { FileSearchOutlined, FormOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Col, Modal, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TransportDetail = () => {
   const [dataTransport, setDataTransport] = useState<TransportModel>();
 
   const { state: transportId } = useLocation();
+
+  const navigate = useNavigate();
 
   const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
 
@@ -25,7 +33,7 @@ const TransportDetail = () => {
       const transport = parseTransportData(res.data);
       setDataTransport(transport);
     });
-  }, []);
+  }, [transportId]);
 
   const handleShowDrawerUpdate = () => {
     setIsOpenModalUpdate(true);
@@ -46,6 +54,30 @@ const TransportDetail = () => {
     }
   };
 
+  // handle for log list
+  const [transportLogList, setTransportLogList] = useState<LogModel[]>([]);
+
+  const [isCallGetLog, setCallGetLog] = useState(false);
+
+  useEffect(() => {
+    setTransportLogList([]);
+
+    const getTransportLogList = async () => {
+      const res: any = await TransportServices.getTransportLogListById(
+        transportId
+      );
+
+      if (res.status === 200) {
+        res.data.map((element: any) => {
+          const logModel = element.log as LogModel;
+          setTransportLogList((prev) => [...prev, logModel]);
+        });
+      }
+    };
+
+    getTransportLogList();
+  }, [transportId, isCallGetLog]);
+
   return (
     <>
       {isOpenModalUpdate && (
@@ -56,6 +88,7 @@ const TransportDetail = () => {
             cancelCloseUpdate: handleCancelDrawerUpdate,
             setDataTransport: setDataTransport,
             setIsOpenModalUpdate: setIsOpenModalUpdate,
+            setCallGetLog: setCallGetLog,
           }}
         />
       )}
@@ -82,9 +115,22 @@ const TransportDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  <div style={{ margin: "12px 0px" }}>
+                  {checkVerifyBlockchainLog(transportLogList) === true &&
+                  dataTransport.state === CommonProjectState.Completed ? (
+                    <img src={logoVerify} height={144} />
+                  ) : (
+                    <></>
+                  )}
+                  <Row
+                    style={{
+                      margin: "12px 0px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <StateCard myProps={{ state: dataTransport.state }} />
-                  </div>
+                  </Row>
                   <Row
                     style={{
                       display: "flex",
@@ -99,7 +145,22 @@ const TransportDetail = () => {
                         {dataTransport.projectCode}
                       </span>
                     </p>
-
+                    <Button
+                      type="default"
+                      size="middle"
+                      icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                      onClick={() => {
+                        navigate(`/project-log/${transportId}`, {
+                          state: {
+                            listLog: transportLogList,
+                            type: LogEnum.Transport,
+                          },
+                        });
+                      }}
+                      style={{ borderRadius: "4px", marginRight: "12px" }}
+                    >
+                      View Log
+                    </Button>
                     {dataTransport.state === CommonProjectState.Completed ||
                     dataTransport.state === CommonProjectState.Canceled ? (
                       <></>
@@ -226,7 +287,7 @@ const TransportDetail = () => {
             </Col>
           ) : (
             <>
-              <SpinApp/>
+              <SpinApp />
             </>
           )}
         </div>

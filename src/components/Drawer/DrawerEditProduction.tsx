@@ -12,11 +12,18 @@ import {
 import { CommonProjectState } from "@/types/project_model";
 import { UpdateProduceAPI } from "@/api/produce_api";
 import { errorMessage, successMessage } from "../Message/MessageNoti";
+import { addTrackingBlock } from "@/api/node_api/blockchain_helper";
+import StepLogServices from "@/api/steplog_api";
+import { useSelector } from "react-redux";
 
 const DrawerEditProduction = ({ myProps: props }: any) => {
   const dataProduction: ProductionModel = props.dataProduction;
 
   const [form] = Form.useForm();
+
+  const currentMode: string = useSelector(
+    (state: any) => state.mode.currentMode
+  );
 
   const { TextArea } = Input;
 
@@ -51,7 +58,13 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
               <span>you will not be able to change the information</span>
             </p>
           ),
-          onOk: () => onUpdateProductionSupervision(value),
+          onOk: () => {
+            if(currentMode === "Current Blockchain Mode is Public Mode") {
+              handlePublicBlockchain(value);
+            } else {
+              onUpdateProductionSupervision(value)
+            }
+          },
         });
       }
     } else if (value.state === CommonProjectState.Canceled) {
@@ -81,6 +94,8 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
 
     const res: any = await UpdateProduceAPI(value, dataProduction.produceSupervisionId);
 
+    console.log(res);
+
     if (res.status === 200) {
       const newUpdate = parseProductionData(res.data.produce);
 
@@ -89,6 +104,7 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
       props.setIsOpenModalUpdate(false);
 
       setIsLoadingUpdate(false);
+      props.setCallGetLog(true);
       successMessage("Update Successfully!");
     } else if (res.response.status === 400) {
       errorMessage(res.response.data.message);
@@ -99,6 +115,50 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
       setIsLoadingUpdate(false);
     }
   };
+
+  const handlePublicBlockchain = async (value: any) => {
+    setIsLoadingUpdate(true);
+
+    const saveBlockchainValue = {
+      ...value,
+      inspector: dataProduction.inspector?.userId,
+    };
+
+    const addBlockchain: any = await addTrackingBlock(
+      dataProduction.projectCode,
+      JSON.stringify(saveBlockchainValue)
+    );
+
+    if (addBlockchain.code === 4001) {
+      errorMessage(addBlockchain.message);
+      setIsLoadingUpdate(false);
+    } else {
+      const updateProductionProject: any = await UpdateProduceAPI(value, dataProduction.produceSupervisionId);
+
+      if(updateProductionProject.status === 200) {
+        const updateSteplog: any =
+          await StepLogServices.updateTransactionStepLog(
+            updateProductionProject.data.produce.logId,
+            addBlockchain.transactionHash
+          );
+
+          if(updateSteplog.status === 200) {
+            const newUpdate = parseProductionData(updateProductionProject.data.produce);
+
+            props.setDataProduction(newUpdate);
+            props.setIsOpenModalUpdate(false);
+            setIsLoadingUpdate(false);
+            props.setCallGetLog(true);
+            successMessage("Update Successfully!");
+          } else {
+            errorMessage("Update Info Failed!");
+          }
+      } else {
+        errorMessage("Update Project Failed!");
+        setIsLoadingUpdate(false);
+      }
+    }
+  }
 
   return (
     <>
@@ -121,14 +181,14 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
                 <Form.Item
                   label="Total Input (ton)"
                   name="totalInput"
-                  initialValue={dataProduction.totalInput ?? "Not Update"}
+                  initialValue={dataProduction.totalInput }
                 >
                   <Input placeholder="Enter total input to produce" />
                 </Form.Item>
                 <Form.Item
                   label="Factory Name"
                   name="factory"
-                  initialValue={dataProduction.factoryName ?? "Not Update"}
+                  initialValue={dataProduction.factoryName }
                 >
                   <Input placeholder="Enter factory name to produce" />
                 </Form.Item>
@@ -136,7 +196,7 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
                   label="Drying Temperature (°C)"
                   name="dryingTemperature"
                   initialValue={
-                    dataProduction.dryingTemperature ?? "Not Update"
+                    dataProduction.dryingTemperature 
                   }
                 >
                   <Input placeholder="Enter drying temperature" />
@@ -144,14 +204,14 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
                 <Form.Item
                   label="Humidity (%)"
                   name="humidity"
-                  initialValue={dataProduction.humidity ?? "Not Update"}
+                  initialValue={dataProduction.humidity }
                 >
                   <Input placeholder="Enter humidity" />
                 </Form.Item>
                 <Form.Item
                   label="Total Product (ton)"
                   name="totalProduct"
-                  initialValue={dataProduction.totalProduct ?? "Not Update"}
+                  initialValue={dataProduction.totalProduct }
                 >
                   <Input placeholder="Enter humidity" />
                 </Form.Item>

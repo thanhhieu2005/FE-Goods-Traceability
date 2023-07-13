@@ -9,12 +9,19 @@ import TransportLogInfoCard from "@/components/Card/LogInfo/TransportLogInfoCard
 import WarehouseLogInfoCard from "@/components/Card/LogInfo/WarehouseLogInfoCard";
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import SpinApp from "@/components/Spin/SpinApp";
-import { LogEnum } from "@/types/project_log_model";
+import { LogEnum, LogModel } from "@/types/project_log_model";
 import moment from "moment";
 import "./log.scss";
+import FarmProjectLogInfoCard from "@/components/Card/LogInfo/FarmProjectLogInfoCard";
+import { useSelector } from "react-redux";
+import { checkIsModePublic } from "@/utils/validation/check_wallet_address";
 
 const ProjectLog = () => {
   const { state: modelLog } = useLocation();
+
+  const currentMode: string = useSelector(
+    (state: any) => state.mode.currentMode
+  );
 
   console.log(modelLog);
 
@@ -37,13 +44,13 @@ const ProjectLog = () => {
       e.modelBeforeChanged = parseJson(e.modelBeforeChanged);
     });
 
-    setTitle(renderTitle(modelLog.type)); 
+    setTitle(renderTitle(modelLog.type));
 
     setIsLoading(false);
   }, [modelLog.listLog, modelLog.type]);
 
   const renderTitle = (type: LogEnum) => {
-    switch(type) {
+    switch (type) {
       case LogEnum.Project:
         return "Project";
       case LogEnum.Harvest:
@@ -59,7 +66,7 @@ const ProjectLog = () => {
       default:
         return "";
     }
-  }
+  };
 
   return (
     <>
@@ -84,7 +91,7 @@ const ProjectLog = () => {
                 <p className="log-title-text">List Logs of {title}</p>
                 <div className="space-padding" />{" "}
                 {modelLog.listLog.length !== 0 ? (
-                  modelLog.listLog.map((log: any, key: number) => (
+                  modelLog.listLog.map((log: LogModel, key: number) => (
                     <div key={key} className="log-container">
                       <Col>
                         <div className="card-border-title">
@@ -134,6 +141,44 @@ const ProjectLog = () => {
                             }}
                           />
                         </Row>
+                        {checkIsModePublic(currentMode) ? (
+                          <Col>
+                            <Row>
+                              <LabelContentItem
+                                myProps={{
+                                  label: "Transaction Hash",
+                                  content: log.transactionHash ?? "Not yet",
+                                }}
+                              />
+                            </Row>
+                            <LabelContentItem
+                              myProps={{
+                                label: "Transaction Uri",
+                                content:
+                                  log.transactionUrl !== null ? (
+                                    <a
+                                      href={log.transactionUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      Visit Mumbai Polygon Scan
+                                    </a>
+                                  ) : (
+                                    "Not yet"
+                                  ),
+                              }}
+                            />
+                          </Col>
+                        ) : (
+                          <Row>
+                            <LabelContentItem
+                              myProps={{
+                                label: "Transaction Hash",
+                                content: log.transactionHash ?? "Not yet",
+                              }}
+                            />
+                          </Row>
+                        )}
                         <LabelContentItem
                           myProps={{
                             label: "Actions",
@@ -141,6 +186,7 @@ const ProjectLog = () => {
                             width: "100%",
                           }}
                         />
+
                         <div style={{ padding: "8px" }} />
                         {modelLog.type === LogEnum.Project ? (
                           <ProjectLogInfoCard
@@ -155,9 +201,17 @@ const ProjectLog = () => {
                             myProps={{ log: log, key: key }}
                           />
                         ) : modelLog.type === LogEnum.Warehouse ? (
-                          <WarehouseLogInfoCard myProps={{ log: log, key: key }}/>
+                          <WarehouseLogInfoCard
+                            myProps={{ log: log, key: key }}
+                          />
                         ) : modelLog.type === LogEnum.Produce ? (
-                          <ProduceLogInfoCard myProps={{ log: log, key: key }} />
+                          <ProduceLogInfoCard
+                            myProps={{ log: log, key: key }}
+                          />
+                        ) : modelLog.type === LogEnum.Farm ? (
+                          <FarmProjectLogInfoCard
+                            myProps={{ log: log, key: key }}
+                          />
                         ) : (
                           <></>
                         )}

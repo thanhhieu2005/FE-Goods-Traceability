@@ -102,26 +102,6 @@ const ProductReleasedDetail = () => {
                 }}
               />
               <div style={{ padding: "8px" }} />
-              <>
-                {dataProduct.productImage.length > 0 ? (
-                  <Row style={{ paddingTop: "24px" }}>
-                    <p className="title-text">Product Images:</p>
-                    <div style={{ padding: "12px" }} />
-                    {dataProduct.productImage.map(
-                      (image: ProductImageModel, key: number) => (
-                        <div key={key} className="common-image">
-                          <Image
-                            src={image.productImageUrl}
-                            style={{ marginRight: "12px" }}
-                          />
-                        </div>
-                      )
-                    )}
-                  </Row>
-                ) : (
-                  <></>
-                )}
-              </>
             </Col>
             <Col
               style={{
@@ -170,6 +150,24 @@ const ProductReleasedDetail = () => {
               </Col>
             </Col>
           </Row>
+          {dataProduct.productImage.length > 0 ? (
+            <Row style={{ paddingTop: "24px" }}>
+              <p className="title-text">Product Images:</p>
+              <div style={{ padding: "12px" }} />
+              {dataProduct.productImage.map(
+                (image: ProductImageModel, key: number) => (
+                  <div key={key} className="common-image">
+                    <Image
+                      src={image.productImageUrl}
+                      style={{ marginRight: "12px" }}
+                    />
+                  </div>
+                )
+              )}
+            </Row>
+          ) : (
+            <></>
+          )}
         </div>
       </Col>
     </div>
