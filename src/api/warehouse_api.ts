@@ -73,6 +73,22 @@ const WarehouseStorageServices = {
       return err;
     }
   },
+  getWarehouseLogListById: async(warehouseStorageId: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.get("/warehouse-storage/loglist", {
+        headers: { Authorization: `Bearer ${currentToken}` },
+        params: {
+          warehouseStorageId: warehouseStorageId,
+        },
+      });
+
+      return res;
+    } catch (err) {
+      return err;
+    }
+  }
 };
 
 export default WarehouseStorageServices;

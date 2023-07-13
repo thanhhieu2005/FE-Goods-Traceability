@@ -53,7 +53,7 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
     } else {
       const updateFarmProject: any = await FarmServices.updateFarmProject(
         dataFarmProject.farmProjectId,
-        value
+        value,
       );
 
       if (updateFarmProject.status === 200) {
@@ -67,6 +67,7 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
           successMessage("Update Successfully!");
           setIsLoadingUpdate(false);
           props.setIsUpdateFarmProjectProgress(false);
+          props.setCallGetLog(true);
         } else {
           errorMessage("Update Info Failed!");
         }
@@ -81,14 +82,19 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
   const handleUpdateFarmProjectProgress = async (value: any) => {
     console.log(value);
 
+
     if (value.state === CommonProjectState.Completed) {
+      const finalValue = {
+        ...value,
+        dateHarvest: Date.now(),
+      }
       Modal.confirm({
         content: `When you confirm "Completed", you will not be able to change the project information!`,
         onOk: () => {
           if (currentMode === "Current Blockchain Mode is Public Mode") {
-            handlePublicBlockchain(value);
+            handlePublicBlockchain(finalValue);
           } else {
-            updateFarmProjectProgress(value);
+            updateFarmProjectProgress(finalValue);
           }
         },
       });
@@ -121,6 +127,7 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
 
       props.setIsUpdateFarmProjectProgress(false);
       props.setIsLoading(false);
+      props.setCallGetLog(true);
 
       setIsLoadingUpdate(false);
     } else {

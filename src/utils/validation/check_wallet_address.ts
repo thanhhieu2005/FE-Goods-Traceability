@@ -13,3 +13,9 @@ export const checkMatchWalletAddress = () => {
     } else return true;
 
 }
+
+export const checkIsModePublic = (currentMode: string) => {
+    if(currentMode === "Current Blockchain Mode is Public Mode") {
+        return true;
+    } else return false;
+}

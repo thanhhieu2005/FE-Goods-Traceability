@@ -104,6 +104,7 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
       props.setIsOpenModalUpdate(false);
 
       setIsLoadingUpdate(false);
+      props.setCallGetLog(true);
       successMessage("Update Successfully!");
     } else if (res.response.status === 400) {
       errorMessage(res.response.data.message);
@@ -147,6 +148,7 @@ const DrawerEditProduction = ({ myProps: props }: any) => {
             props.setDataProduction(newUpdate);
             props.setIsOpenModalUpdate(false);
             setIsLoadingUpdate(false);
+            props.setCallGetLog(true);
             successMessage("Update Successfully!");
           } else {
             errorMessage("Update Info Failed!");

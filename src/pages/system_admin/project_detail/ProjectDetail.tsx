@@ -1,6 +1,6 @@
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
 import ProjectServices, {
-  GetProjectDetailByID
+  GetProjectDetailByID,
 } from "@/api/system_admin/project_api";
 import { logoVerify } from "@/assets";
 import FarmProjectInfoCard from "@/components/Card/FarmProjectInfoCard";
@@ -64,6 +64,7 @@ const ProjectDetail = () => {
 
       setCurrentStep(currentStep);
     });
+    
 
     setProjectLogList([]);
     setHarvestLogList([]);
@@ -108,7 +109,6 @@ const ProjectDetail = () => {
   }, [projectId, isCallGetLog]);
 
   const [farm, setFarm] = useState<FarmInfoModel>();
-
 
   useEffect(() => {
     const fetchAPIFarm = async () => {
@@ -197,21 +197,21 @@ const ProjectDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
+                  {checkVerifyBlockchainLog(projectLogList) === true &&
+                  dataProject.state === CommonProjectState.Completed ? (
+                    <img src={logoVerify} height={144} />
+                  ) : (
+                    <></>
+                  )}
                   <Row
                     style={{
                       margin: "12px 0px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: 'space-between',
+                      justifyContent: "space-between",
                     }}
                   >
                     <StateCard myProps={{ state: dataProject.state }} />
-                    {checkVerifyBlockchainLog(projectLogList) === true &&
-                    dataProject.state === CommonProjectState.Completed ? (
-                      <img src={logoVerify} height={144} />
-                    ) : (
-                      <></>
-                    )}
                   </Row>
                   <Row
                     style={{

@@ -85,6 +85,22 @@ const ProductServices = {
     } catch(err) {
         return err;
     }
+  },
+  getProduceLogListById: async (produceId: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.get("/produce/loglist", {
+        headers: { Authorization: `Bearer ${currentToken}` },
+        params: {
+          produceId: produceId,
+        },
+      });
+
+      return res;
+    } catch (err) {
+      return err;
+    }
   }
 };
 

@@ -126,6 +126,7 @@ const EditProject = ({ myProps: props }: any) => {
           props.setDataProject(updateProject.data.project);
           successMessage("Update Successfully!");
           props.setOpenModalUpdate(false);
+          props.setCallGetLog(true);
           setIsUpdateLoading(false);
         } else {
           errorMessage("Update Info Failed!");

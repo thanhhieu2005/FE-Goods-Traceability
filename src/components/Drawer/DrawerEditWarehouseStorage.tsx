@@ -114,6 +114,7 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
       props.setIsOpenModalUpdate(false);
 
       setIsLoadingUpdate(false);
+      props.setCallGetLog(true);
       successMessage("Update Successfully!");
     } else if (res.response.status === 400) {
       errorMessage(res.response.data.message);
@@ -161,6 +162,7 @@ const DrawerEditWarehouseStorage = ({ myProps: props }: any) => {
           props.setDataWarehouseStorage(newWarehouse);
           props.setIsOpenModalUpdate(false);
           setIsLoadingUpdate(false);
+          props.setCallGetLog(true);
           successMessage("Update Successfully!");
         } else {
           errorMessage("Update Info Failed!");

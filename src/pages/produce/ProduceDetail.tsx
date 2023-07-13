@@ -6,9 +6,15 @@ import LabelContentItem from "@/components/Label/LabelContentItem";
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { ProductImageModel, ProductModel } from "@/types/product_model";
+import { LogEnum, LogModel } from "@/types/project_log_model";
 import { CommonProjectState } from "@/types/project_model";
 import { ProductionModel, parseProductionData } from "@/types/step_tracking";
-import { FormOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
+import {
+  FileSearchOutlined,
+  FormOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 import { Breadcrumb, Button, Col, Empty, Image, Modal, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -70,6 +76,31 @@ function ProduceDetail() {
     }
   };
 
+  // handle for log list
+  const [produceLogList, setProduceLogList] = useState<LogModel[]>([]);
+
+  const [isCallGetLog, setCallGetLog] = useState(false);
+
+  useEffect(() => {
+    setProduceLogList([]);
+    setCallGetLog(false);
+
+    const getHarvestLogList = async () => {
+      const res: any = await ProductServices.getProduceLogListById(
+        productionId
+      );
+
+      if (res.status === 200) {
+        res.data.map((element: any) => {
+          const logModel = element.log as LogModel;
+          setProduceLogList((prev) => [...prev, logModel]);
+        });
+      }
+    };
+
+    getHarvestLogList();
+  }, [productionId, isCallGetLog]);
+
   return (
     <>
       {isOpenModalUpdate && (
@@ -80,6 +111,7 @@ function ProduceDetail() {
             cancelCloseUpdate: handleCancelDrawerUpdate,
             setDataProduction: setDataProduction,
             setIsOpenModalUpdate: setIsOpenModalUpdate,
+            setCallGetLog: setCallGetLog,
           }}
         />
       )}
@@ -106,6 +138,12 @@ function ProduceDetail() {
             <Col>
               <div className="content-page">
                 <Col>
+                  {checkVerifyBlockchainLog(produceLogList) === true &&
+                  dataProduction.state === CommonProjectState.Completed ? (
+                    <img src={logoVerify} height={144} />
+                  ) : (
+                    <></>
+                  )}
                   <Row
                     style={{
                       margin: "12px 0px",
@@ -115,11 +153,6 @@ function ProduceDetail() {
                     }}
                   >
                     <StateCard myProps={{ state: dataProduction.state }} />
-                    {dataProduction.state === CommonProjectState.Completed ? (
-                      <img src={logoVerify} height={144} />
-                    ) : (
-                      <></>
-                    )}
                   </Row>
                   <Row
                     style={{
@@ -135,7 +168,22 @@ function ProduceDetail() {
                         {dataProduction.projectCode}
                       </span>
                     </p>
-
+                    <Button
+                      type="default"
+                      size="middle"
+                      icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                      onClick={() => {
+                        navigate(`/project-log/${productionId}`, {
+                          state: {
+                            listLog: produceLogList,
+                            type: LogEnum.Produce,
+                          },
+                        });
+                      }}
+                      style={{ borderRadius: "4px", marginRight: "12px" }}
+                    >
+                      View Log
+                    </Button>
                     {dataProduction.state === CommonProjectState.Completed ||
                     dataProduction.state === CommonProjectState.Canceled ? (
                       <></>

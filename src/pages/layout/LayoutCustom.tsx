@@ -24,9 +24,9 @@ export const LayoutCustom = () => {
           // overflow: "hidden",
           // // height: "100%",
           // position: "fixed",
-          // left: 0,
-          // top: 0,
-          // bottom: 0,
+          left: 0,
+          top: 0,
+          bottom: 0,
           marginTop: "64px",
         }}
       >

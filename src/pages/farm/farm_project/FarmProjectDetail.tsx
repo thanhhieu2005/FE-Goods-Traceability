@@ -5,15 +5,17 @@ import DrawerUpdateFarmPropject from "@/components/Drawer/Farm/DrawerUpdateFarmP
 import SpinApp from "@/components/Spin/SpinApp";
 import StateCard from "@/components/Tag/StateCard";
 import { FarmProjectModel, LandState } from "@/types/farm_model";
+import { LogEnum, LogModel } from "@/types/project_log_model";
 import { CommonProjectState } from "@/types/project_model";
 import { UserDetailModel } from "@/types/user";
 import { mainColor, whiteColor } from "@/utils/app_color";
-import { EditOutlined } from "@ant-design/icons";
+import { checkVerifyBlockchainLog } from "@/utils/check_verify_log";
+import { EditOutlined, FileSearchOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Col, Modal, Progress, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const FarmProjectDetail = () => {
   const { state: farmProject } = useLocation();
@@ -24,9 +26,35 @@ const FarmProjectDetail = () => {
     (state: any) => state.authen.currentUserInfo.isOwner
   );
 
+  const navigate = useNavigate();
+
   const currentUser: UserDetailModel = useSelector(
     (state: any) => state.authen.currentUserInfo
   );
+
+  // handle log list
+  const [farmProjectLogList, setFarmProjectLogList] = useState<LogModel[]>([]);
+
+  const [isCallGetLog, setCallGetLog] = useState(false);
+
+  useEffect(() => {
+    setFarmProjectLogList([]);
+
+    const getFarmProjectLogList = async () => {
+      const res: any = await FarmServices.getFarmProjectLogList(
+        farmProject.farmProjectId
+      );
+
+      if (res.status === 200) {
+        console.log(res);
+        res.data.map((element: any) => {
+          const logModel = element.log as LogModel;
+          setFarmProjectLogList((prev) => [...prev, logModel]);
+        });
+      }
+    };
+    getFarmProjectLogList();
+  }, [farmProject.farmProjectId, isCallGetLog]);
 
   useEffect(() => {
     const getFarmProjectDetail = async () => {
@@ -34,8 +62,6 @@ const FarmProjectDetail = () => {
         const res: any = await FarmServices.getFarmProjectDetail(
           farmProject.farmProjectId
         );
-
-        console.log(res);
 
         if (res.status === 200) {
           setDataFarmProject(res.data);
@@ -140,6 +166,7 @@ const FarmProjectDetail = () => {
             setIsLoading: setIsLoading,
             setDataFarmProject: setDataFarmProject,
             setIsUpdateFarmProjectProgress: setIsUpdateFarmProjectProgress,
+            setCallGetLog: setCallGetLog,
           }}
         />
       )}
@@ -171,13 +198,19 @@ const FarmProjectDetail = () => {
           <>
             <div className="content-page">
               <Col>
+                {checkVerifyBlockchainLog(farmProjectLogList) === true &&
+                dataFarmProject.state === CommonProjectState.Completed ? (
+                  <img src={logoVerify} height={144} />
+                ) : (
+                  <></>
+                )}
                 <div style={{ paddingTop: "24px" }}>
                   <Row
                     style={{
                       paddingBottom: "12px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: 'space-between',
+                      justifyContent: "space-between",
                     }}
                   >
                     <StateCard
@@ -185,11 +218,6 @@ const FarmProjectDetail = () => {
                         state: dataFarmProject.state,
                       }}
                     />
-                    {dataFarmProject.state === CommonProjectState.Completed ? (
-                      <img src={logoVerify} height={144} />
-                    ) : (
-                      <></>
-                    )}
                   </Row>
                   <Row
                     style={{ display: "flex", justifyContent: "space-between" }}
@@ -208,7 +236,29 @@ const FarmProjectDetail = () => {
                         {dataFarmProject?.farmProjectCode}
                       </span>
                     </p>
+
                     <Row>
+                      <Button
+                        type="default"
+                        size="middle"
+                        icon={
+                          <FileSearchOutlined style={{ fontSize: "18px" }} />
+                        }
+                        onClick={() => {
+                          navigate(
+                            `/project-log/${farmProject.farmProjectId}`,
+                            {
+                              state: {
+                                listLog: farmProjectLogList,
+                                type: LogEnum.Farm,
+                              },
+                            }
+                          );
+                        }}
+                        style={{ borderRadius: "4px", marginRight: "12px" }}
+                      >
+                        View Log
+                      </Button>
                       {dataFarmProject.state === CommonProjectState.Canceled ||
                       dataFarmProject.state === CommonProjectState.Completed ? (
                         <></>
@@ -232,7 +282,7 @@ const FarmProjectDetail = () => {
                           </Button>
                         </>
                       )}
-                      <div style={{ padding: "12px" }}></div>
+                      <div style={{ padding: "6px" }}></div>
                       {isOwner ? (
                         <Button
                           type="primary"
@@ -374,7 +424,7 @@ const FarmProjectDetail = () => {
                               width: "25%",
                             }}
                           >
-                            <p className="title-text">Total Harvest: </p>
+                            <p className="title-text">Total Harvest (ton): </p>
                             <div style={{ padding: "4px" }}></div>
                             <p className="content-text">
                               {dataFarmProject.totalHarvest ?? "Not update"}
@@ -384,10 +434,10 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "15%",
+                              width: "25%",
                             }}
                           >
-                            <p className="title-text">Total seeds:</p>
+                            <p className="title-text">Total seeds (ton):</p>
                             <div style={{ padding: "4px" }}></div>
                             <p className="content-text">
                               {dataFarmProject.totalSeeds ?? "Not update"}
@@ -397,7 +447,7 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "35%",
+                              width: "25%",
                             }}
                           >
                             <p className="title-text">Fertilizer Used:</p>
@@ -413,7 +463,9 @@ const FarmProjectDetail = () => {
                               width: "25%",
                             }}
                           >
-                            <p className="title-text">Total Fertilizers:</p>
+                            <p className="title-text">
+                              Total Fertilizers (ton):
+                            </p>
                             <div style={{ padding: "4px" }}></div>
                             <p className="content-text">
                               {dataFarmProject.totalFertilizers ?? "Not update"}
@@ -442,7 +494,7 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "15%",
+                              width: "25%",
                             }}
                           >
                             <p className="title-text">Ripeness(%):</p>
@@ -455,7 +507,7 @@ const FarmProjectDetail = () => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              width: "35%",
+                              width: "25%",
                             }}
                           >
                             <p className="title-text">Pesticides:</p>
@@ -487,7 +539,9 @@ const FarmProjectDetail = () => {
                         >
                           <p className="title-text">Note:</p>
                           <div style={{ padding: "4px" }}></div>
-                          <p className="content-text">{dataFarmProject.note}</p>
+                          <p className="content-text">
+                            {dataFarmProject.note ?? "Not update"}
+                          </p>
                         </Row>
                       </Col>
                     </div>

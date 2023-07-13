@@ -1,61 +1,66 @@
 import { axiosClient } from "@/services/axios";
 
 export const GetTransportDetailByIdAPI = async (transportId: string) => {
-    try {
+  try {
+    const currentToken = localStorage.getItem("token");
 
-        const currentToken = localStorage.getItem('token');
+    const res = await axiosClient.get("/transport/" + transportId, {
+      headers: { Authorization: `Bearer ${currentToken}` },
+    });
+    return res;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
 
-        const res = await axiosClient.get(
-            "/transport/" + transportId,
-            {
-                headers: { Authorization: `Bearer ${currentToken}` },
-            }
-        );
-        return res;
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-}
+export const UpdateTransportAPI = async (value: any, transportId: string) => {
+  try {
+    const currentToken = localStorage.getItem("token");
 
-export const UpdateTransportAPI = async (value: any, transportId: string ) => {
-    try {
-        const currentToken = localStorage.getItem('token');
-
-        const res = await axiosClient.patch(
-            "/transport/" + transportId,
-            value,
-            {
-                headers: { Authorization: `Bearer ${currentToken}`},
-            }
-        );
-        console.log(res);
-        return res;
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-}
+    const res = await axiosClient.patch("/transport/" + transportId, value, {
+      headers: { Authorization: `Bearer ${currentToken}` },
+    });
+    console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
 
 const TransportServices = {
-    getAllTransportByID: async(userId: string) => {
-        try {
-            const currentToken = localStorage.getItem('token');
+  getAllTransportByID: async (userId: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
 
-            const res = await axiosClient.get(
-                "/transport/all-by-user/",
-                {
-                    headers: { Authorization: `Bearer ${currentToken}` },
-                    params: {
-                        userId: userId,
-                    }
-                }
-            );
-            return res;
-        } catch(err) {
-            return err;
-        }
+      const res = await axiosClient.get("/transport/all-by-user/", {
+        headers: { Authorization: `Bearer ${currentToken}` },
+        params: {
+          userId: userId,
+        },
+      });
+      return res;
+    } catch (err) {
+      return err;
     }
-}
+  },
+  getTransportLogListById: async (transportId: string) => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res = await axiosClient.get("/transport/loglist", {
+        headers: { Authorization: `Bearer ${currentToken}` },
+        params: {
+          transportId: transportId,
+        },
+      });
+
+      return res;
+    } catch (err) {
+      return err;
+    }
+  },
+};
 
 export default TransportServices;

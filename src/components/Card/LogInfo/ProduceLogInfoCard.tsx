@@ -11,9 +11,8 @@ const ProduceLogInfoCard = ({ myProps: props }: any) => {
 
   return (
     <>
-      
-        <>
-          <div>
+      <>
+        <div>
           <Row
             style={{
               alignItems: "center",
@@ -38,90 +37,90 @@ const ProduceLogInfoCard = ({ myProps: props }: any) => {
               }}
             />
           </Row>
-            <Row>
-              <LabelContentItem
-                myProps={{
-                  label: "Production Supervision ID",
-                  content: logModel.modelBeforeChanged.produceSupervisionId,
-                }}
-              />
-            </Row>
-            <Row>
-              <LabelContentItem
-                myProps={{
-                  label: "Inspector ID",
-                  content: logModel.modelBeforeChanged.inspector ?? "",
-                }}
-              />
-              <LabelContentItem
-                myProps={{
-                  label: "Project Code",
-                  content: logModel.modelBeforeChanged.projectCode,
-                }}
-              />
-            </Row>
-            <Row>
-              <LabelContentItem
-                myProps={{
-                  label: "Total Input",
-                  content: logModel.modelBeforeChanged.totalInput,
-                }}
-              />
-              <LabelContentItem
-                myProps={{
-                  label: "Factory Name",
-                  content: logModel.modelBeforeChanged.factory,
-                }}
-              />
-            </Row>
-            <Row>
-              <LabelContentItem
-                myProps={{
-                  label: "Total Product",
-                  content: logModel.modelBeforeChanged.totalProduct,
-                }}
-              />
-              <LabelContentItem
-                myProps={{
-                  label: "Humidity",
-                  content: logModel.modelBeforeChanged.humidity,
-                }}
-              />
-            </Row>
-            <Row>
-              <LabelContentItem
-                myProps={{
-                  label: "Drying Temperature",
-                  content: logModel.modelBeforeChanged.dryingTemperature,
-                }}
-              />
-              <LabelContentItem
-                myProps={{
-                  label: "Completed Date",
-                  content:
-                    logModel.modelBeforeChanged.dateCompleted !== null
-                      ? moment(
-                          logModel.modelBeforeChanged.dateCompleted
-                        ).format("DD/MM/YYYY")
-                      : "",
-                }}
-              />
-            </Row>
-            <Row>
-              <LabelContentItem
-                myProps={{
-                  label: "Expired Date",
-                  content:
-                    logModel.modelBeforeChanged.expiredDate !== null
-                      ? moment(logModel.modelBeforeChanged.expiredDate).format(
-                          "DD/MM/YYYY"
-                        )
-                      : "",
-                }}
-              />
-            </Row>
-          </div>
-        </>
+          <Row>
+            <LabelContentItem
+              myProps={{
+                label: "Production Supervision ID",
+                content: logModel.modelBeforeChanged.produceSupervisionId,
+              }}
+            />
+          </Row>
+          <Row>
+            <LabelContentItem
+              myProps={{
+                label: "Inspector ID",
+                content: logModel.modelBeforeChanged.inspector ?? "",
+              }}
+            />
+            <LabelContentItem
+              myProps={{
+                label: "Project Code",
+                content: logModel.modelBeforeChanged.projectCode,
+              }}
+            />
+          </Row>
+          <Row>
+            <LabelContentItem
+              myProps={{
+                label: "Total Input",
+                content: logModel.modelBeforeChanged.totalInput,
+              }}
+            />
+            <LabelContentItem
+              myProps={{
+                label: "Factory Name",
+                content: logModel.modelBeforeChanged.factory,
+              }}
+            />
+          </Row>
+          <Row>
+            <LabelContentItem
+              myProps={{
+                label: "Total Product",
+                content: logModel.modelBeforeChanged.totalProduct,
+              }}
+            />
+            <LabelContentItem
+              myProps={{
+                label: "Humidity",
+                content: logModel.modelBeforeChanged.humidity,
+              }}
+            />
+          </Row>
+          <Row>
+            <LabelContentItem
+              myProps={{
+                label: "Drying Temperature",
+                content: logModel.modelBeforeChanged.dryingTemperature,
+              }}
+            />
+            <LabelContentItem
+              myProps={{
+                label: "Completed Date",
+                content:
+                  logModel.modelBeforeChanged.dateCompleted !== null
+                    ? moment(logModel.modelBeforeChanged.dateCompleted).format(
+                        "DD/MM/YYYY"
+                      )
+                    : "",
+              }}
+            />
+          </Row>
+          <Row>
+            <LabelContentItem
+              myProps={{
+                label: "Expired Date",
+                content:
+                  logModel.modelBeforeChanged.expiredDate !== null
+                    ? moment(logModel.modelBeforeChanged.expiredDate).format(
+                        "DD/MM/YYYY"
+                      )
+                    : "",
+              }}
+            />
+          </Row>
+        </div>
+      </>
       {/* ) : (
         <p
           className="log-container"
@@ -139,7 +138,7 @@ const ProduceLogInfoCard = ({ myProps: props }: any) => {
       <div style={{ padding: "8px" }} />
       {logModel.modelAfterChanged !== null ? (
         <div>
-           <Row
+          <Row
             style={{
               alignItems: "center",
               justifyContent: "flex-start",

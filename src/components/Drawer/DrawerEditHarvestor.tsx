@@ -103,6 +103,7 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
     } else if (res.response.status === 400) {
       errorMessage(res.response.data.message);
       setIsLoadingUpdate(false);
+      props.setCallGetLog(true);
     } else {
       errorMessage("Update Failed!");
       setIsLoadingUpdate(false);
@@ -144,6 +145,7 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
           props.setDataHarvest(newHarvest);
           props.setIsOpenModalUpdate(false);
           setIsLoadingUpdate(false);
+          props.setCallGetLog(true);
           successMessage("Update Successfully!");
         } else {
           errorMessage("Update Info Failed!");
