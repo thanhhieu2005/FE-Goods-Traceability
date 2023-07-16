@@ -133,7 +133,7 @@ const WarehouseLogInfoCard = ({ myProps: props }: any) => {
               style={{
                 fontSize: "16px",
                 fontWeight: "500",
-                color: canceledColor,
+                color: completedColor,
                 paddingRight: "12px",
               }}
             >
