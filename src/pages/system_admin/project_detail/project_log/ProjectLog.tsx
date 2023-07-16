@@ -160,6 +160,7 @@ const ProjectLog = () => {
                                       href={log.transactionUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
+                                      style={{ textDecoration: 'underline' }}
                                     >
                                       Visit Mumbai Polygon Scan
                                     </a>

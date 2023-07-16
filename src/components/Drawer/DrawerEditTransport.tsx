@@ -27,6 +27,8 @@ const DrawerEditTransport = ({ myProps: props }: any) => {
     (state: any) => state.mode.currentMode
   );
 
+  const isCallUpdate: boolean = props.isCallGetLog;
+
   const [form] = Form.useForm();
 
   const { TextArea } = Input;
@@ -89,7 +91,7 @@ const DrawerEditTransport = ({ myProps: props }: any) => {
 
       props.setIsOpenModalUpdate(false);
       setIsLoadingUpdate(false);
-      props.setCallGetLog(true);
+      props.setCallGetLog(!isCallUpdate);
       successMessage("Update Successfully!");
     } else if (res.response.status === 400) {
       errorMessage(res.response.data.message);
@@ -137,7 +139,7 @@ const DrawerEditTransport = ({ myProps: props }: any) => {
           props.setDataTransport(newTransportSupervision);
           props.setIsOpenModalUpdate(false);
           setIsLoadingUpdate(false);
-          props.setCallGetLog(true);
+          props.setCallGetLog(!isCallUpdate);
           successMessage("Update Successfully!");
         } else {
           errorMessage("Update Info Failed!");

@@ -122,7 +122,7 @@ const ProjectLogInfoCard = ({ myProps: props }: any) => {
             </p>
             <StateCard
               myProps={{
-                state: logModel.modelBeforeChanged.state,
+                state: logModel.modelAfterChanged.state,
                 fontSizeText: "12px",
                 padding: "4px 8px",
               }}

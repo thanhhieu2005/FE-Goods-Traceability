@@ -94,6 +94,7 @@ function WarehouseDetail() {
             setDataWarehouseStorage: setDataWarehouseStorage,
             setIsOpenModalUpdate: setIsOpenModalUpdate,
             setCallGetLog: setCallGetLog,
+            isCallGetLog: isCallGetLog,
           }}
         />
       )}
@@ -148,41 +149,43 @@ function WarehouseDetail() {
                       {dataWarehouseStorage.projectCode}
                     </span>
                   </p>
-                  <Button
-                      type="default"
-                      size="middle"
-                      icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
-                      onClick={() => {
-                        navigate(`/project-log/${warehouseStorageId}`, {
-                          state: {
-                            listLog: warehouseLogList,
-                            type: LogEnum.Warehouse,
-                          },
-                        });
-                      }}
-                      style={{ borderRadius: "4px", marginRight: "12px" }}
-                    >
-                      View Log
-                    </Button>
-                  {dataWarehouseStorage.state ===
-                    CommonProjectState.Completed ||
-                  dataWarehouseStorage.state === CommonProjectState.Canceled ? (
-                    <></>
-                  ) : (
-                    <div>
-                      <Button
-                        type="primary"
-                        icon={<FormOutlined />}
-                        size="large"
-                        style={{ borderRadius: "4px" }}
+                  <Row style={{ alignItems: 'center' }}>
+                    <Button
+                        type="default"
+                        size="middle"
+                        icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
                         onClick={() => {
-                          checkHasProject();
+                          navigate(`/project-log/${warehouseStorageId}`, {
+                            state: {
+                              listLog: warehouseLogList,
+                              type: LogEnum.Warehouse,
+                            },
+                          });
                         }}
+                        style={{ borderRadius: "4px", marginRight: "12px" }}
                       >
-                        Update
+                        View Log
                       </Button>
-                    </div>
-                  )}
+                    {dataWarehouseStorage.state ===
+                      CommonProjectState.Completed ||
+                    dataWarehouseStorage.state === CommonProjectState.Canceled ? (
+                      <></>
+                    ) : (
+                      <div>
+                        <Button
+                          type="primary"
+                          icon={<FormOutlined />}
+                          size="middle"
+                          style={{ borderRadius: "4px" }}
+                          onClick={() => {
+                            checkHasProject();
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </div>
+                    )}
+                  </Row>
                 </Row>
                 <div style={{ padding: "8px 0px" }}>
                   <Row

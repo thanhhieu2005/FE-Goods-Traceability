@@ -89,6 +89,7 @@ const TransportDetail = () => {
             setDataTransport: setDataTransport,
             setIsOpenModalUpdate: setIsOpenModalUpdate,
             setCallGetLog: setCallGetLog,
+            isCallGetLog: isCallGetLog,
           }}
         />
       )}
@@ -145,40 +146,44 @@ const TransportDetail = () => {
                         {dataTransport.projectCode}
                       </span>
                     </p>
-                    <Button
-                      type="default"
-                      size="middle"
-                      icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
-                      onClick={() => {
-                        navigate(`/project-log/${transportId}`, {
-                          state: {
-                            listLog: transportLogList,
-                            type: LogEnum.Transport,
-                          },
-                        });
-                      }}
-                      style={{ borderRadius: "4px", marginRight: "12px" }}
-                    >
-                      View Log
-                    </Button>
-                    {dataTransport.state === CommonProjectState.Completed ||
-                    dataTransport.state === CommonProjectState.Canceled ? (
-                      <></>
-                    ) : (
-                      <div>
-                        <Button
-                          type="primary"
-                          icon={<FormOutlined />}
-                          size="large"
-                          style={{ borderRadius: "4px" }}
-                          onClick={() => {
-                            checkHasProject();
-                          }}
-                        >
-                          Update
-                        </Button>
-                      </div>
-                    )}
+                    <Row style={{
+                      alignItems: 'center',
+                    }}>
+                      <Button
+                        type="default"
+                        size="middle"
+                        icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                        onClick={() => {
+                          navigate(`/project-log/${transportId}`, {
+                            state: {
+                              listLog: transportLogList,
+                              type: LogEnum.Transport,
+                            },
+                          });
+                        }}
+                        style={{ borderRadius: "4px", marginRight: "12px" }}
+                      >
+                        View Log
+                      </Button>
+                      {dataTransport.state === CommonProjectState.Completed ||
+                      dataTransport.state === CommonProjectState.Canceled ? (
+                        <></>
+                      ) : (
+                        <div>
+                          <Button
+                            type="primary"
+                            icon={<FormOutlined />}
+                            size="middle"
+                            style={{ borderRadius: "4px" }}
+                            onClick={() => {
+                              checkHasProject();
+                            }}
+                          >
+                            Update
+                          </Button>
+                        </div>
+                      )}
+                    </Row>
                   </Row>
                   <div style={{ padding: "8px 0px" }}>
                     <Row
