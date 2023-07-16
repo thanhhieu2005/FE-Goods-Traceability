@@ -28,6 +28,8 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
     console.log(state);
   };
 
+  const isCallUpdate: boolean = props.isCallGetLog;
+
   const { TextArea } = Input;
 
   // Handle for Public Blockchain
@@ -67,7 +69,7 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
           successMessage("Update Successfully!");
           setIsLoadingUpdate(false);
           props.setIsUpdateFarmProjectProgress(false);
-          props.setCallGetLog(true);
+          props.setCallGetLog(!isCallUpdate);
         } else {
           errorMessage("Update Info Failed!");
         }
@@ -127,7 +129,7 @@ const DrawerUpdateFarmPropject = ({ myProps: props }: any) => {
 
       props.setIsUpdateFarmProjectProgress(false);
       props.setIsLoading(false);
-      props.setCallGetLog(true);
+      props.setCallGetLog(!isCallUpdate);
 
       setIsLoadingUpdate(false);
     } else {

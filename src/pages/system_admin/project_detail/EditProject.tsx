@@ -22,6 +22,8 @@ const EditProject = ({ myProps: props }: any) => {
     (state: any) => state.mode.currentMode
   );
 
+  const isCallUpdate: boolean = props.isCallGetLog;
+
   const dataProject: ProjectDetailModel = props.dataProject;
 
   console.log(dataProject);
@@ -126,7 +128,7 @@ const EditProject = ({ myProps: props }: any) => {
           props.setDataProject(updateProject.data.project);
           successMessage("Update Successfully!");
           props.setOpenModalUpdate(false);
-          props.setCallGetLog(true);
+          props.setCallGetLog(!isCallUpdate);
           setIsUpdateLoading(false);
         } else {
           errorMessage("Update Info Failed!");
@@ -182,7 +184,7 @@ const EditProject = ({ myProps: props }: any) => {
       setIsUpdateLoading(false);
 
       props.setOpenModalUpdate(false);
-      props.setCallGetLog(true);
+      props.setCallGetLog(!isCallUpdate);
 
       successMessage("Update Successfully!");
     } else {

@@ -167,6 +167,7 @@ const FarmProjectDetail = () => {
             setDataFarmProject: setDataFarmProject,
             setIsUpdateFarmProjectProgress: setIsUpdateFarmProjectProgress,
             setCallGetLog: setCallGetLog,
+            isCallGetLog: isCallGetLog,
           }}
         />
       )}

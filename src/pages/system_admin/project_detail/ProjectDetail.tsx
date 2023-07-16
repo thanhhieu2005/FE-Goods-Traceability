@@ -175,6 +175,7 @@ const ProjectDetail = () => {
             setDataProject: setDataProject,
             setOpenModalUpdate: setOpenModalUpdate,
             setCallGetLog: setCallGetLog,
+            isCallGetLog: isCallGetLog,
           }}
         />
       )}

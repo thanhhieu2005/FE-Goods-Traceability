@@ -83,7 +83,6 @@ function ProduceDetail() {
 
   useEffect(() => {
     setProduceLogList([]);
-    setCallGetLog(false);
 
     const getHarvestLogList = async () => {
       const res: any = await ProductServices.getProduceLogListById(
@@ -112,6 +111,7 @@ function ProduceDetail() {
             setDataProduction: setDataProduction,
             setIsOpenModalUpdate: setIsOpenModalUpdate,
             setCallGetLog: setCallGetLog,
+            isCallGetLog: isCallGetLog,
           }}
         />
       )}
@@ -168,40 +168,42 @@ function ProduceDetail() {
                         {dataProduction.projectCode}
                       </span>
                     </p>
-                    <Button
-                      type="default"
-                      size="middle"
-                      icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
-                      onClick={() => {
-                        navigate(`/project-log/${productionId}`, {
-                          state: {
-                            listLog: produceLogList,
-                            type: LogEnum.Produce,
-                          },
-                        });
-                      }}
-                      style={{ borderRadius: "4px", marginRight: "12px" }}
-                    >
-                      View Log
-                    </Button>
-                    {dataProduction.state === CommonProjectState.Completed ||
-                    dataProduction.state === CommonProjectState.Canceled ? (
-                      <></>
-                    ) : (
-                      <div>
-                        <Button
-                          type="primary"
-                          icon={<FormOutlined />}
-                          size="large"
-                          style={{ borderRadius: "4px" }}
-                          onClick={() => {
-                            checkHasProject();
-                          }}
-                        >
-                          Update
-                        </Button>
-                      </div>
-                    )}
+                    <Row style={{ alignItems: 'center' }}>
+                      <Button
+                        type="default"
+                        size="middle"
+                        icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                        onClick={() => {
+                          navigate(`/project-log/${productionId}`, {
+                            state: {
+                              listLog: produceLogList,
+                              type: LogEnum.Produce,
+                            },
+                          });
+                        }}
+                        style={{ borderRadius: "4px", marginRight: "12px" }}
+                      >
+                        View Log
+                      </Button>
+                      {dataProduction.state === CommonProjectState.Completed ||
+                      dataProduction.state === CommonProjectState.Canceled ? (
+                        <></>
+                      ) : (
+                        <div>
+                          <Button
+                            type="primary"
+                            icon={<FormOutlined />}
+                            size="middle"
+                            style={{ borderRadius: "4px" }}
+                            onClick={() => {
+                              checkHasProject();
+                            }}
+                          >
+                            Update
+                          </Button>
+                        </div>
+                      )}
+                    </Row>
                   </Row>
                   <div style={{ padding: "8px 0px" }}>
                     <Row

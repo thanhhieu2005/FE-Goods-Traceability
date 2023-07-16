@@ -25,6 +25,8 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
     (state: any) => state.mode.currentMode
   );
 
+  const isCallUpdate: boolean = props.isCallGetLog;
+
   const [form] = Form.useForm();
 
   const { TextArea } = Input;
@@ -87,6 +89,7 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
 
   const onUpdateHarvestProject = async (value: any) => {
     setIsLoadingUpdate(true);
+    
     const res: any = await UpdateHarvestAPI(value, dataHarvest.harvestId);
 
     if (res.status == 200) {
@@ -99,11 +102,13 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
 
       setIsLoadingUpdate(false);
 
+      props.setCallGetLog(!isCallUpdate);
+
       successMessage("Update Successfully!");
     } else if (res.response.status === 400) {
       errorMessage(res.response.data.message);
       setIsLoadingUpdate(false);
-      props.setCallGetLog(true);
+      
     } else {
       errorMessage("Update Failed!");
       setIsLoadingUpdate(false);
@@ -145,7 +150,7 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
           props.setDataHarvest(newHarvest);
           props.setIsOpenModalUpdate(false);
           setIsLoadingUpdate(false);
-          props.setCallGetLog(true);
+          props.setCallGetLog(!isCallUpdate);
           successMessage("Update Successfully!");
         } else {
           errorMessage("Update Info Failed!");
