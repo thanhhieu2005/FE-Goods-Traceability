@@ -1,4 +1,4 @@
-import { icLogo } from "@/assets";
+import { icLogo, logoBlockchain } from "@/assets";
 import { logout } from "@/redux/authenSlice";
 import { useAppDispatch } from "@/redux/hook";
 import { backgroundColor } from "@/utils/app_color";
@@ -113,7 +113,7 @@ export const HeaderCustom: React.FC = () => {
           >
             <img
               style={{ width: "48px", margin: "0 12px", cursor: "pointer" }}
-              src={icLogo}
+              src={logoBlockchain}
             />
             <div className="app-name">HK Solution</div>
           </Row>
