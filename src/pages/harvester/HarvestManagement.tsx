@@ -21,6 +21,9 @@ const HarvestManagement = () => {
     (state: any) => state.authen.currentUserInfo
   );
 
+  const [isLoading, setIsLoading] = useState(true);
+
+
   useEffect(() => {
     const getHarvestProjectByUser = async () => {
       try {
@@ -38,12 +41,15 @@ const HarvestManagement = () => {
 
           setDataHarvests(formatHarvest);
         }
+        setIsLoading(false);
       } catch (err) {
         // handle err
+        setIsLoading(false);
       }
     };
 
     getHarvestProjectByUser();
+    
   }, [currentUser.userId]);
 
   const columns: ColumnsType<HarvestModel> = [
@@ -138,6 +144,7 @@ const HarvestManagement = () => {
           <Table
             columns={columns}
             dataSource={dataHarvests}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(harvest: HarvestModel) => {

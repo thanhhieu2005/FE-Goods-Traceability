@@ -28,6 +28,8 @@ function WarehouseManagement() {
   const currentUser: UserDetailModel = useSelector(
     (state: any) => state.authen.currentUserInfo
   );
+  
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getAllWarehouseProjectByUser = async () => {
@@ -46,12 +48,15 @@ function WarehouseManagement() {
 
           setDataWarehouseStorage(formatWarehouseStorage);
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
+        setIsLoading(false);
       }
     };
 
     getAllWarehouseProjectByUser();
+    
   }, [currentUser.userId]);
 
   const columns: ColumnsType<WarehouseStorageModel> = [
@@ -164,6 +169,7 @@ function WarehouseManagement() {
           <Table
             columns={columns}
             dataSource={dataWarehouseStorage}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(warehouseStorage: WarehouseStorageModel) => {

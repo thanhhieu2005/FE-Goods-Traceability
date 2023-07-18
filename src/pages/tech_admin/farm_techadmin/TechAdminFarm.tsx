@@ -90,6 +90,8 @@ export const TechAdminFarm = () => {
 
   const [dataListFarms, setDataListFarms] = useState<FarmInfoModel[]>([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     FarmManagementService.getAllFarmService().then((res: any) => {
       if(res?.status === 200) {
@@ -99,7 +101,9 @@ export const TechAdminFarm = () => {
           setDataListFarms((prev) => [...prev, farmInfo]);
         })
       }
+      setIsLoading(false);
     });
+    
   }, []);
 
   return (
@@ -133,9 +137,10 @@ export const TechAdminFarm = () => {
             <Table 
               columns={columns} 
               dataSource={dataListFarms} 
+              loading={isLoading}
               scroll={{ x: 1300 }} 
               pagination={{ defaultPageSize: 10, showSizeChanger: true}}
-              onRow={(farm : FarmInfoModel, rowIndex : any) => {
+              onRow={(farm : FarmInfoModel) => {
                 return {
                   onClick: () => {
                     navigate(`/techAd-farm-management/${farm.farmId}`, {

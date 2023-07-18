@@ -42,6 +42,7 @@ const LandManagement = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     FarmServices.getAllLandInFarmService(farmId).then((res: any) => {
       if (res?.status === 200) {
         res.data.map((element: any) => {
@@ -49,6 +50,7 @@ const LandManagement = () => {
           setLands((prevLand) => [...prevLand, land]);
         });
       }
+      setIsLoading(false);
     });
   }, [farmId]);
 

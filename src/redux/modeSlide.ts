@@ -5,6 +5,10 @@ let res: any;
 
 if (localStorage.getItem("token") !== null) {
   res = await UserServices.getCurrentMode();
+
+  if(res.status !== 200 || res.status === undefined) {
+    localStorage.clear();
+  }
 }
 
 const initialState = {

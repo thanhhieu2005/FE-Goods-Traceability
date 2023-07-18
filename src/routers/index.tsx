@@ -40,6 +40,7 @@ import UserProfile from "@/pages/user/UserProfile";
 import SystemSettings from "@/pages/user/SystemSettings";
 import ProductReleasedManagement from "@/pages/product/ProductReleasedManagement";
 import ProductReleasedDetail from "@/pages/product/ProductReleasedDetail";
+import NotFound from "@/pages/common/NotFound";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -59,26 +60,23 @@ const Routers = () => {
       <Routes>
         {(login && currentToken != null) || currentTokenLocal ? (
           <>
+            {/* Not found page */}
+            <Route path="*" element={<Navigate to="/not-found" />} />
+            <Route path="/not-found" element={<NotFound />} />
+
+            {/* Pages */}
             <Route
               path="/"
               element={
                 <ProtectedRoute isAllowed={!!currentToken || !!currentToken}>
-                  <LayoutCustom/>
+                  <LayoutCustom />
                 </ProtectedRoute>
               }
             >
-              <Route
-                path="/about-us"
-                element={<AboutUs/>}
-              />
-              <Route
-                path="/settings"
-                element={<SystemSettings/>}
-              />
-              <Route
-                path="/user-profile"
-                element={<UserProfile/>}
-              />
+              <Route path="/login" element={<Navigate to="/" />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/settings" element={<SystemSettings />} />
+              <Route path="/user-profile" element={<UserProfile />} />
               {/* Check Role to render Route */}
               {userName.role === 1 ? ( // Technical Admin Router
                 <>
@@ -145,7 +143,7 @@ const Routers = () => {
                   />
                   <Route
                     path="/released-product-management/:productId"
-                    element={<ProductReleasedDetail/>}
+                    element={<ProductReleasedDetail />}
                   />
                 </>
               ) : userName.role === 3 ? ( // Farm Router
@@ -248,12 +246,18 @@ const Routers = () => {
                   <Route path="/project-log/:id" element={<ProjectLog />} />
                 </>
               ) : (
-                <></>
+                <>
+                  
+                </>
               )}
             </Route>
           </>
         ) : (
           <>
+            {/* Not found page */}
+            <Route path="*" element={<Navigate to="/not-found" />} />
+            <Route path="/not-found" element={<NotFound />} />
+
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

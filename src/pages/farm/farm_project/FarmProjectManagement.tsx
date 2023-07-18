@@ -89,6 +89,9 @@ const FarmProjectManagement = () => {
     []
   );
 
+  const [isLoading, setIsLoading] = useState(true);
+
+
   const farmId = useSelector(
     (state: any) => state.authen.currentUserInfo.farmId
   );
@@ -107,12 +110,15 @@ const FarmProjectManagement = () => {
 
           setDataFarmProjects(formattedData.reverse());
         }
+        setIsLoading(false);
       } catch (error) {
         // handle error
+        setIsLoading(false);
       }
     };
 
     handleGetAllFarm();
+    
   }, [farmId]);
 
   return (
@@ -150,6 +156,7 @@ const FarmProjectManagement = () => {
           <Table
             columns={columns}
             dataSource={dataFarmProjects}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(farmProject: any) => {

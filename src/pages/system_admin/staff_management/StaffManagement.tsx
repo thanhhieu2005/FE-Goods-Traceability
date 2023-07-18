@@ -50,7 +50,7 @@ const columns: ColumnsType<ListUserInfo> = [
     align: "center",
   },
   {
-    title: "Department",
+    title: "Department/ Role",
     width: 100,
     dataIndex: "department",
     key: "department",
@@ -73,6 +73,8 @@ const StaffManagement = () => {
 
   const [dataUsers, setDataUsers] = useState<ListUserInfo[]>([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     StaffServices.getAllDepartmentUser().then((res: any) => {
       if (res?.status === 200) {
@@ -83,7 +85,9 @@ const StaffManagement = () => {
           setDataUsers((prevUser) => [...prevUser, user]);
         });
       }
+      setIsLoading(false);
     });
+    
   }, []);
 
   return (
@@ -122,6 +126,7 @@ const StaffManagement = () => {
           <Table
             columns={columns}
             dataSource={dataUsers}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(user: ListUserInfo) => {

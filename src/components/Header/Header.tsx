@@ -77,7 +77,8 @@ export const HeaderCustom: React.FC = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <HeaderListItem title="User Profile" />,
+      itemIcon: <UserOutlined />,
+      label: <HeaderListItem title="Profile" />,
     },
     {
       key: "2",

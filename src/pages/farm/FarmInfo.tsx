@@ -8,6 +8,7 @@ import { Button, Col, Row, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import FarmerManagement from "./FarmerManagement";
+import SpinApp from "@/components/Spin/SpinApp";
 
 const FarmInfo = () => {
   const userName = useSelector((state: any) => state.authen.currentUserInfo);
@@ -16,13 +17,17 @@ const FarmInfo = () => {
 
   const [dataFarmInfo, setDataFarmInfo] = useState<FarmDetailInfoModel>();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
+    setIsLoading(true);
     FarmServices.getFarmDetailService(userName.farmId).then((res: any) => {
       console.log(res);
       if (res.status === 200) {
         const farmInfo = parseFarmDetail(res.data);
         setDataFarmInfo(farmInfo);
       }
+    setIsLoading(false);
     });
   }, [userName.farmId]);
 
@@ -82,7 +87,7 @@ const FarmInfo = () => {
         <div className="title-header">Farm Information</div>
         <div className="sub-title-header">Farm overview</div>
       </div>
-      {dataFarmInfo ? (
+      {!isLoading && dataFarmInfo ? (
         <div className="content-page">
           {/* display thumbnail/ background image farm */}
           <div
@@ -232,9 +237,7 @@ const FarmInfo = () => {
         </div>
       ) : (
         <>
-          <div className="content-page">
-
-          </div>
+          <SpinApp/>
         </>
       )}
     </Col>

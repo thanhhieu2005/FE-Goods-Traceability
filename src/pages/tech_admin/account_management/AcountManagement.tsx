@@ -86,6 +86,8 @@ export const AccountManagement = () => {
 
   const [dataUsers, setDataUsers] = useState<ListUserInfo[]>([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
       UserManagementService.getAllUserService().then((res : any) => {
       if(res?.status === 200) {
@@ -94,7 +96,10 @@ export const AccountManagement = () => {
           setDataUsers((prevUser) => [...prevUser, user]);
         });
       }
+
+      setIsLoading(false);
     });
+    
   }, []);
 
   return (
@@ -128,6 +133,7 @@ export const AccountManagement = () => {
             <Table 
               columns={columns} 
               dataSource={dataUsers} 
+              loading={isLoading}
               scroll={{ x: 1300 }}
               pagination={{ defaultPageSize: 10, showSizeChanger: true}}
               onRow={(user : ListUserInfo) => {

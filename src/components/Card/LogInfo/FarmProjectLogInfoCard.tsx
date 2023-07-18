@@ -1,7 +1,7 @@
 import LabelContentItem from "@/components/Label/LabelContentItem";
 import StateCard from "@/components/Tag/StateCard";
 import { LogModel } from "@/types/project_log_model";
-import { canceledColor } from "@/utils/app_color";
+import { canceledColor, completedColor } from "@/utils/app_color";
 import { Row } from "antd";
 import moment from "moment";
 import React from "react";
@@ -147,7 +147,7 @@ const FarmProjectLogInfoCard = ({ myProps: props }: any) => {
               style={{
                 fontSize: "16px",
                 fontWeight: "500",
-                color: canceledColor,
+                color: completedColor,
                 paddingRight: "12px",
               }}
             >
