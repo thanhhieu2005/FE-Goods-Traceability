@@ -46,40 +46,44 @@ const UserProfile = () => {
   const [isChangePassword, setChangePassword] = useState(false);
 
   const onClickLinkWallet = () => {
-    Modal.confirm({
-      title: (
-        <Row
-          style={{
-            display: "flex",
-            alignContent: "center",
-          }}
-        >
-          <img src={logoMetaMask} width="48px" />
-          <p
+    if (walletInfo !== null) {
+      Modal.confirm({
+        title: (
+          <Row
             style={{
-              fontSize: "18px",
-              color: mainColor,
-              fontWeight: "600",
               display: "flex",
               alignContent: "center",
-              flexWrap: "wrap",
             }}
           >
-            Link Meta Mask Address
+            <img src={logoMetaMask} width="48px" />
+            <p
+              style={{
+                fontSize: "18px",
+                color: mainColor,
+                fontWeight: "600",
+                display: "flex",
+                alignContent: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              Link Meta Mask Address
+            </p>
+          </Row>
+        ),
+        content: (
+          <p style={{ fontSize: "20px" }}>
+            <span>This step will link address to database. </span>
+            <span>Do you agree with that?</span>
           </p>
-        </Row>
-      ),
-      content: (
-        <p style={{ fontSize: "20px" }}>
-          <span>This step will link address to database. </span>
-          <span>Do you agree with that?</span>
-        </p>
-      ),
-      width: 720,
-      onOk: () => {
-        updateAddressToProfile();
-      },
-    });
+        ),
+        width: 720,
+        onOk: () => {
+          updateAddressToProfile();
+        },
+      });
+    } else {
+      errorMessage("You are not connect wallet!");
+    }
   };
 
   const updateAddressToProfile = async () => {
@@ -121,6 +125,40 @@ const UserProfile = () => {
           </div>
           <div className="content-page">
             <div style={{ paddingTop: "48px" }} />
+            <Row style={{ width: "100%", justifyContent: "flex-end" }}>
+              <Button
+                type="primary"
+                icon={<KeyOutlined />}
+                onClick={() => {
+                  setChangePassword(true);
+                }}
+              >
+                Change Password
+              </Button>
+              <div style={{ padding: "4px" }} />
+              <Button
+                type="default"
+                size="middle"
+                style={{
+                  borderRadius: "4px",
+                  border: "1px solid #e8b26e",
+                }}
+                onClick={onClickLinkWallet}
+              >
+                <Row>
+                  <img src={logoMetaMask} width="24px" />
+                  <p
+                    style={{
+                      fontWeight: "600",
+                      fontSize: "16px",
+                      paddingLeft: "4px",
+                    }}
+                  >
+                    Link Wallet
+                  </p>
+                </Row>
+              </Button>
+            </Row>
             <Row>
               <Col
                 style={{
@@ -182,7 +220,7 @@ const UserProfile = () => {
                 </div>
               </Col>
               <div style={{ display: "flex", width: "70%" }}>
-                <Col style={{ width: "70%", paddingLeft: "48px" }}>
+                <Col style={{ width: "100%", paddingLeft: "48px" }}>
                   <LabelContentItem
                     myProps={{
                       label: "User ID",
@@ -199,7 +237,7 @@ const UserProfile = () => {
                   <div style={{ padding: "8px" }} />
                   <LabelContentItem
                     myProps={{
-                      label: "Wallet Address",
+                      label: "Wallet Address MetaMask",
                       content:
                         currentUserInfo.walletAddress === "" ||
                         currentUserInfo.walletAddress === null
@@ -232,40 +270,6 @@ const UserProfile = () => {
                     }}
                   />
                 </Col>
-                <Row style={{ width: "30%", justifyContent: "flex-end" }}>
-                  <Button
-                    type="primary"
-                    icon={<KeyOutlined />}
-                    onClick={() => {
-                      setChangePassword(true)
-                    }}
-                  >
-                    Change Password
-                  </Button>
-                  <div style={{ padding: "4px" }} />
-                  <Button
-                    type="default"
-                    size="middle"
-                    style={{
-                      borderRadius: "4px",
-                      border: "1px solid #e8b26e",
-                    }}
-                    onClick={onClickLinkWallet}
-                  >
-                    <Row>
-                      <img src={logoMetaMask} width="24px" />
-                      <p
-                        style={{
-                          fontWeight: "600",
-                          fontSize: "16px",
-                          paddingLeft: "4px",
-                        }}
-                      >
-                        Link Wallet
-                      </p>
-                    </Row>
-                  </Button>
-                </Row>
               </div>
             </Row>
           </div>
@@ -286,7 +290,7 @@ const UserProfile = () => {
                 myProps={{
                   onClose: setUpdateProfile,
                   currentUserInfo: currentUserInfo,
-                  updateSucces: setCurrentUserInfo
+                  updateSucces: setCurrentUserInfo,
                 }}
               />
             </div>

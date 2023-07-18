@@ -48,7 +48,7 @@ const DashBoardSystemAdmin = () => {
               ),
             }}
           />
-          <div style={{ padding: "4px" }} />
+          {/* <div style={{ padding: "4px" }} /> */}
           <CardDashBoard
             myProp={{
               title: "System Admin",
@@ -57,7 +57,7 @@ const DashBoardSystemAdmin = () => {
               icon: <UserOutlined style={{ color: "red", fontSize: "200%" }} />,
             }}
           />
-          <div style={{ padding: "4px" }} />
+          {/* <div style={{ padding: "4px" }} /> */}
           <CardDashBoard
             myProp={{
               title: "Staffs",
@@ -68,7 +68,7 @@ const DashBoardSystemAdmin = () => {
               ),
             }}
           />
-          <div style={{ padding: "4px" }} />
+          {/* <div style={{ padding: "4px" }} /> */}
           <CardDashBoard
             myProp={{
               title: "Total Partner Farms",

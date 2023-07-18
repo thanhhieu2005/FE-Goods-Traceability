@@ -13,6 +13,8 @@ const ProductReleasedManagement = () => {
     ProductModel[]
   >([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const getALlReleasedProducts = async () => {
       try {
@@ -28,13 +30,16 @@ const ProductReleasedManagement = () => {
           });
 
           setDataReleasedProducts(formatKey);
+          setIsLoading(false);
         }
       } catch (err) {
         //
+        setIsLoading(false);
       }
     };
 
     getALlReleasedProducts();
+    
   }, []);
 
   const columns: ColumnsType<ProductModel> = [
@@ -101,6 +106,7 @@ const ProductReleasedManagement = () => {
           <Table
             columns={columns}
             dataSource={dataReleasedProducts}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(product: ProductModel) => {

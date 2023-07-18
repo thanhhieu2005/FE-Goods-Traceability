@@ -21,6 +21,8 @@ function ProduceManagement() {
     (state: any) => state.authen.currentUserInfo
   );
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const getProductionProjectsByUser = async () => {
       try {
@@ -38,12 +40,15 @@ function ProduceManagement() {
 
           setDataProduction(formatProduction);
         }
+        setIsLoading(false);
       } catch (err) {
         //handle
+        setIsLoading(false);
       }
     };
 
     getProductionProjectsByUser();
+    
   }, [currentUser.userId]);
 
   const columns: ColumnsType<ProductionModel> = [
@@ -142,6 +147,7 @@ function ProduceManagement() {
           <Table
             columns={columns}
             dataSource={dataProduction}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(production: ProductionModel) => {

@@ -61,6 +61,8 @@ const FarmerManagement = ({ myProp: props }: any) => {
   const [formAddFarmer] = Form.useForm();
   const [dataFarmers, setDataFarmers] = useState<ListUserInfo[]>([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const getAllFarmers = async () => {
       try {
@@ -75,11 +77,14 @@ const FarmerManagement = ({ myProp: props }: any) => {
             setDataFarmers((prevUser) => [...prevUser, user]);
           });
         }
+        setIsLoading(false);
       } catch (err) {
         // handle error
+        setIsLoading(false);
       }
     };
     getAllFarmers();
+    
   }, [props.farmId]);
 
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
@@ -156,6 +161,7 @@ const FarmerManagement = ({ myProp: props }: any) => {
           <Table
             columns={columns}
             dataSource={dataFarmers}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
           />

@@ -40,6 +40,7 @@ const SeedManagement = () => {
   );
 
   useEffect(() => {
+    setIsLoading(true);
     FarmServices.getAllSeedInFarmService(farmId).then((res: any) => {
       if (res?.status === 200) {
         res.data.map((element: any) => {
@@ -47,6 +48,7 @@ const SeedManagement = () => {
           setDataSeeds((prevSeed) => [...prevSeed, seed]);
         });
       }
+      setIsLoading(false);
     });
   }, [farmId]);
 

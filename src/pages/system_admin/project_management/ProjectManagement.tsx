@@ -27,6 +27,8 @@ export const ProjectManagement = () => {
 
   const [dataProjects, setDataProjects] = useState<ProjectInfo[]>([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchAPI = GetAllProjectAPI();
     fetchAPI.then((res: any) => {
@@ -41,6 +43,8 @@ export const ProjectManagement = () => {
         project.status = element.state;
         setDataProjects((prevArr) => [...prevArr, project]);
       });
+
+      setIsLoading(false);
     });
   }, []);
 
@@ -131,6 +135,7 @@ export const ProjectManagement = () => {
           <Table
             columns={columns}
             dataSource={dataProjects}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(record: ProjectInfo) => {

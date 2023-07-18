@@ -20,6 +20,8 @@ const TransportManagement = () => {
     (state: any) => state.authen.currentUserInfo
   );
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const getTransportProjectByUser = async () => {
       try {
@@ -38,12 +40,15 @@ const TransportManagement = () => {
 
           setDataTransport(formatTransport);
         }
+        setIsLoading(false);
       } catch (err) {
         //handle
+        setIsLoading(false);
       }
     };
 
     getTransportProjectByUser();
+    
   }, [currentUser.userId]);
 
   const columns: ColumnsType<TransportModel> = [
@@ -142,6 +147,7 @@ const TransportManagement = () => {
           <Table
             columns={columns}
             dataSource={dataTransport}
+            loading={isLoading}
             scroll={{ x: 1300 }}
             pagination={{ defaultPageSize: 10, showSizeChanger: true }}
             onRow={(transport: TransportModel) => {
