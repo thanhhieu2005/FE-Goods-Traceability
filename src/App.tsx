@@ -7,8 +7,6 @@ import { logout, updateCurrentUserInfo } from "./redux/authenSlice";
 import { useEffect } from "react";
 import UserServices from "./api/user_api";
 import { updateBlockchainMode } from "./redux/modeSlide";
-import firebase from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
 import { getMessagingToken, onMessageListener } from "./services/firebase";
 
 function App() {
@@ -51,9 +49,18 @@ function App() {
     }
   }, [currentToken, dispatch, navigate]);
 
-  useEffect(()=> {
+  useEffect(() => {
     getMessagingToken();
-    
+    onMessageListener().then((payload) => {
+      console.log(payload)
+    })
+      .catch((err) => {
+        console.log(err)
+      });
+    const channel = new BroadcastChannel("notifications");
+    channel.addEventListener("message", (event) => {
+      console.log("Receive background: ", event.data);
+    });
   }, []);
 
   return <Routers />;
