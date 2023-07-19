@@ -15,6 +15,7 @@ import {
 } from "@/assets";
 import { mainColor, whiteColor } from "@/utils/app_color";
 import { ButtonStyle } from "@/utils/style_common";
+import { AxiosError } from "axios";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -33,16 +34,23 @@ const Login = () => {
     try {
       const res = await axiosClient.post("/users/login", value);
 
-      localStorage.setItem("token", res.data.token);
+      if (res.status === 200) {
+        localStorage.setItem("token", res.data.token);
 
-      dispatch(setCurrentUserInfo(res.data));
+        dispatch(setCurrentUserInfo(res.data));
 
-      navigate("/", { replace: true });
-      // console.log({ data: res.data });
-      successMessage("Login Successfully", 2);
+        navigate("/", { replace: true });
+        // console.log({ data: res.data });
+        successMessage("Login Successfully", 2);
+      }
     } catch (err: any) {
       console.log(err);
-      errorMessage(err.response.data.message, 3);
+      if(err.code === AxiosError.ERR_NETWORK) {
+        errorMessage("Server has Error, please try later!");
+      } else {
+        errorMessage(err.response.data.message, 3);
+      }
+      
     }
   };
 
@@ -61,14 +69,28 @@ const Login = () => {
         >
           {/* <img src={logoFull} width="50%" height="70%" style={{ display: 'flex' }} /> */}
           <img src={logoBlockchain} width="25%" height="35%" />
-          <p style={{ color: mainColor, fontSize: "32px", fontWeight: "600", padding: '0px', margin: '0px' }}>
+          <p
+            style={{
+              color: mainColor,
+              fontSize: "32px",
+              fontWeight: "600",
+              padding: "0px",
+              margin: "0px",
+            }}
+          >
             Unlocking Transparency - Building Trust
           </p>
           <p style={{ color: whiteColor, fontSize: "32px", fontWeight: "600" }}>
             Ethereum-Powered Traceability
           </p>
           <div style={{ padding: "24px" }} />
-          <Row style={{ display: "flex", justifyContent: "space-between", width: '100%' }}>
+          <Row
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
             <img src={thumpLogin1} width="30%" />
             <img src={thumpLogin2} width="30%" />
           </Row>

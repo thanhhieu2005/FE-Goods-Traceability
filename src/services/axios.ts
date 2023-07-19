@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrlEc2 = "https://ec2-13-231-4-216.ap-northeast-1.compute.amazonaws.com:3000/";
+const baseUrlEc2 = "https://nodejs.blockchain-good-traceability.info.vn/";
 const baseURLRender = "https://coffee-supply-chain.onrender.com/";
 const local = "http://localhost:3000/"
 
