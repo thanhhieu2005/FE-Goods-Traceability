@@ -2,7 +2,6 @@ import { getToken, onMessage } from "firebase/messaging";
 import { getMessaging } from "firebase/messaging/sw";
 import { firebaseConfig } from "./config_firebase";
 import { initializeApp } from "firebase/app";
-import { onBackgroundMessage } from "firebase/messaging/sw";
 
 const app = initializeApp(firebaseConfig);
 
@@ -13,7 +12,7 @@ export const getMessagingToken = async () => {
   try {
     currentToken = await getToken(messaging, {
       vapidKey:
-        "BC97_4VZG8y6vxFhMbYYergEQWJs-Z4q3Ela1mXyAFjSt5l-dEesaUJgO8YICRd4sNHRf9vsN7sfmdtsb2Hn1DY",
+        "BBKjAF_MAM-_j1KK0Mt4uG2TTTUxKy26QHMsWwffS6sUXuZ-jdxGIkgK6V7xPmfDwwh-d-6q9s6UIzlWFTvnrpc",
     });
 
     console.log("FCM registration token", currentToken);
@@ -27,7 +26,10 @@ export const getMessagingToken = async () => {
 
 export const onMessageListener = () => 
   new Promise((resolve) => {
+    console.log("Here it in")
     onMessage(messaging, (payload) => {
+      console.log("Here it Call and send")
+      console.log(payload)
       resolve(payload);
     });
   });

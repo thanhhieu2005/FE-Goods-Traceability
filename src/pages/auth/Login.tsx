@@ -16,6 +16,8 @@ import {
 import { mainColor, whiteColor } from "@/utils/app_color";
 import { ButtonStyle } from "@/utils/style_common";
 import { AxiosError } from "axios";
+import { onMessageListener } from "@/services/firebase";
+import { getMessaging, onMessage } from "firebase/messaging";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -29,6 +31,13 @@ const Login = () => {
       navigate("/", { replace: true });
     }
   }, [login, navigate]);
+
+  useEffect(() => {
+    const messaging = getMessaging();
+    onMessage(messaging, (payload) => {
+      console.log("Message received. ", payload);
+    });
+  })
 
   const handleSubmit = async (value: any) => {
     try {
@@ -45,12 +54,12 @@ const Login = () => {
       }
     } catch (err: any) {
       console.log(err);
-      if(err.code === AxiosError.ERR_NETWORK) {
+      if (err.code === AxiosError.ERR_NETWORK) {
         errorMessage("Server has Error, please try later!");
       } else {
         errorMessage(err.response.data.message, 3);
       }
-      
+
     }
   };
 
@@ -165,7 +174,7 @@ const Login = () => {
                     type="primary"
                     size="large"
                     htmlType="submit"
-                    // disabled = {email && password ? false : true}
+                  // disabled = {email && password ? false : true}
                   >
                     LOGIN
                   </Button>

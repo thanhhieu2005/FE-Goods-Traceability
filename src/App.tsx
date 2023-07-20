@@ -63,6 +63,12 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    onMessageListener().then(data => {
+      console.log("Receive foreground: ", data)
+    })
+  })
+
   return <Routers />;
 }
 
