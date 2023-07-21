@@ -4,32 +4,44 @@ import { FiEdit } from "react-icons/fi";
 import FarmManagementService from "@/api/admin_tech/farm_management_services";
 import CardCustom from "@/components/Card/Card";
 import { contentLayout } from "@/styles/content_layout";
-import { FarmInfoModel } from "@/types/farm_model";
+import { FarmInfoModel, StatusFarm } from "@/types/farm_model";
 import { isDisabled } from "@testing-library/user-event/dist/utils";
 import { Badge, Breadcrumb, Button, Card, Col, Form, Input, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { icLand, icSeed } from "@/assets";
+import SpinApp from "@/components/Spin/SpinApp";
+import {
+  canceledColor,
+  mainColor,
+  pendingColorBackground,
+} from "@/utils/app_color";
+import ButtonUpdateStatusFarm from "@/components/Button/ButtonUpdateStatusFarm";
 
 const TechAdminFarmDetail = () => {
   const { state: farmId } = useLocation();
 
   const [dataFarm, setDataFarm] = useState<FarmInfoModel>();
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isCall, setIsCall] = useState(false);
+
   useEffect(() => {
+    setIsLoading(true);
     FarmManagementService.getFarmDetailService(farmId).then((res: any) => {
       if (res.status === 200) {
         console.log(res.data);
         setDataFarm(res.data);
       }
-    });
-  }, []);
 
-  console.log(dataFarm);
+      setIsLoading(false);
+    });
+  }, [farmId, isCall]);
 
   const farmCardProps = {
     title: "Famers",
-    content: "10",
+    content: dataFarm?.farmerList.length,
     onClick: () => {
       {
         console.log("Watch Detail");
@@ -41,7 +53,7 @@ const TechAdminFarmDetail = () => {
 
   const farmProjectProps = {
     title: "Projects",
-    content: "20",
+    content: dataFarm?.farmProjectList.length,
     onClick: () => {
       {
         console.log("Watch Detail");
@@ -53,7 +65,7 @@ const TechAdminFarmDetail = () => {
 
   const landProjectProps = {
     title: "Lands",
-    content: "30",
+    content: dataFarm?.landList.length,
     onClick: () => {
       {
         console.log("Watch Detail");
@@ -65,7 +77,7 @@ const TechAdminFarmDetail = () => {
 
   const seedProjectProps = {
     title: "Seeds",
-    content: "30",
+    content: dataFarm?.seedList.length,
     onClick: () => {
       {
         console.log("Watch Detail");
@@ -90,7 +102,7 @@ const TechAdminFarmDetail = () => {
           </div>
         </Col>
       </div>
-      {dataFarm ? (
+      {!isLoading && dataFarm ? (
         <>
           <div className="content-page">
             <Col>
@@ -119,7 +131,14 @@ const TechAdminFarmDetail = () => {
                   }}
                 >
                   <p className="text-title">Farm Information</p>
-                  <Button type="primary">Update Status</Button>
+                  <ButtonUpdateStatusFarm
+                    myProps={{
+                      statusFarm: dataFarm.statusFarm,
+                      farmId: farmId,
+                      isCall: isCall,
+                      setIsCall: setIsCall,
+                    }}
+                  />
                 </Row>
               </div>
               <div>
@@ -132,15 +151,31 @@ const TechAdminFarmDetail = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Badge status="success" style={{ paddingRight: "8px" }} />
+                      <Badge
+                        status={
+                          dataFarm.statusFarm === StatusFarm.NotActive
+                            ? "warning"
+                            : "success"
+                        }
+                        style={{ paddingRight: "8px" }}
+                      />
                       <div
                         style={{
                           fontWeight: "500",
                           fontSize: "16px",
-                          color: "#52c41a",
+                          color:
+                            dataFarm.statusFarm === StatusFarm.Actived
+                              ? "#52c41a"
+                              : dataFarm.statusFarm === StatusFarm.NotActive
+                              ? mainColor
+                              : canceledColor,
                         }}
                       >
-                        Actived
+                        {dataFarm.statusFarm === StatusFarm.NotActive
+                          ? "Not Active"
+                          : dataFarm.statusFarm === StatusFarm.Actived
+                          ? "Active"
+                          : "Revoked"}
                       </div>
                     </Row>
                   </Form.Item>
@@ -216,11 +251,15 @@ const TechAdminFarmDetail = () => {
                   >
                     <Input />
                   </Form.Item>
-                  <Form.Item label="Owner Email" name="ownerEmail" initialValue={
+                  <Form.Item
+                    label="Owner Email"
+                    name="ownerEmail"
+                    initialValue={
                       dataFarm.farmOwner !== null
                         ? dataFarm.farmOwner?.email
                         : ""
-                    }>
+                    }
+                  >
                     <Input />
                   </Form.Item>
                   {/* <Form.Item label="Owner Name" name="ownerName" >
@@ -235,7 +274,9 @@ const TechAdminFarmDetail = () => {
           </div>
         </>
       ) : (
-        <></>
+        <>
+          <SpinApp />
+        </>
       )}
     </Col>
   );
