@@ -105,6 +105,22 @@ const FarmManagementService = {
         } catch (err) {
             return err;
         }
+    },
+    createNewFarm: async (value: any) => {
+        try {
+            const currentToken = localStorage.getItem('token');
+            const res = await axiosClient.post(
+                '/farm/',
+                value,
+                {
+                    headers: { Authorization: `Bearer ${currentToken}` },
+                }
+            )
+
+            return res;
+        } catch (err) {
+            return err;
+        }
     }
 }
 

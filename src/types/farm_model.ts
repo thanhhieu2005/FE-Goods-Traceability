@@ -10,6 +10,9 @@ export interface FarmInfoModel {
     farmOwner?: UserDetailModel;
     farmPhoneNumber?: string;
     farmerList: string[];
+    farmProjectList: string[];
+    landList: string[];
+    seedList: string[];
     statusFarm: StatusFarm;
     dateCreated: string;
 }

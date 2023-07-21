@@ -68,17 +68,21 @@ const columns: ColumnsType<FarmInfoModel> = [
     render: (value: StatusFarm) =>
       value == StatusFarm.Actived ? (
         <span>
-          <Badge status="success" style={{paddingRight: '4px'}} />
+          <Badge status="success" style={{ paddingRight: "4px" }} />
           Actived
         </span>
       ) : value == StatusFarm.NotActive ? (
         <span>
-          <Badge status="processing" color="yellow" style={{paddingRight: '4px'}} />
+          <Badge
+            status="processing"
+            color="yellow"
+            style={{ paddingRight: "4px" }}
+          />
           Not Actived
         </span>
       ) : (
         <span>
-          <Badge status="error" style={{paddingRight: '4px'}} />
+          <Badge status="error" style={{ paddingRight: "4px" }} />
           Revoked
         </span>
       ),
@@ -92,62 +96,68 @@ export const TechAdminFarm = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isCall, setIsCall] = useState(false);
+
   useEffect(() => {
     FarmManagementService.getAllFarmService().then((res: any) => {
-      if(res?.status === 200) {
+      if (res?.status === 200) {
         console.log(res.data);
         res.data.map((element: any) => {
           const farmInfo = parseFarmInfo(element) as FarmInfoModel;
           setDataListFarms((prev) => [...prev, farmInfo]);
-        })
+        });
       }
       setIsLoading(false);
     });
-    
-  }, []);
+  }, [isCall]);
 
   return (
     <div>
       <Col>
         <div className="header-content">
           <Col>
-            <div className="title-header">
-              Farm Management
-            </div>
+            <div className="title-header">Farm Management</div>
             <div className="sub-title-header">
-              Manage the list of farms in the system controlled by the Technical Administrator
+              Manage the list of farms in the system controlled by the Technical
+              Administrator
             </div>
           </Col>
         </div>
         <div className="content-page">
           <Col>
-          <Row style={{paddingBottom: '12px', justifyContent: 'space-between', alignItems: 'center'}}>
-              <Row style={{width:'80%'}}>
-                <div className="label-search">
-                  Find farm
-                </div>
+            <Row
+              style={{
+                paddingBottom: "12px",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Row style={{ width: "80%" }}>
+                <div className="label-search">Find farm</div>
                 <div className="search-item">
-                  <Search placeholder="Enter your farm code" enterButton/>
+                  <Search placeholder="Enter your farm code" enterButton />
                 </div>
               </Row>
               <div className="action-layout-btn">
-              <CreateFarmForm></CreateFarmForm>
+                <CreateFarmForm
+                  myProps={{ isCall: isCall, setIsCall: setIsCall }}
+                />
               </div>
             </Row>
-            <Table 
-              columns={columns} 
-              dataSource={dataListFarms} 
+            <Table
+              columns={columns}
+              dataSource={dataListFarms}
               loading={isLoading}
-              scroll={{ x: 1300 }} 
-              pagination={{ defaultPageSize: 10, showSizeChanger: true}}
-              onRow={(farm : FarmInfoModel) => {
+              scroll={{ x: 1300 }}
+              pagination={{ defaultPageSize: 10, showSizeChanger: true }}
+              onRow={(farm: FarmInfoModel) => {
                 return {
                   onClick: () => {
                     navigate(`/techAd-farm-management/${farm.farmId}`, {
                       state: farm.farmId,
-                    })
-                  }
-                }
+                    });
+                  },
+                };
               }}
             />
           </Col>

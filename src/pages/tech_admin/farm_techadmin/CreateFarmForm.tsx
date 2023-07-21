@@ -1,20 +1,48 @@
 import { Button, Modal, Input, Form, Select } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import FarmManagementService from "@/api/admin_tech/farm_management_services";
+import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
 
-const CreateFarmForm = () => {
+const CreateFarmForm = ({myProps: props}: any) => {
+  const [form] = Form.useForm();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const isCall: any = props.isCall;
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleCreate = () => {
+  const handleCancel = () => {
+    form.resetFields();
     setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const createNewFarm = async(value: any) => {
+    console.log(value);
+
+    setIsLoading(true);
+
+    const res: any = await FarmManagementService.createNewFarm(value);
+
+    console.log(res);
+
+    if(res.status === 200) {
+      setIsLoading(false);
+
+      props.setIsCall(!isCall);
+      setIsModalOpen(false);
+
+      successMessage("Create new Farm Successfully!");
+    } else {
+      setIsLoading(false);
+
+      errorMessage("Create Failed!");
+    }
   };
 
   return (
@@ -25,26 +53,38 @@ const CreateFarmForm = () => {
       <Modal
         title="Create new Farm"
         open={isModalOpen}
-        onOk={handleCreate}
+        onOk={form.submit}
         onCancel={handleCancel}
         okText={"Create"}
         closable={false}
         width={640}
         maskClosable={false}
-        destroyOnClose = {true}
+        destroyOnClose={true}
+        confirmLoading={isLoading}
         bodyStyle={{
           fontWeight: "500",
           justifyItems: "center",
           justifyContent: "center",
         }}
       >
-        <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
-          <Form.Item label="Farm Code" name="farmCode" required
+        <Form
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 16 }}
+          form={form}
+          onFinish={(value) => createNewFarm(value)}
+        >
+          <Form.Item
+            label="Farm Code"
+            name="farmCode"
+            required
             rules={[{ required: true, message: "Please enter farm code" }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item label="Farm Name" name="farmName" required
+          <Form.Item
+            label="Farm Name"
+            name="farmName"
+            required
             rules={[{ required: true, message: "Please enter farm name" }]}
           >
             <Input />
@@ -52,10 +92,10 @@ const CreateFarmForm = () => {
           <Form.Item label="Farm Owner" name="farmOwner">
             <Input />
           </Form.Item>
-          <Form.Item label="Phone Number" name="phone">
+          <Form.Item label="Phone Number" name="farmPhoneNumber">
             <Input />
           </Form.Item>
-          <Form.Item label="Address" name="address">
+          <Form.Item label="Address" name="farmAddress">
             <Input />
           </Form.Item>
         </Form>
