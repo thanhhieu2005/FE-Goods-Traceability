@@ -41,6 +41,7 @@ import SystemSettings from "@/pages/user/SystemSettings";
 import ProductReleasedManagement from "@/pages/product/ProductReleasedManagement";
 import ProductReleasedDetail from "@/pages/product/ProductReleasedDetail";
 import NotFound from "@/pages/common/NotFound";
+import NotificationPage from "@/pages/common/NotificationPage";
 
 const Routers = () => {
   // const currentUserInfo = useSelector((state : any) => state.authen.currentUserInfo);
@@ -63,6 +64,7 @@ const Routers = () => {
             {/* Not found page */}
             <Route path="*" element={<Navigate to="/not-found" />} />
             <Route path="/not-found" element={<NotFound />} />
+            
 
             {/* Pages */}
             <Route
@@ -77,6 +79,7 @@ const Routers = () => {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/settings" element={<SystemSettings />} />
               <Route path="/user-profile" element={<UserProfile />} />
+              {/* <Route path="/notifications"  element={<NotificationPage/>}/> */}
               {/* Check Role to render Route */}
               {userName.role === 1 ? ( // Technical Admin Router
                 <>

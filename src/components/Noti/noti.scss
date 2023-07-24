@@ -1,0 +1,40 @@
+.noti-css {
+    // width: 100%;
+    .date {
+        font-size: 12px;
+        font-style: italic;
+        width: 100%;
+    }
+
+    .noti-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: "#e8b26e";
+        width: 100%;
+        display: flex;
+    }
+
+    .line {
+        height: 1px;
+        width: 100%;
+        margin-bottom: 12px;
+        margin-top: 8px;
+        background-color: beige;
+    }
+
+    
+}
+
+.show-all {
+    font-size: 16px;
+    font-style: italic;
+    color: blue;
+    margin: 0;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.ant-popover-inner-content {
+    width: max-content;
+}

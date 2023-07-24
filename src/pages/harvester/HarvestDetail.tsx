@@ -227,13 +227,13 @@ const HarvestDetail = () => {
                     <LabelContentItem
                       myProps={{
                         label: "Total Harvest (ton)",
-                        content: dataHarvest.totalHarvest ?? "Not Updat",
+                        content: dataHarvest.totalHarvest ?? "Not Update",
                       }}
                     />
                     <LabelContentItem
                       myProps={{
                         label: "Temperature (°C)",
-                        content: dataHarvest.temperature ?? "Not Updat",
+                        content: dataHarvest.temperature ?? "Not Update",
                       }}
                     />
                   </Row>
