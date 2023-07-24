@@ -22,11 +22,20 @@ export const LayoutCustom = () => {
       onMessage(messaging, (payload) => {
         console.log("Message received. ", payload);
         notification.open({
-          message: (<Row>
-            <BellOutlined style={{ color: "#e8b26e", fontSize: "32px" }} />
-            <p>New Notification</p>
-          </Row>),
-          description: `test`,
+          message: (
+            <Row>
+              <BellOutlined style={{ color: "#e8b26e", fontSize: "32px" }} />
+              <p>
+                {payload.notification !== undefined
+                  ? payload.notification.title
+                  : "New Notification"}{" "}
+              </p>
+            </Row>
+          ),
+          description:
+            payload.notification !== undefined
+              ? `${payload.notification?.body}`
+              : "Test",
           placement: "bottomLeft",
           duration: 5,
         });
