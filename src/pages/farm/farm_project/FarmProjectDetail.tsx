@@ -53,7 +53,7 @@ const FarmProjectDetail = () => {
         });
       }
     };
-    getFarmProjectLogList();
+    setTimeout(getFarmProjectLogList, 4000);
   }, [farmProject.farmProjectId, isCallGetLog]);
 
   useEffect(() => {
@@ -199,8 +199,7 @@ const FarmProjectDetail = () => {
           <>
             <div className="content-page">
               <Col>
-                {checkVerifyBlockchainLog(farmProjectLogList) === true &&
-                dataFarmProject.state === CommonProjectState.Completed ? (
+                {dataFarmProject.state === CommonProjectState.Completed ? (
                   <img src={logoVerify} height={144} />
                 ) : (
                   <></>

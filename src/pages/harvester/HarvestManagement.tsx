@@ -36,7 +36,6 @@ const HarvestManagement = () => {
         if (res.status === 200) {
           res.data.map((e: any) => {
             formatHarvest.push(parseHarvestData(e));
-            console.log(formatHarvest);
           });
 
           setDataHarvests(formatHarvest);

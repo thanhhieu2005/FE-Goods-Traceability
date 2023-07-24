@@ -58,9 +58,8 @@ const HarvestDetail = () => {
   const [isCallGetLog, setCallGetLog] = useState(false);
 
   useEffect(() => {
-    setHarvestLogList([]);
-
     const getHarvestLogList = async () => {
+      setHarvestLogList([]);
       const res: any = await HarvestServices.getHarvestLogListById(harvestId);
 
       if (res.status === 200) {
@@ -71,7 +70,8 @@ const HarvestDetail = () => {
       }
     };
 
-    getHarvestLogList();
+    setTimeout(getHarvestLogList, 2000);
+    // getHarvestLogList();
   }, [harvestId, isCallGetLog]);
 
   return (
@@ -85,7 +85,7 @@ const HarvestDetail = () => {
             setDataHarvest: setDataHarvest,
             setIsOpenModalUpdate: setIsOpenModalUpdate,
             setCallGetLog: setCallGetLog,
-            isCallGetLog: isCallGetLog
+            isCallGetLog: isCallGetLog,
           }}
         />
       )}
@@ -108,8 +108,7 @@ const HarvestDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  {checkVerifyBlockchainLog(harvestLogList) === true &&
-                  dataHarvest.state === CommonProjectState.Completed ? (
+                  {dataHarvest.state === CommonProjectState.Completed ? (
                     <img src={logoVerify} height={144} />
                   ) : (
                     <></>
@@ -138,11 +137,13 @@ const HarvestDetail = () => {
                         {dataHarvest.projectCode}
                       </span>
                     </p>
-                    <Row style={{ alignItems: 'center' }}>
+                    <Row style={{ alignItems: "center" }}>
                       <Button
                         type="default"
                         size="middle"
-                        icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                        icon={
+                          <FileSearchOutlined style={{ fontSize: "18px" }} />
+                        }
                         onClick={() => {
                           navigate(`/project-log/${harvestId}`, {
                             state: {

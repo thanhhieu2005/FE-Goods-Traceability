@@ -105,7 +105,7 @@ const ProjectDetail = () => {
       }
     };
 
-    getProjectLogsById();
+    setTimeout(getProjectLogsById, 4000);
   }, [projectId, isCallGetLog]);
 
   const [farm, setFarm] = useState<FarmInfoModel>();

@@ -75,7 +75,7 @@ const TransportDetail = () => {
       }
     };
 
-    getTransportLogList();
+    setTimeout(getTransportLogList, 4000);
   }, [transportId, isCallGetLog]);
 
   return (
@@ -116,8 +116,7 @@ const TransportDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  {checkVerifyBlockchainLog(transportLogList) === true &&
-                  dataTransport.state === CommonProjectState.Completed ? (
+                  {dataTransport.state === CommonProjectState.Completed ? (
                     <img src={logoVerify} height={144} />
                   ) : (
                     <></>
@@ -146,13 +145,17 @@ const TransportDetail = () => {
                         {dataTransport.projectCode}
                       </span>
                     </p>
-                    <Row style={{
-                      alignItems: 'center',
-                    }}>
+                    <Row
+                      style={{
+                        alignItems: "center",
+                      }}
+                    >
                       <Button
                         type="default"
                         size="middle"
-                        icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                        icon={
+                          <FileSearchOutlined style={{ fontSize: "18px" }} />
+                        }
                         onClick={() => {
                           navigate(`/project-log/${transportId}`, {
                             state: {
