@@ -81,6 +81,27 @@ const ApiCommonService = {
       return err;
     }
   },
+  removeFCMToken: async () => {
+    try {
+      const currentToken = localStorage.getItem("token");
+
+      const res: any = await axiosClient.patch(
+        "/users/me",
+        {
+          fcmToken: null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
+        }
+      );
+
+      return res;
+    } catch (err) {
+      return err;
+    }
+  },
 };
 
 export default ApiCommonService;

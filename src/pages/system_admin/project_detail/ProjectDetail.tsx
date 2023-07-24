@@ -64,7 +64,6 @@ const ProjectDetail = () => {
 
       setCurrentStep(currentStep);
     });
-    
 
     setProjectLogList([]);
     setHarvestLogList([]);
@@ -198,8 +197,7 @@ const ProjectDetail = () => {
             <Col>
               <div className="content-page">
                 <Col>
-                  {checkVerifyBlockchainLog(projectLogList) === true &&
-                  dataProject.state === CommonProjectState.Completed ? (
+                  {dataProject.state === CommonProjectState.Completed ? (
                     <img src={logoVerify} height={144} />
                   ) : (
                     <></>

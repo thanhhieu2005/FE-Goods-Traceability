@@ -22,8 +22,6 @@ const ProductCheckInfoCard = ({ myProps: props }: any) => {
     props.dataProduct
   );
 
-  console.log(dataProduct);
-
   useEffect(() => {
     setDataProduct(props.dataProduct);
   }, [props.dataProduct]);
@@ -80,7 +78,6 @@ const ProductCheckInfoCard = ({ myProps: props }: any) => {
                   borderColor: canceledColor,
                 }}
                 onClick={() => {
-                  console.log("a");
                   props.onDeleteProduct(dataProduct);
                 }}
               >
@@ -112,17 +109,25 @@ const ProductCheckInfoCard = ({ myProps: props }: any) => {
           ) : (
             <>
               <Row style={{ display: "flex", alignItems: "center" }}>
-              <img src={icCheck} height={32} />
-                <div style={{ marginLeft: "12px", border: "solid 1px", padding: '4px 12px', borderColor: completedColor, borderRadius: '12px' }}>
-                    <p
-                      style={{
-                        fontSize: "24px",
-                        fontWeight: "600",
-                        color: completedColor,
-                      }}
-                    >
-                      Released
-                    </p>
+                <img src={icCheck} height={32} />
+                <div
+                  style={{
+                    marginLeft: "12px",
+                    border: "solid 1px",
+                    padding: "4px 12px",
+                    borderColor: completedColor,
+                    borderRadius: "12px",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: "600",
+                      color: completedColor,
+                    }}
+                  >
+                    Released
+                  </p>
                 </div>
               </Row>
             </>
