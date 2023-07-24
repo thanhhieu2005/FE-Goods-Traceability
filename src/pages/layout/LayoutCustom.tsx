@@ -41,7 +41,7 @@ export const LayoutCustom = () => {
         });
       });
     }
-  }, [user]);
+  }, []);
 
   return (
     <Layout className="my-layout" style={{ minHeight: "100vh" }}>

@@ -1,4 +1,3 @@
-import { notification } from "antd";
 import "antd/dist/antd.min.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +8,7 @@ import { logout, updateCurrentUserInfo } from "./redux/authenSlice";
 import { updateBlockchainMode } from "./redux/modeSlide";
 import Routers from "./routers";
 import { axiosClient } from "./services/axios";
-import { getMessagingToken, onMessageListener } from "./services/firebase";
+import { getMessagingToken } from "./services/firebase";
 
 function App() {
   const currentToken = localStorage.getItem("token");
