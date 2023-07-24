@@ -13,6 +13,9 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "../../features/connectWalletAPI";
 import NotificationBadge from "../Badge/NotificationBadge";
 import "./Header.scss";
+import ApiCommonService from "@/api/api_common/api_common";
+import { errorMessage } from "../Message/MessageNoti";
+import { RiStarSFill } from "react-icons/ri";
 
 const { Header } = Layout;
 
@@ -45,7 +48,7 @@ export const HeaderCustom: React.FC = () => {
     fetch();
   }, [fetch]);
 
-  const onLogout = async () => {
+  const onLogout = () => {
     localStorage.clear();
 
     dispatch(logout());
@@ -54,13 +57,22 @@ export const HeaderCustom: React.FC = () => {
     navigate("/login", { replace: true });
   };
 
+  const removeFCMToken = async () => {
+    const res: any = await ApiCommonService.removeFCMToken();
+    console.log(res);
+
+    if (res.status === 200) {
+      onLogout();
+    }
+  };
+
   const onBackHomePage = () => {
     navigate(`/`);
   };
 
   const onClickItems: MenuProps["onClick"] = (e) => {
     if (e.key === "2") {
-      onLogout();
+      removeFCMToken();
     } else if (e.key === "1") {
       // message.info("Feature is delevoping!");
       navigate("/user-profile");
@@ -128,7 +140,7 @@ export const HeaderCustom: React.FC = () => {
           <span className="item-header" style={{ color: "#e8b26e" }}>
             Hi, {userName.firstName}
           </span>
-          <NotificationBadge/>
+          <NotificationBadge />
           <Dropdown
             menu={{
               items,

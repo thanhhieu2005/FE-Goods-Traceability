@@ -30,23 +30,22 @@ const ListProductsOfProject = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const onHandleDeleteProduct = async(product: ProductModel) => {
+  const onHandleDeleteProduct = async (product: ProductModel) => {
     setIsLoading(true);
     const res: any = await ProductServices.deleteProduct(product.productId);
 
-    if(res.status === 200) {
+    if (res.status === 200) {
       const indexProduct = dataProducts.indexOf(product);
-      if(indexProduct !== -1) {
+      if (indexProduct !== -1) {
         dataProducts.splice(indexProduct, 1);
         successMessage("Delete Successfully!");
-      }
-      else {
+      } else {
         errorMessage("Delete Failed!");
       }
       setDataProducts(dataProducts);
-      setIsLoading(false);
     }
-  }
+    setIsLoading(false);
+  };
 
   const onConfirmDelete = async (product: ProductModel) => {
     Modal.confirm({
@@ -54,9 +53,9 @@ const ListProductsOfProject = () => {
       content: "You will delete this Product from Project ?",
       onOk: () => {
         onHandleDeleteProduct(product);
-      }
+      },
     });
-  }
+  };
 
   return (
     <>
