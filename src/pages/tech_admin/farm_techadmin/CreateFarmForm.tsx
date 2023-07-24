@@ -27,7 +27,18 @@ const CreateFarmForm = ({myProps: props}: any) => {
 
     setIsLoading(true);
 
-    const res: any = await FarmManagementService.createNewFarm(value);
+    let finalValue = {};
+
+    if(value.farmOwner !== null || value.farmOwner !== undefined) {
+      finalValue = {
+        ...value,
+        statusFarm: 1,
+      }
+    } else {
+      finalValue = value;
+    }
+
+    const res: any = await FarmManagementService.createNewFarm(finalValue);
 
     console.log(res);
 

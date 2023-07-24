@@ -6,7 +6,7 @@ let res: any;
 if (localStorage.getItem("token") !== null) {
   res = await UserServices.getCurrentMode();
 
-  if(res.status !== 200 || res.status === undefined) {
+  if(res.status === undefined || res.status === 401) {
     localStorage.clear();
   }
 }

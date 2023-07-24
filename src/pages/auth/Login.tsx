@@ -1,23 +1,17 @@
-import React, { useEffect } from "react";
-import "./Login.scss";
-import { Col, Row, Form, Input, Button, message } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setCurrentUserInfo } from "../../redux/authenSlice";
-import { axiosClient } from "../../services/axios";
+import { icLogo, logoBlockchain, thumpLogin1, thumpLogin2 } from "@/assets";
 import { errorMessage, successMessage } from "@/components/Message/MessageNoti";
-import {
-  icLogo,
-  logoBlockchain,
-  logoFull,
-  thumpLogin1,
-  thumpLogin2,
-} from "@/assets";
 import { mainColor, whiteColor } from "@/utils/app_color";
 import { ButtonStyle } from "@/utils/style_common";
+import { Button, Col, Form, Input, Row } from "antd";
 import { AxiosError } from "axios";
-import { onMessageListener } from "@/services/firebase";
 import { getMessaging, onMessage } from "firebase/messaging";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setCurrentUserInfo } from "../../redux/authenSlice";
+import { axiosClient } from "../../services/axios";
+import "./Login.scss";
+import { getMessagingToken } from "@/services/firebase";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -32,20 +26,22 @@ const Login = () => {
     }
   }, [login, navigate]);
 
-  useEffect(() => {
-    const messaging = getMessaging();
-    onMessage(messaging, (payload) => {
-      console.log("Message received. ", payload);
-    });
-  })
+  // useEffect(() => {
+  //   const messaging = getMessaging();
+  //   onMessage(messaging, (payload) => {
+  //     console.log("Message received. ", payload);
+  //   });
+  // });
 
   const handleSubmit = async (value: any) => {
     try {
       const res = await axiosClient.post("/users/login", value);
 
       if (res.status === 200) {
+        const fcmToken = await getMessagingToken();
+        localStorage.setItem("registrationTokenFCM", fcmToken);
+        
         localStorage.setItem("token", res.data.token);
-
         dispatch(setCurrentUserInfo(res.data));
 
         navigate("/", { replace: true });
@@ -59,7 +55,6 @@ const Login = () => {
       } else {
         errorMessage(err.response.data.message, 3);
       }
-
     }
   };
 
@@ -174,7 +169,7 @@ const Login = () => {
                     type="primary"
                     size="large"
                     htmlType="submit"
-                  // disabled = {email && password ? false : true}
+                    // disabled = {email && password ? false : true}
                   >
                     LOGIN
                   </Button>

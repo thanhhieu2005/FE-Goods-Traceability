@@ -5,8 +5,10 @@ let res: any;
 
 if (localStorage.getItem("token") !== null) {
   res = await UserServices.RefreshUserAPI();
+
+  console.log(res);
   
-  if(res.status !== 200 || res.status === undefined) {
+  if( res.status === undefined || res.status !== 200) {
     localStorage.clear();
   }
 }

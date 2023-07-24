@@ -1,17 +1,18 @@
-import { icLogo, logoBlockchain } from "@/assets";
+import { logoBlockchain } from "@/assets";
 import { logout } from "@/redux/authenSlice";
 import { useAppDispatch } from "@/redux/hook";
+import { clearBlockchainMode } from "@/redux/modeSlide";
 import { backgroundColor } from "@/utils/app_color";
 import { checkRole } from "@/utils/checkRole";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Avatar, Col, Dropdown, Layout, Row, message } from "antd";
+import { Avatar, Col, Dropdown, Layout, Row } from "antd";
 import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { connect } from "../../features/connectWalletAPI";
+import NotificationBadge from "../Badge/NotificationBadge";
 import "./Header.scss";
-import { clearBlockchainMode } from "@/redux/modeSlide";
 
 const { Header } = Layout;
 
@@ -29,7 +30,6 @@ const HeaderListItem: React.FC<HeaderListItemProps> = ({ title }) => {
   );
 };
 
-
 export const HeaderCustom: React.FC = () => {
   const userName = useSelector((state: any) => state.authen.currentUserInfo);
   const navigate = useNavigate();
@@ -45,13 +45,6 @@ export const HeaderCustom: React.FC = () => {
     fetch();
   }, [fetch]);
 
-  // useEffect(() => {
-
-  //   if (log == null) {
-  //     setLogged(false);
-  //   } else setLogged(true);
-  // }, [log]);
-
   const onLogout = async () => {
     localStorage.clear();
 
@@ -65,14 +58,14 @@ export const HeaderCustom: React.FC = () => {
     navigate(`/`);
   };
 
-  const onClickItems: MenuProps['onClick'] = e => {
-    if(e.key === '2') {
+  const onClickItems: MenuProps["onClick"] = (e) => {
+    if (e.key === "2") {
       onLogout();
-    } else if(e.key === "1") {
+    } else if (e.key === "1") {
       // message.info("Feature is delevoping!");
-      navigate('/user-profile');
+      navigate("/user-profile");
     }
-  }
+  };
 
   const items: MenuProps["items"] = [
     {
@@ -119,19 +112,28 @@ export const HeaderCustom: React.FC = () => {
             <div className="app-name">HK Solution</div>
           </Row>
         </div>
+
         <div
           style={{
             marginRight: "16px",
             gap: 12,
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          <span className="item-header item-role" style={{ color: "#e8b26e"}}> {role} </span>
-          <span className="item-header" style={{ color: "#e8b26e"}}>Hi, {userName.firstName}</span>
-          <Dropdown 
+          <span className="item-header item-role" style={{ color: "#e8b26e" }}>
+            {" "}
+            {role}{" "}
+          </span>
+          <span className="item-header" style={{ color: "#e8b26e" }}>
+            Hi, {userName.firstName}
+          </span>
+          <NotificationBadge/>
+          <Dropdown
             menu={{
               items,
               onClick: onClickItems,
-            }} 
+            }}
             placement="bottomRight"
           >
             <Avatar size="large" icon={<UserOutlined />} />
