@@ -67,7 +67,7 @@ function WarehouseDetail() {
   useEffect(() => {
     setWarehouseLogList([]);
 
-    const getHarvestLogList = async () => {
+    const getWarehouseLogList = async () => {
       const res: any = await WarehouseStorageServices.getWarehouseLogListById(
         warehouseStorageId
       );
@@ -80,7 +80,7 @@ function WarehouseDetail() {
       }
     };
 
-    getHarvestLogList();
+    setTimeout(getWarehouseLogList, 4000);
   }, [warehouseStorageId, isCallGetLog]);
 
   return (
@@ -120,7 +120,7 @@ function WarehouseDetail() {
           {dataWarehouseStorage ? (
             <Col>
               <div className="content-page">
-                {checkVerifyBlockchainLog(warehouseLogList) === true && dataWarehouseStorage.state === CommonProjectState.Completed ? (
+                {dataWarehouseStorage.state === CommonProjectState.Completed ? (
                   <img src={logoVerify} height={144} />
                 ) : (
                   <></>
@@ -149,26 +149,27 @@ function WarehouseDetail() {
                       {dataWarehouseStorage.projectCode}
                     </span>
                   </p>
-                  <Row style={{ alignItems: 'center' }}>
+                  <Row style={{ alignItems: "center" }}>
                     <Button
-                        type="default"
-                        size="middle"
-                        icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
-                        onClick={() => {
-                          navigate(`/project-log/${warehouseStorageId}`, {
-                            state: {
-                              listLog: warehouseLogList,
-                              type: LogEnum.Warehouse,
-                            },
-                          });
-                        }}
-                        style={{ borderRadius: "4px", marginRight: "12px" }}
-                      >
-                        View Log
-                      </Button>
+                      type="default"
+                      size="middle"
+                      icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                      onClick={() => {
+                        navigate(`/project-log/${warehouseStorageId}`, {
+                          state: {
+                            listLog: warehouseLogList,
+                            type: LogEnum.Warehouse,
+                          },
+                        });
+                      }}
+                      style={{ borderRadius: "4px", marginRight: "12px" }}
+                    >
+                      View Log
+                    </Button>
                     {dataWarehouseStorage.state ===
                       CommonProjectState.Completed ||
-                    dataWarehouseStorage.state === CommonProjectState.Canceled ? (
+                    dataWarehouseStorage.state ===
+                      CommonProjectState.Canceled ? (
                       <></>
                     ) : (
                       <div>

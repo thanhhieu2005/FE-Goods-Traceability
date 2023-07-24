@@ -84,7 +84,7 @@ function ProduceDetail() {
   useEffect(() => {
     setProduceLogList([]);
 
-    const getHarvestLogList = async () => {
+    const getProduceLogList = async () => {
       const res: any = await ProductServices.getProduceLogListById(
         productionId
       );
@@ -97,7 +97,7 @@ function ProduceDetail() {
       }
     };
 
-    getHarvestLogList();
+    setTimeout(getProduceLogList, 4000);
   }, [productionId, isCallGetLog]);
 
   return (
@@ -138,8 +138,7 @@ function ProduceDetail() {
             <Col>
               <div className="content-page">
                 <Col>
-                  {checkVerifyBlockchainLog(produceLogList) === true &&
-                  dataProduction.state === CommonProjectState.Completed ? (
+                  {dataProduction.state === CommonProjectState.Completed ? (
                     <img src={logoVerify} height={144} />
                   ) : (
                     <></>
@@ -168,11 +167,13 @@ function ProduceDetail() {
                         {dataProduction.projectCode}
                       </span>
                     </p>
-                    <Row style={{ alignItems: 'center' }}>
+                    <Row style={{ alignItems: "center" }}>
                       <Button
                         type="default"
                         size="middle"
-                        icon={<FileSearchOutlined style={{ fontSize: "18px" }} />}
+                        icon={
+                          <FileSearchOutlined style={{ fontSize: "18px" }} />
+                        }
                         onClick={() => {
                           navigate(`/project-log/${productionId}`, {
                             state: {

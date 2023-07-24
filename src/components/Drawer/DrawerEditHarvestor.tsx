@@ -95,6 +95,7 @@ const DrawerEditHarvestor = ({ myProps: props }: any) => {
     if (res.status == 200) {
       console.log(res);
       const newHarvest = parseHarvestData(res.data.harvest);
+      console.log(newHarvest);
 
       props.setDataHarvest(newHarvest);
 
