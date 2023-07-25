@@ -12,7 +12,7 @@ if (localStorage.getItem("token") !== null) {
 }
 
 const initialState = {
-  currentMode: res?.data.result || "",
+  currentMode: res !== undefined ? res?.data.result : "",
 };
 
 export const modeSlide = createSlice({
