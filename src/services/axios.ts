@@ -4,10 +4,10 @@ const baseUrlEc2 = "https://nodejs.blockchain-good-traceability.info.vn/";
 const baseURLRender = "https://coffee-supply-chain.onrender.com/";
 const local = "http://localhost:3000/"
 
-const baseURLEc2NotSSL = "https://ec2-54-65-79-156.ap-northeast-1.compute.amazonaws.com:3000/";
+const baseUrlEC2WithSSLNoBlockchain = "https://hksolution.blockchain-good-traceability.info.vn/";
 
 const config = {
-    baseURL: baseURLEc2NotSSL,
+    baseURL: baseUrlEC2WithSSLNoBlockchain,
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json'
